@@ -1,4 +1,5 @@
 import logo200Image from 'assets/img/logo/logo_200.png';
+import ganadovacunoImage from 'assets/img/logo/ganado_vacuno.png';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Button, Form, FormGroup, Input, Label } from 'reactstrap';
@@ -26,11 +27,11 @@ class AuthForm extends React.Component {
     const { buttonText } = this.props;
 
     if (!buttonText && this.isLogin) {
-      return 'Login';
+      return 'Iniciar sesión';
     }
 
     if (!buttonText && this.isSignup) {
-      return 'Signup';
+      return 'Registrarse';
     }
 
     return buttonText;
@@ -54,9 +55,9 @@ class AuthForm extends React.Component {
         {showLogo && (
           <div className="text-center pb-4">
             <img
-              src={logo200Image}
+              src={ganadovacunoImage}
               className="rounded"
-              style={{ width: 60, height: 60, cursor: 'pointer' }}
+              style={{ width: 201, height: 60, cursor: 'pointer' }}
               alt="logo"
               onClick={onLogoClick}
             />
@@ -79,7 +80,7 @@ class AuthForm extends React.Component {
         <FormGroup check>
           <Label check>
             <Input type="checkbox" />{' '}
-            {this.isSignup ? 'Agree the terms and policy' : 'Remember me'}
+            {this.isSignup ? 'Aceptar los términos y políticas' : 'Recordarme'}
           </Label>
         </FormGroup>
         <hr />
@@ -92,15 +93,15 @@ class AuthForm extends React.Component {
         </Button>
 
         <div className="text-center pt-1">
-          <h6>or</h6>
+          <h6>o</h6>
           <h6>
             {this.isSignup ? (
               <a href="#login" onClick={this.changeAuthState(STATE_LOGIN)}>
-                Login
+                Entrar
               </a>
             ) : (
               <a href="#signup" onClick={this.changeAuthState(STATE_SIGNUP)}>
-                Signup
+                Crear cuenta
               </a>
             )}
           </h6>
@@ -130,20 +131,20 @@ AuthForm.propTypes = {
 AuthForm.defaultProps = {
   authState: 'LOGIN',
   showLogo: true,
-  usernameLabel: 'Email',
+  usernameLabel: 'Correo electrónico',
   usernameInputProps: {
     type: 'email',
-    placeholder: 'your@email.com',
+    placeholder: '',
   },
-  passwordLabel: 'Password',
+  passwordLabel: 'Contraseña',
   passwordInputProps: {
     type: 'password',
-    placeholder: 'your password',
+    placeholder: '',
   },
-  confirmPasswordLabel: 'Confirm Password',
+  confirmPasswordLabel: 'Confirma tu Contraseña',
   confirmPasswordInputProps: {
     type: 'password',
-    placeholder: 'confirm your password',
+    placeholder: '',
   },
   onLogoClick: () => {},
 };
