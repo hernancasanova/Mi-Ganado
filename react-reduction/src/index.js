@@ -6,6 +6,8 @@ import { createStore, compose, applyMiddleware } from 'redux'
 import createSagaMiddleware from 'redux-saga'
 import rootSaga from './sagas/index'
 import rootReducer from './reducers/index'
+//import AuthReducer from './reducers/AuthReducer'
+//import VacunoReducer from './reducers/VacunoReducer'
 import { composeWithDevTools } from 'redux-devtools-extension';
 
 const sagaMiddleware = createSagaMiddleware()

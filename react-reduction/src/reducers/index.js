@@ -1,11 +1,12 @@
 import { combineReducers } from 'redux';
 // import { reducer as burgerMenuReducer } from 'redux-burger-menu';
-import AuthReducer from './AuthReducer';
+import AuthReducer from './AuthReducer'
 import VacunoReducer from './VacunoReducer'
-const rootReducer = () =>
+const rootReducer = 
   combineReducers({
-    AuthReducer,
-    VacunoReducer
+    auth: AuthReducer,
+    vacuno: VacunoReducer
   });
+
 
 export default rootReducer;

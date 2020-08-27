@@ -8,7 +8,7 @@ function config() {
   const baseURL = HOSTNAME.substring(0, HOSTNAME.indexOf('.'));
 
   const instance = axios.create({
-    baseURL:'http://localhost:8000/api/'
+    baseURL:'http://localhost:8000/'
     //baseURL: `http://${baseURL}.allremu.test/api/`
     // baseURL: `http://${baseURL}.allremu.test:80/allremu/rest/public/index.php/api/`
   });

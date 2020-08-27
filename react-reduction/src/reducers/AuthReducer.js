@@ -1,22 +1,24 @@
 /* eslint-disable no-undef */
 import {
     AUTH_SIGNIN,
-    AUTH_REQUEST_FAILED,
-    AUTH_REQUEST_SUCCESS,
+    AUTH_SIGNIN_FAILED,
+    AUTH_SIGNIN_SUCCESS,
+    AUTH_REGISTER,
+    AUTH_REGISTER_FAILED,
+    AUTH_REGISTER_SUCCESS,
+    AUTH,
   } from '../actionstypes/types';
   
   const MODO_OFFLINE = true;
   
   const INITIAL_STATE = {
+    username:'',
     email: '',
     password: '',
+    api_token: '',
     errors: false,
     data: null,
     loading: false,
-    token: MODO_OFFLINE ? 'token-falso' : localStorage.getItem('token'),
-    tokenRefresh: localStorage.getItem('token.refreshToken'),
-    tokenType: localStorage.getItem('token.tokenType'),
-    expiresIn: localStorage.getItem('token.expiresIn') ? localStorage.getItem('token.expiresIn') : 0,
     user: MODO_OFFLINE
       ? {
           id: 1,
@@ -31,12 +33,12 @@ import {
         }
       : null,
     isLoginModalOpen: false,
-    isRegisterModalOpen: false
+    isRegistered: false
   };
   
   export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
-      case AUTH_REQUEST_FAILED:
+      case AUTH_SIGNIN_FAILED:
         return {
           ...state,
           loading: false,
@@ -46,21 +48,42 @@ import {
               : { error: 'Servidor en mantención temporalmente' },
           password: ''
         };
-      case AUTH_REQUEST_SUCCESS:
+      case AUTH_SIGNIN_SUCCESS:
+        console.log("AUTH DESDE REDUCER AUTH_SIGNIN_SUCCESS");
         return {
           ...state,
           // ...INITIAL_STATE,
-          data: action.payload,
-          user: action.payload.user,
-          token: action.payload.access_token,
+          //data: action.payload,
+          username: action.payload.user,
+          email: action.payload.email,
+          password: action.payload.password,
+          api_token: action.payload.api_token,
           loading: false,
           // tokenRefresh: action.payload.token.refreshToken,
           // tokenType: action.payload.token.tokenType,
           // expiresIn: action.payload.token.expiresIn,
-          isLoginModalOpen: false // ← Revisar como quedó acá
         };
-  
+      
+      case AUTH_REGISTER:
+        console.log("AUTH DESDE REDUCER AUTH_REGISTER");
+        return {...state, loading: true, errors: false};
+      case AUTH_REGISTER_FAILED:
+        console.log("AUTH DESDE REDUCER AUTH_REGISTER_FAILED");
+        return {...state, loading: false, errors: true};
+      case AUTH_REGISTER_SUCCESS:
+        console.log("USUARIO REGISTRADO CON EXITO");
+        return {...state, 
+          loading: false,
+          errors: false,
+          isRegistered: true
+        };
+      case AUTH:
+        return {
+          ...state,
+          isRegistered:false
+        };
       case AUTH_SIGNIN:
+        console.log("AUTH DESDE REDUCER AUTH_SIGNIN");
         return { ...state, loading: true, errors: false };
       default:
         return state;

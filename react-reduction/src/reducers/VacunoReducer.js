@@ -6,18 +6,18 @@ import {
   
   
   const INITIAL_STATE = {
-    email: '',
-    password: '',
-    errors: false,
-    isRegisterModalOpen: false
+    diio: '',
+    tipo_vacuno: '',
+    muerto: false,
+    vendido: false
   };
   
   export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
       case AUTH_EMAIL_CHANGED:
-        return { ...state, email: action.payload, errors: false };
+        return { ...state, diio: action.payload, muerto: false };
       case AUTH_PASSWORD_CHANGED:
-        return { ...state, password: action.payload, errors: false };
+        return { ...state, tipo_vacuno: action.payload, muerto: false };
       default:
         return state;
     }
