@@ -52,8 +52,8 @@ class AuthForm extends React.Component {
     .then(
       (result) => {
         console.log(result);
-        var d=result.resp[0];//d:datos
-        console.log("RESPUESTA DE LA API: ", d);
+        //var d=result.resp[0];//d:datos
+        //console.log("RESPUESTA DE LA API: ", d);
       }
     )
     //signIn(email,password);
