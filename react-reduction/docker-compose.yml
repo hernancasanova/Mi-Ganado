@@ -1,0 +1,19 @@
+version: '3.5'
+
+services: 
+  frontend:
+    image: node:12-alpine
+    volumes: 
+      - ./:/app:cached
+    working_dir: /app
+    networks: 
+      - appan
+    ports: 
+      - 3000:3000
+    command: npm run start 
+    tty: true
+
+networks: 
+  appan: 
+    external: true
+    name: appan

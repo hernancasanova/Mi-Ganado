@@ -39,7 +39,23 @@ class AuthForm extends React.Component {
     event.preventDefault();
     const {username,email,password}=this.state;
     const {signIn,register}=this.props;
-    this.isLogin?signIn(email,password):register(username,email,password);
+    //this.isLogin?signIn(email,password):register(username,email,password);
+    //fetch("http://localhost:3000/api/users")
+    //.then();
+    fetch("http://localhost:8000/api/users",{
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(res => res.json())
+    .then(
+      (result) => {
+        console.log(result);
+        var d=result.resp[0];//d:datos
+        console.log("RESPUESTA DE LA API: ", d);
+      }
+    )
     //signIn(email,password);
   };
 
