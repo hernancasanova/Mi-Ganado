@@ -5,12 +5,13 @@ services:
     image: node:12-alpine
     volumes: 
       - ./:/app:cached
+      - /app/node_modules:cached
     working_dir: /app
     networks: 
       - appan
     ports: 
       - 3000:3000
-    command: npm run start 
+    command: npm run serve
     tty: true
 
 networks: 

@@ -44,6 +44,7 @@ class AuthForm extends React.Component {
     //.then();
     fetch("http://localhost:8000/api/users",{
         method: 'GET',
+        mode: 'cors',
         headers: {
             'Content-Type': 'application/json'
         }
