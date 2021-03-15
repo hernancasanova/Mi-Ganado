@@ -26,7 +26,7 @@ class RegisterController extends Controller
             'password' => Hash::make($request->input('password')),
         ]);
         return response()->json([
-            'status_code' =>200,
+            'status_code' =>200
         ],200);
     }
 

@@ -5,41 +5,49 @@ import React from 'react';
 import { Button, Form, FormGroup, Input, Label } from 'reactstrap';
 import {signIn, register, auth} from '../actions/AuthActions';
 import {connect} from 'react-redux';
-import {Redirect, withRouter} from 'react-router-dom';
+import {Link, Redirect, withRouter} from 'react-router-dom';
+import Alert from 'reactstrap/lib/Alert';
 
  
 class AuthForm extends React.Component {
   constructor(props) {
     super(props);
-    //const { isRegister } = props;
-    this.state = {username:'', email:'', password:'', api_token:''};
+    const { isRegistered } = props;
+    this.state = {email:'', password:'', api_token:'', isRegistered};
     this.handleChange=this.handleChange.bind(this);
   }
-  get isLogin() {
-    return this.props.authState === STATE_LOGIN;
-  }
 
-  get isSignup() {
+  get isSignup() {//determina texto del botón de formulario de inicio de sesión/registro
     return this.props.authState === STATE_SIGNUP;
   }
 
   componentDidMount() {
-    const { auth } = this.props;
-    auth();
+    //const { auth } = this.props;
+    //auth();
+    const {isRegistered}=this.state;
+    if (isRegistered){
+      console.log("Usuario registrado con exito desde componentDidMount");
+    }else{
+      console.log("No se han registrado usuarios");
+    }
   }
 
   changeAuthState = authState => event => {
     event.preventDefault();
 
-    this.props.onChangeAuthState(authState);
+    //this.props.onChangeAuthState(authState);
   };
+
 
   handleSubmit = event => {
     console.log("CLICKEADO HANDLESUBMIT");
     event.preventDefault();
-    const {username,email,password}=this.state;
+    const {username,email,password,isRegistered}=this.state;
     const {signIn,register}=this.props;
-    //this.isLogin?signIn(email,password):register(username,email,password);
+    this.isSignup?register(username,email,password):signIn(email,password);
+    /*fetch('https://jsonplaceholder.typicode.com/todos/1')
+    .then(response => response.json())
+    .then(json => console.log(json))
     //fetch("http://localhost:3000/api/users")
     //.then();
     fetch("http://localhost:8000/api/users",{
@@ -56,7 +64,7 @@ class AuthForm extends React.Component {
         //var d=result.resp[0];//d:datos
         //console.log("RESPUESTA DE LA API: ", d);
       }
-    )
+    )*/
     //signIn(email,password);
   };
 
@@ -68,17 +76,12 @@ class AuthForm extends React.Component {
   }
 
   renderButtonText() {
-    const { buttonText } = this.props;
-
-    if (!buttonText && this.isLogin) {
+    if (this.isSignup) {
+      return 'Crear cuenta';
+    }else{
       return 'Iniciar sesión';
     }
 
-    if (!buttonText && this.isSignup) {
-      return 'Crear cuenta';
-    }
-
-    return buttonText;
   }
 
   render() {
@@ -95,7 +98,8 @@ class AuthForm extends React.Component {
       children,
       signIn,
       isRegistered,
-      history
+      history,
+      api_token
     } = this.props;
 
     return (
@@ -115,7 +119,7 @@ class AuthForm extends React.Component {
             />
           </div>
         )}
-        {this.isSignup && (
+      {this.isSignup && (
           <FormGroup>
           <Label for={usernameLabel}>{usernameLabel}</Label>
           <Input {...usernameInputProps} value={this.state.username} name="username" onChange={this.handleChange} />
@@ -148,13 +152,14 @@ class AuthForm extends React.Component {
           <h6>o</h6>
           <h6>
             {this.isSignup ? (
-              <a href="#login" onClick={this.changeAuthState(STATE_LOGIN)}>
+              /*<a href=""  onClick={()=>history.push("login")}>
                 Entrar
-              </a>
+              </a>*/
+              <Link to="login">Iniciar sesión</Link>
             ) : (
-              <a href="#signup" onClick={this.changeAuthState(STATE_SIGNUP)}>
+              <Link to="signup">
                 Crear cuenta
-              </a>
+              </Link>
             )}
           </h6>
         </div>
@@ -197,12 +202,12 @@ AuthForm.defaultProps = {
   passwordLabel: 'Contraseña',
   passwordInputProps: {
     type: 'password',
-    placeholder: '',
+    placeholder: 'entre 6 a 8 caracteres alfanuméricos',
   },
   confirmPasswordLabel: 'Confirmar Contraseña',
   confirmPasswordInputProps: {
     type: 'password',
-    placeholder: '',
+    placeholder: 'entre 6 a 8 caracteres alfanuméricos',
   },
 };
 

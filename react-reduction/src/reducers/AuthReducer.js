@@ -12,7 +12,6 @@ import {
   const MODO_OFFLINE = true;
   
   const INITIAL_STATE = {
-    username:'',
     email: '',
     password: '',
     api_token: '',
@@ -54,7 +53,7 @@ import {
           ...state,
           // ...INITIAL_STATE,
           //data: action.payload,
-          username: action.payload.user,
+          //username: action.payload.user,
           email: action.payload.email,
           password: action.payload.password,
           api_token: action.payload.api_token,

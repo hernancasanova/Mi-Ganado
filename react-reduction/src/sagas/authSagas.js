@@ -39,8 +39,8 @@ function* register({ payload }) {
     console.log("PAYLOAD DESDE REGISTER SAGA:");
     console.log(payload);
     const response = yield call(post, 'api/register', data);
-    console.log("response: ");
-    console.log(response);
+    console.log("response desde register saga: ");
+    console.log(response.data);
     //localStorage.setItem('token', response.data.access_token);
     //localStorage.setItem('token.expiresIn', response.data.expires_in);
     yield put({ type: AUTH_REGISTER_SUCCESS, payload: response.data });
