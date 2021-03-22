@@ -23,7 +23,6 @@ Route::resource('users','UserController');
 Route::post('register','RegisterController@register');
 
 Route::post('login', function (Request $request) {
-    dd($request);
     //if (auth()->attempt(['email' => $request->input('email'), 'password' => $request->input('password')])) {
 	if (auth()->attempt($request->only('email', 'password'))) {
         // Authentication passed...
@@ -33,7 +32,7 @@ Route::post('login', function (Request $request) {
     	return response([
             'api_token'=>$user->api_token,
             'user'=>$user->email,
-            'password'=>$user->password,
+            //'password'=>$user->password,
             'user_id'=>$user->id,
             'status_code' => 200,
         ], 200);

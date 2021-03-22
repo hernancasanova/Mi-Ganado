@@ -13,7 +13,7 @@ class AuthForm extends React.Component {
   constructor(props) {
     super(props);
     const { isRegistered } = props;
-    this.state = {email:'', password:'', api_token:'', isRegistered};
+    this.state = {userLogged: '' , username:'', email: '', password: '', api_token: '' , isRegistered};
     this.handleChange=this.handleChange.bind(this);
   }
 
@@ -21,51 +21,27 @@ class AuthForm extends React.Component {
     return this.props.authState === STATE_SIGNUP;
   }
 
-  componentDidMount() {
-    //const { auth } = this.props;
-    //auth();
-    const {isRegistered}=this.state;
-    if (isRegistered){
-      console.log("Usuario registrado con exito desde componentDidMount");
-    }else{
-      console.log("No se han registrado usuarios");
+
+  componentDidUpdate(){
+    const {userLogged, api_token, history} =this.props;
+    if(userLogged.length>0){
+      localStorage.setItem('api_token',api_token);
+      history.push("dashboard");
+      console.log("El usuario "+userLogged+" ha iniciado sesión");
     }
   }
-
-  changeAuthState = authState => event => {
-    event.preventDefault();
-
-    //this.props.onChangeAuthState(authState);
-  };
-
 
   handleSubmit = event => {
     console.log("CLICKEADO HANDLESUBMIT");
     event.preventDefault();
-    const {username,email,password,isRegistered}=this.state;
+    const {username, email, password}=this.state;
     const {signIn,register}=this.props;
-    this.isSignup?register(username,email,password):signIn(email,password);
-    /*fetch('https://jsonplaceholder.typicode.com/todos/1')
-    .then(response => response.json())
-    .then(json => console.log(json))
-    //fetch("http://localhost:3000/api/users")
-    //.then();
-    fetch("http://localhost:8000/api/users",{
-        method: 'GET',
-        mode: 'cors',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-    .then(res => res.json())
-    .then(
-      (result) => {
-        console.log(result);
-        //var d=result.resp[0];//d:datos
-        //console.log("RESPUESTA DE LA API: ", d);
-      }
-    )*/
-    //signIn(email,password);
+    //this.isSignup?register(username,email,password):signIn(email,password);
+    if(this.isSignup){
+      register(username,email,password);
+    }else{
+      signIn(email,password);
+    }
   };
 
   handleChange(e){
@@ -98,10 +74,9 @@ class AuthForm extends React.Component {
       children,
       signIn,
       isRegistered,
-      history,
-      api_token
+      api_token,
+      history
     } = this.props;
-
     return (
       <Form onSubmit={this.handleSubmit}>
         {isRegistered && <Redirect to="/login" />
@@ -152,9 +127,6 @@ class AuthForm extends React.Component {
           <h6>o</h6>
           <h6>
             {this.isSignup ? (
-              /*<a href=""  onClick={()=>history.push("login")}>
-                Entrar
-              </a>*/
               <Link to="login">Iniciar sesión</Link>
             ) : (
               <Link to="signup">
@@ -202,28 +174,27 @@ AuthForm.defaultProps = {
   passwordLabel: 'Contraseña',
   passwordInputProps: {
     type: 'password',
-    placeholder: 'entre 6 a 8 caracteres alfanuméricos',
+    placeholder: '',
   },
   confirmPasswordLabel: 'Confirmar Contraseña',
   confirmPasswordInputProps: {
     type: 'password',
-    placeholder: 'entre 6 a 8 caracteres alfanuméricos',
+    placeholder: '',
   },
 };
 
 //export default AuthForm;
 const mapStateToProps = state => ({
-  email: state.auth.email,
-  password: state.auth.password,
+  userLogged: state.auth.userLogged,
   api_token: state.auth.api_token,
   isRegistered: state.auth.isRegistered
 });
 
-export default withRouter(connect(
+export default connect(
   mapStateToProps,
   {
     signIn,
     register,
     auth,
   }
-)(AuthForm));
+)(AuthForm);

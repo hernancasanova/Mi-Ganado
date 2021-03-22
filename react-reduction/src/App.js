@@ -8,6 +8,12 @@ import componentQueries from 'react-component-queries';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import './styles/reduction.scss';
 import AuthForm from './components/AuthForm';
+import Dashboard from './components/Dashboard';
+import { createBrowserHistory } from 'history';
+import { ConnectedRouter } from 'connected-react-router';
+import { connect } from 'react-redux';
+import { push } from 'connected-react-router'
+
 
 const AlertPage = React.lazy(() => import('pages/AlertPage'));
 const AuthModalPage = React.lazy(() => import('pages/AuthModalPage'));
@@ -24,24 +30,30 @@ const ModalPage = React.lazy(() => import('pages/ModalPage'));
 const ProgressPage = React.lazy(() => import('pages/ProgressPage'));
 const TablePage = React.lazy(() => import('pages/TablePage'));
 const TypographyPage = React.lazy(() => import('pages/TypographyPage'));
-const WidgetPage = React.lazy(() => import('pages/WidgetPage'));
+const WidgetPage = React.lazy(() => import('pages/WidgetPage'));//
 
 const getBasename = () => {
   return `/${process.env.PUBLIC_URL.split('/').pop()}`;
 };
 
 class App extends React.Component {
+  componentDidMount(){
+    let api_token=localStorage.getItem('api_token');
+    if(!api_token){
+      this.props.history.push("login");
+    }
+  }
   render() {
+    const {history} = this.props;
     return (
-      <BrowserRouter basename={getBasename()}>
-        <GAListener>
+      <ConnectedRouter history={history} >
           <Switch>
             <LayoutRoute
               exact
               path="/login"
               layout={EmptyLayout}
               component={props => (
-                <AuthPage {...props} authState={STATE_LOGIN} />
+                <AuthPage {...props} authState={STATE_LOGIN} history={history} />
               )}
             />
             <LayoutRoute
@@ -49,15 +61,13 @@ class App extends React.Component {
               path="/signup"
               layout={EmptyLayout}
               component={props => (
-                <AuthPage {...props} authState={STATE_SIGNUP} />
+                <AuthPage {...props} authState={STATE_SIGNUP} history={history}/>
               )}
             />
 
             <MainLayout breakpoint={this.props.breakpoint}>
               <React.Suspense fallback={<PageSpinner />}>
-                <Route exact path="/" >
-                  <Redirect to="/login" />
-                </Route>
+                <Route exact path="/dashboard" component={DashboardPage} />
                 <Route exact path="/login-modal" component={AuthModalPage} />
                 <Route exact path="/buttons" component={ButtonPage} />
                 <Route exact path="/cards" component={CardPage} />
@@ -66,23 +76,17 @@ class App extends React.Component {
                 <Route exact path="/alerts" component={AlertPage} />
                 <Route exact path="/tables" component={TablePage} />
                 <Route exact path="/badges" component={BadgePage} />
-                <Route
-                  exact
-                  path="/button-groups"
-                  component={ButtonGroupPage}
-                />
+                <Route exact path="/button-groups" component={ButtonGroupPage} />
                 <Route exact path="/dropdowns" component={DropdownPage} />
                 <Route exact path="/progress" component={ProgressPage} />
                 <Route exact path="/modals" component={ModalPage} />
                 <Route exact path="/forms" component={FormPage} />
                 <Route exact path="/input-groups" component={InputGroupPage} />
                 <Route exact path="/charts" component={ChartPage} />
-                <Route exact path="/login" component={AuthForm} />
               </React.Suspense>
             </MainLayout>
           </Switch>
-        </GAListener>
-      </BrowserRouter>
+      </ConnectedRouter>
     );
   }
 }

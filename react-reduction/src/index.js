@@ -9,13 +9,17 @@ import rootReducer from './reducers/index'
 //import AuthReducer from './reducers/AuthReducer'
 //import VacunoReducer from './reducers/VacunoReducer'
 import { composeWithDevTools } from 'redux-devtools-extension';
+import { routerMiddleware } from 'connected-react-router'
+import { createBrowserHistory } from 'history'
 
-const sagaMiddleware = createSagaMiddleware()
-const store=createStore(rootReducer, composeWithDevTools(applyMiddleware(sagaMiddleware)));
-sagaMiddleware.run(rootSaga)
+
+export const history = createBrowserHistory();
+const sagaMiddleware = createSagaMiddleware();
+const store=createStore(rootReducer(history), composeWithDevTools(applyMiddleware(sagaMiddleware, routerMiddleware(history))));
+sagaMiddleware.run(rootSaga);
 
 ReactDOM.render(
     <Provider store={store}>
-        <App />
+        <App history={history} />
     </Provider>, 
         document.getElementById('root'));
