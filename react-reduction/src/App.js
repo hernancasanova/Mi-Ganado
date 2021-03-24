@@ -8,7 +8,7 @@ import componentQueries from 'react-component-queries';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import './styles/reduction.scss';
 import AuthForm from './components/AuthForm';
-import Dashboard from './components/Dashboard';
+//import Dashboard from './components/Dashboard';
 import { createBrowserHistory } from 'history';
 import { ConnectedRouter } from 'connected-react-router';
 import { connect } from 'react-redux';
@@ -65,7 +65,7 @@ class App extends React.Component {
               )}
             />
 
-            <MainLayout breakpoint={this.props.breakpoint}>
+            <MainLayout breakpoint={this.props.breakpoint} history={history}>
               <React.Suspense fallback={<PageSpinner />}>
                 <Route exact path="/dashboard" component={DashboardPage} />
                 <Route exact path="/login-modal" component={AuthModalPage} />

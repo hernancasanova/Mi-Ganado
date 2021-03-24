@@ -75,6 +75,12 @@ class Header extends React.Component {
     document.querySelector('.cr-sidebar').classList.toggle('cr-sidebar--open');
   };
 
+  logout = () => {
+    const {history} = this.props;
+    localStorage.removeItem('api_token');
+    history.push("login");
+  }  
+
   render() {
     const { isNotificationConfirmed } = this.state;
 
@@ -156,7 +162,7 @@ class Header extends React.Component {
                     <ListGroupItem tag="button" action className="border-light">
                       <MdHelp /> Help
                     </ListGroupItem>
-                    <ListGroupItem tag="button" action className="border-light">
+                    <ListGroupItem tag="button" action className="border-light" onClick={this.logout} >
                       <MdExitToApp /> Signout
                     </ListGroupItem>
                   </ListGroup>
