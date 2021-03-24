@@ -5,6 +5,8 @@ import SearchInput from 'components/SearchInput';
 import { notificationsData } from 'demos/header';
 import withBadge from 'hocs/withBadge';
 import React from 'react';
+import {connect} from 'react-redux';
+
 import {
   MdClearAll,
   MdExitToApp,
@@ -77,7 +79,7 @@ class Header extends React.Component {
 
   render() {
     const { isNotificationConfirmed } = this.state;
-
+    const {userLogged}=this.props;
     return (
       <Navbar light expand className={bem.b('bg-white')}>
         <Nav navbar className="mr-2">
@@ -135,9 +137,9 @@ class Header extends React.Component {
             >
               <PopoverBody className="p-0 border-light">
                 <UserCard
-                  title="Jane"
-                  subtitle="jane@jane.com"
-                  text="Last updated 3 mins ago"
+                  title="Hernán Casanova"
+                  subtitle={userLogged}
+                  text=""
                   className="border-light"
                 >
                   <ListGroup flush>
@@ -170,4 +172,14 @@ class Header extends React.Component {
   }
 }
 
-export default Header;
+const mapStateToProps = state => ({
+  userLogged: state.auth.userLogged,
+  api_token: state.auth.api_token,
+  isRegistered: state.auth.isRegistered
+});
+
+export default connect(
+  mapStateToProps,
+  {}
+)(Header);
+

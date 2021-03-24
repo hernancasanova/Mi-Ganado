@@ -26,7 +26,7 @@ class AuthForm extends React.Component {
     const {userLogged, api_token, history} =this.props;
     if(userLogged.length>0){
       localStorage.setItem('api_token',api_token);
-      history.push("dashboard");
+      history.push("/");
       console.log("El usuario "+userLogged+" ha iniciado sesión");
     }
   }
