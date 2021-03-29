@@ -18,7 +18,10 @@ use Illuminate\Support\Str;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
 Route::resource('users','UserController');
+
+Route::resource('vacunos','VacunoController');//->middleware('auth:api');
 
 Route::post('register','RegisterController@register');
 
