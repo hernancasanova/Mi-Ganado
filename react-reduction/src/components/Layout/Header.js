@@ -149,7 +149,7 @@ class Header extends React.Component {
                   className="border-light"
                 >
                   <ListGroup flush>
-                    <ListGroupItem tag="button" action className="border-light">
+                    {/*<ListGroupItem tag="button" action className="border-light">
                       <MdPersonPin /> Profile
                     </ListGroupItem>
                     <ListGroupItem tag="button" action className="border-light">
@@ -163,9 +163,9 @@ class Header extends React.Component {
                     </ListGroupItem>
                     <ListGroupItem tag="button" action className="border-light">
                       <MdHelp /> Help
-                    </ListGroupItem>
+              </ListGroupItem>*/}
                     <ListGroupItem tag="button" action className="border-light" onClick={this.logout} >
-                      <MdExitToApp /> Signout
+                      <MdExitToApp /> Cerrar sesión
                     </ListGroupItem>
                   </ListGroup>
                 </UserCard>

@@ -5,7 +5,8 @@ import {
   
   
   const INITIAL_STATE = {
-    vacunos:[]
+    vacunos:[],
+    url_imagenes: "http://localhost:8000/storage/imagenes/"
   };
   
   export default (state = INITIAL_STATE, action) => {
