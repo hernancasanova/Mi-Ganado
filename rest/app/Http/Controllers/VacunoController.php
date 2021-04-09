@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Vacuno;
 use Illuminate\Http\Request;
+use DB;
 
 class VacunoController extends Controller
 {
@@ -29,7 +30,13 @@ class VacunoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //ALMACENAR IMAGEN
+        DB::table('vacunos')->insert([
+            ['nombre' => $request->nombre, 'fecha_nacimiento' => $request->fecha_nacimiento, 'sexo' => $request->sexo, 'tipos_vacunos_id' => $request->tipos_vacunos_id, 'raza' => $request->raza, 'estado' => $request->estado, 'fecha_venta' => $request->fecha_venta]
+        ]);
+        return response()->json([
+            'status_code' => 200
+        ], 200);
     }
 
     /**

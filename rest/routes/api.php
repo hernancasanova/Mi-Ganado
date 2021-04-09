@@ -23,6 +23,8 @@ Route::resource('users','UserController');
 
 //Route::resource('vacunos','VacunoController');//->middleware('auth:api');
 
+Route::apiResource('tiposvacunos','TiposVacunoController');
+
 Route::apiResource('vacunos','VacunoController');
 
 Route::apiResource('aretes','AreteController');
