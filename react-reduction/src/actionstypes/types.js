@@ -14,8 +14,3 @@ export const AUTH_REGISTER_SUCCESS = 'auth_register_success';
 export const VACUNO_LIST_REQUEST = 'vacuno_list_request';
 export const VACUNO_LIST_FAILED = 'vacuno_list_failed';
 export const VACUNO_LIST_SUCCESS = 'vacuno_list_success';
-
-
-export const VACUNO_CREATE_REQUEST = 'vacuno_create_request';
-export const VACUNO_CREATE_FAILED = 'vacuno_create_failed';
-export const VACUNO_CREATE_SUCCESS = 'vacuno_create_success';
