@@ -5,59 +5,43 @@ import React from 'react';
 import { Button, Form, FormGroup, Input, Label } from 'reactstrap';
 import {signIn, register, auth} from '../actions/AuthActions';
 import {connect} from 'react-redux';
-import {Redirect, withRouter} from 'react-router-dom';
+import {Link, Redirect, withRouter} from 'react-router-dom';
+import Alert from 'reactstrap/lib/Alert';
 
  
 class AuthForm extends React.Component {
   constructor(props) {
     super(props);
-    //const { isRegister } = props;
-    this.state = {username:'', email:'', password:'', api_token:''};
+    const { isRegistered } = props;
+    this.state = {userLogged: '' , username:'', email: '', password: '', api_token: '' , isRegistered};
     this.handleChange=this.handleChange.bind(this);
   }
-  get isLogin() {
-    return this.props.authState === STATE_LOGIN;
-  }
 
-  get isSignup() {
+  get isSignup() {//determina texto del botón de formulario de inicio de sesión/registro
     return this.props.authState === STATE_SIGNUP;
   }
 
-  componentDidMount() {
-    const { auth } = this.props;
-    auth();
+
+  componentDidUpdate(){
+    const {userLogged, api_token, history} =this.props;
+    if(userLogged.length>0){
+      localStorage.setItem('api_token',api_token);
+      history.push("/");
+      console.log("El usuario "+userLogged+" ha iniciado sesión");
+    }
   }
-
-  changeAuthState = authState => event => {
-    event.preventDefault();
-
-    this.props.onChangeAuthState(authState);
-  };
 
   handleSubmit = event => {
     console.log("CLICKEADO HANDLESUBMIT");
     event.preventDefault();
-    const {username,email,password}=this.state;
+    const {username, email, password}=this.state;
     const {signIn,register}=this.props;
-    //this.isLogin?signIn(email,password):register(username,email,password);
-    //fetch("http://localhost:3000/api/users")
-    //.then();
-    fetch("http://localhost:8000/api/users",{
-        method: 'GET',
-        mode: 'cors',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-    .then(res => res.json())
-    .then(
-      (result) => {
-        console.log(result);
-        //var d=result.resp[0];//d:datos
-        //console.log("RESPUESTA DE LA API: ", d);
-      }
-    )
-    //signIn(email,password);
+    //this.isSignup?register(username,email,password):signIn(email,password);
+    if(this.isSignup){
+      register(username,email,password);
+    }else{
+      signIn(email,password);
+    }
   };
 
   handleChange(e){
@@ -68,17 +52,12 @@ class AuthForm extends React.Component {
   }
 
   renderButtonText() {
-    const { buttonText } = this.props;
-
-    if (!buttonText && this.isLogin) {
+    if (this.isSignup) {
+      return 'Crear cuenta';
+    }else{
       return 'Iniciar sesión';
     }
 
-    if (!buttonText && this.isSignup) {
-      return 'Crear cuenta';
-    }
-
-    return buttonText;
   }
 
   render() {
@@ -95,9 +74,9 @@ class AuthForm extends React.Component {
       children,
       signIn,
       isRegistered,
+      api_token,
       history
     } = this.props;
-
     return (
       <Form onSubmit={this.handleSubmit}>
         {isRegistered && <Redirect to="/login" />
@@ -115,7 +94,7 @@ class AuthForm extends React.Component {
             />
           </div>
         )}
-        {this.isSignup && (
+      {this.isSignup && (
           <FormGroup>
           <Label for={usernameLabel}>{usernameLabel}</Label>
           <Input {...usernameInputProps} value={this.state.username} name="username" onChange={this.handleChange} />
@@ -148,13 +127,11 @@ class AuthForm extends React.Component {
           <h6>o</h6>
           <h6>
             {this.isSignup ? (
-              <a href="#login" onClick={this.changeAuthState(STATE_LOGIN)}>
-                Entrar
-              </a>
+              <Link to="login">Iniciar sesión</Link>
             ) : (
-              <a href="#signup" onClick={this.changeAuthState(STATE_SIGNUP)}>
+              <Link to="signup">
                 Crear cuenta
-              </a>
+              </Link>
             )}
           </h6>
         </div>
@@ -208,17 +185,16 @@ AuthForm.defaultProps = {
 
 //export default AuthForm;
 const mapStateToProps = state => ({
-  email: state.auth.email,
-  password: state.auth.password,
+  userLogged: state.auth.userLogged,
   api_token: state.auth.api_token,
   isRegistered: state.auth.isRegistered
 });
 
-export default withRouter(connect(
+export default connect(
   mapStateToProps,
   {
     signIn,
     register,
     auth,
   }
-)(AuthForm));
+)(AuthForm);

@@ -87,12 +87,12 @@ class MainLayout extends React.Component {
   }
 
   render() {
-    const { children } = this.props;
+    const { children, history } = this.props;
     return (
       <main className="cr-app bg-light">
         <Sidebar />
         <Content fluid onClick={this.handleContentClick}>
-          <Header />
+          <Header history={history} />
           {children}
           <Footer />
         </Content>

@@ -11,9 +11,11 @@ function* index({ payload }) {
     const request = {
       params: {}
     };
-    const url = 'vacunos';
-    const datas = yield call(get, url, request);
-    yield put({ type: VACUNO_LIST_SUCCESS, payload: datas });
+    console.log("DESDE VACUNO SAGA");
+    const url = 'api/vacunos';
+    const data = yield call(get, url, request);
+    console.log("DATA DE VACUNO SAGA: ",data.data.vacunos);
+    yield put({ type: VACUNO_LIST_SUCCESS, payload: data.data.vacunos });
   } catch (error) {
     yield put({ type: VACUNO_LIST_FAILED, payload: error });
   }

@@ -5,6 +5,8 @@ import SearchInput from 'components/SearchInput';
 import { notificationsData } from 'demos/header';
 import withBadge from 'hocs/withBadge';
 import React from 'react';
+import {connect} from 'react-redux';
+
 import {
   MdClearAll,
   MdExitToApp,
@@ -75,9 +77,15 @@ class Header extends React.Component {
     document.querySelector('.cr-sidebar').classList.toggle('cr-sidebar--open');
   };
 
+  logout = () => {
+    const {history} = this.props;
+    localStorage.removeItem('api_token');
+    history.push("login");
+  }  
+
   render() {
     const { isNotificationConfirmed } = this.state;
-
+    const {userLogged}=this.props;
     return (
       <Navbar light expand className={bem.b('bg-white')}>
         <Nav navbar className="mr-2">
@@ -135,13 +143,13 @@ class Header extends React.Component {
             >
               <PopoverBody className="p-0 border-light">
                 <UserCard
-                  title="Jane"
-                  subtitle="jane@jane.com"
-                  text="Last updated 3 mins ago"
+                  title="Hernán Casanova"
+                  subtitle={userLogged}
+                  text=""
                   className="border-light"
                 >
                   <ListGroup flush>
-                    <ListGroupItem tag="button" action className="border-light">
+                    {/*<ListGroupItem tag="button" action className="border-light">
                       <MdPersonPin /> Profile
                     </ListGroupItem>
                     <ListGroupItem tag="button" action className="border-light">
@@ -155,9 +163,9 @@ class Header extends React.Component {
                     </ListGroupItem>
                     <ListGroupItem tag="button" action className="border-light">
                       <MdHelp /> Help
-                    </ListGroupItem>
-                    <ListGroupItem tag="button" action className="border-light">
-                      <MdExitToApp /> Signout
+              </ListGroupItem>*/}
+                    <ListGroupItem tag="button" action className="border-light" onClick={this.logout} >
+                      <MdExitToApp /> Cerrar sesión
                     </ListGroupItem>
                   </ListGroup>
                 </UserCard>
@@ -170,4 +178,14 @@ class Header extends React.Component {
   }
 }
 
-export default Header;
+const mapStateToProps = state => ({
+  userLogged: state.auth.userLogged,
+  api_token: state.auth.api_token,
+  isRegistered: state.auth.isRegistered
+});
+
+export default connect(
+  mapStateToProps,
+  {}
+)(Header);
+

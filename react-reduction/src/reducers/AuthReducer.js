@@ -12,14 +12,14 @@ import {
   const MODO_OFFLINE = true;
   
   const INITIAL_STATE = {
-    username:'',
-    email: '',
-    password: '',
+    userLogged: '',
+    //email: '',
+    //password: '',
     api_token: '',
     errors: false,
     data: null,
     loading: false,
-    user: MODO_OFFLINE
+    /*user: MODO_OFFLINE
       ? {
           id: 1,
           name: 'Offline',
@@ -31,7 +31,7 @@ import {
           created_at: '2019-10-15 18:30:19',
           updated_at: '2019-10-15 18:30:19'
         }
-      : null,
+      : null,*/
     isLoginModalOpen: false,
     isRegistered: false
   };
@@ -45,8 +45,7 @@ import {
           errors:
             typeof action.payload !== 'undefined'
               ? action.payload
-              : { error: 'Servidor en mantención temporalmente' },
-          password: ''
+              : { error: 'Servidor en mantención temporalmente' }
         };
       case AUTH_SIGNIN_SUCCESS:
         console.log("AUTH DESDE REDUCER AUTH_SIGNIN_SUCCESS");
@@ -54,9 +53,10 @@ import {
           ...state,
           // ...INITIAL_STATE,
           //data: action.payload,
-          username: action.payload.user,
-          email: action.payload.email,
-          password: action.payload.password,
+          //username: action.payload.user,
+          userLogged: action.payload.user,
+          //email: action.payload.email,
+          //password: action.payload.password,
           api_token: action.payload.api_token,
           loading: false,
           // tokenRefresh: action.payload.token.refreshToken,

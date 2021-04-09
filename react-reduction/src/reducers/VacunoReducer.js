@@ -1,25 +1,23 @@
 /* eslint-disable no-undef */
 import {
-    AUTH_EMAIL_CHANGED,
-    AUTH_PASSWORD_CHANGED,
+    VACUNO_LIST_REQUEST, VACUNO_LIST_SUCCESS
   } from '../actionstypes/types';
   
   
   const INITIAL_STATE = {
-    diio: '',
-    tipo_vacuno: '',
-    muerto: false,
-    vendido: false
+    vacunos:[],
+    url_imagenes: "http://localhost:8000/storage/imagenes/"
   };
   
   export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
-      case AUTH_EMAIL_CHANGED:
-        return { ...state, diio: action.payload, muerto: false };
-      case AUTH_PASSWORD_CHANGED:
-        return { ...state, tipo_vacuno: action.payload, muerto: false };
+      case VACUNO_LIST_REQUEST:
+        console.log("DESDE VACUNO REDUCER");
+        return { ...state, muerto: false };
+      case VACUNO_LIST_SUCCESS:
+        return {...state, vacunos: action.payload};
+        //return { ...state, vacunos: [action.payload, ...state.vacunos] };
       default:
         return state;
     }
   };
-  
