@@ -41,7 +41,7 @@ const Listado = () => {
         <Col>
           <Card className="mb-3">
             <CardHeader>Actualizado al 
-              <Button disabled={vacunos.length===0} style={{float:'right'}} className="ml-10" onClick={descargarPdf}>Descargar pdf </Button>
+              <Button  style={{float:'right'}} className="ml-10" onClick={descargarPdf}>Descargar pdf </Button>
             </CardHeader>
             <CardBody>
               <Table id="listVacunos">
@@ -63,7 +63,7 @@ const Listado = () => {
                     <td>{vac.fecha_nacimiento}</td>
                     <td>{vac.sexo}</td>
                     <td>{vac.raza}</td>
-                    <td><img height={34} src={url_imagenes+vac.id+".jpg"}/></td>
+                    <td><img height={34} src={url_imagenes+"019017472.jpg"}/></td>
                   </tr>);} )}
                 </tbody>
               </Table>

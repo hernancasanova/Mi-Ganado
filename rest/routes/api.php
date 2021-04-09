@@ -21,11 +21,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::resource('users','UserController');
 
-//Route::resource('vacunos','VacunoController');//->middleware('auth:api');
-
-Route::apiResource('vacunos','VacunoController');
-
-Route::apiResource('aretes','AreteController');
+Route::resource('vacunos','VacunoController');//->middleware('auth:api');
 
 Route::post('register','RegisterController@register');
 
