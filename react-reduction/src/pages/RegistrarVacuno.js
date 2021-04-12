@@ -18,12 +18,30 @@ const RegistrarVacuno = () => {
     let raza = document.getElementById("raza").value;
     let estado = document.getElementById("estado").value;
     let fecha_venta = document.getElementById("fecha_venta").value;
-    fetch("http://localhost:8000/api/vacunos",{method: 'post',
-    headers: {
+    //let imagen2 = document.getElementById("imagen_vacuno").files[0];
+    let imagen = document.querySelector('input[type="file"]').files[0];
+    //imagen.name="test";
+    var datosVacuno = new FormData();
+    datosVacuno.append("nombre",nombre);
+    datosVacuno.append("fecha_nacimiento",fecha_nacimiento);
+    datosVacuno.append("sexo",sexo);
+    datosVacuno.append("tipos_vacunos_id",tipos_vacunos_id);
+    datosVacuno.append("raza",raza);
+    datosVacuno.append("estado",estado);
+    datosVacuno.append("fecha_venta",fecha_venta);
+    //formData.append( '_token', csrf_token() );
+    datosVacuno.append("imagen_vacuno",imagen);
+    //console.log("fecha_venta: ",fecha_venta);
+    //console.log("imagen2: ",imagen2);
+    //debugger;
+    fetch("http://localhost:8000/api/vacunos",{method: 'post', 
+    /*headers: {
       'Accept': 'application/json, text/plain, *',
       'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({nombre, fecha_nacimiento, sexo, tipos_vacunos_id, raza, estado, fecha_venta})})
+      //'Content-Type': 'application/x-www-form-urlencoded'
+    },*/
+    //body: JSON.stringify({nombre, fecha_nacimiento, sexo, tipos_vacunos_id, raza, estado, fecha_venta})})
+    body:datosVacuno})
     .then(result => { return result.json() })
     .then(data => {
         if(data.status_code===200){
@@ -122,6 +140,15 @@ const RegistrarVacuno = () => {
                   name="fecha_venta"
                   id="fecha_venta"
                   placeholder="Ej: 2021-04-06"
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label for="imagen_vacuno">Seleccione imagen</Label>
+                <Input
+                  type="file"
+                  name="imagen_vacuno"
+                  id="imagen_vacuno"
+                  //placeholder="Ej: 2021-04-06"
                 />
               </FormGroup>
               <Button className="ml-10" onClick={registrar_vacuno}>Registrar vacuno</Button>

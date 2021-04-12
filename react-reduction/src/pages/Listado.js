@@ -6,18 +6,57 @@ import * as actions from '../actions/VacunoActions';
 import ganado_vacuno from '../../src/assets/img/logo/019017472.jpg';
 import { jsPDF } from "jspdf";
 import 'jspdf-autotable'
+import base64Img from 'base64-img';
 
 const Listado = () => {  
+  //var vacunos = useSelector(store=>store.vacuno.vacunos);
+  const  toDataURL = (url, callback) => {
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function() {
+      var reader = new FileReader();
+      reader.onloadend = function() {
+        callback(reader.result);
+      };
+      reader.readAsDataURL(xhr.response);
+    };
+    xhr.open("GET", url);
+    xhr.responseType = "blob";
+    xhr.send();
+  }
+  var url_imagenes = useSelector(store=>store.vacuno.url_imagenes);
   const descargarPdf = () => {
     console.log("Descargando pdf");
     var pdf = new jsPDF('p', 'pt', 'letter');
+    //let imagen = new Image();
+    //imagen.crossOrigin = 'anonymous';
+    var imagen;
+    var id;
     var tabla = document.getElementById("listVacunos");
     pdf.autoTable({
       html: "#listVacunos",
-      bodyStyles: {minCellHeight: 15},
+      bodyStyles: {minCellHeight: 50},
       didDrawCell: function(data) {
+        //let id;
+        //console.log("id: ",id);
+        //console.log("data.column: ",data.column);
+        /*if(data.column.index===0 && data.cell.section === 'body'){
+          console.log("data.cell.text[0]: ",data.cell.text[0]);
+          console.log("data.cell.secction: ",data.cell.section);
+          id=data.cell.text[0];
+        }*/
         if (data.column.index === 5 && data.cell.section === 'body') {
-           pdf.addImage(ganado_vacuno, 'JPEG', data.cell.x + 15, data.cell.y + 2, 30, 20)
+          //base64Img.base64(url_imagenes+id+".jpg", function(err, data) {
+            //imagen=data;
+          //});
+          //console.log("url_imagenes+id: "+url_imagenes+id);
+          //toDataURL(url_imagenes+data.cell.text[0]+".jpg",result => {
+          //toDataURL(url_imagenes+id+".jpg",result => {
+            //console.log("result: ",result);
+          //toDataURL(url_imagenes+"26.jpg",result => {
+            //imagen = result;
+          //});
+           //imagen.src=url_imagenes+data.cell.text[0];
+           pdf.addImage(ganado_vacuno, 'JPEG', data.cell.x + 15, data.cell.y + 2, 50, 50)
         }
       }
     });
@@ -57,7 +96,7 @@ const Listado = () => {
                 </thead>
                 <tbody>
                   {vacunos.map(vac=>{
-                    return (<tr key={vac.id} className="table-info">
+                    return (<tr key={vac.id} >
                     <th>{vac.id}</th>
                     <td>{vac.nombre}</td>
                     <td>{vac.fecha_nacimiento}</td>
