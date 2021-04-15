@@ -25,7 +25,7 @@ Route::resource('users','UserController');
 
 Route::apiResource('tiposvacunos','TiposVacunoController');
 
-Route::apiResource('vacunos','VacunoController');
+Route::resource('vacunos','VacunoController')->middleware("cors");
 
 Route::apiResource('aretes','AreteController');
 
