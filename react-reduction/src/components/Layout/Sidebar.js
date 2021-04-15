@@ -90,9 +90,9 @@ class Sidebar extends React.Component {
             <SourceLink className="navbar-brand d-flex">
               <img
                 src={logoappAn}
-                width="100"
-                height="30"
-                className="pr-2"
+                width="120"
+                height="40"
+                className="pr-20"
                 alt=""
               />
             </SourceLink>
