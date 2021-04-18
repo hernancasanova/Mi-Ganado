@@ -7,6 +7,12 @@ import { jsPDF } from "jspdf";
 import 'jspdf-autotable'
 
 const Listado = () => {  
+  const styles = {
+      width: 300,
+      height: 300,
+      resizeMode: 'cover'
+      
+  };
   var url_imagenes = useSelector(store=>store.vacuno.url_imagenes);
   const descargarPdf = () => {
     console.log("Descargando pdf");
@@ -48,24 +54,27 @@ const Listado = () => {
             <CardBody>
               <Table id="listVacunos">
                 <thead>
-                  <tr>
-                    <th scope="col">N°</th>
+                  <tr className="align-middle">
+                    <th scope="col">Imagen</th>
                     <th scope="col">Nombre</th>
+                    <th scope="col">DIIO</th>
+                    <th scope="col">Fecha colocación</th>
                     <th scope="col">Fecha nacimiento</th>
                     <th scope="col">Sexo</th>
                     <th scope="col">Raza</th>
-                    <th scope="col">Imagen</th>
                   </tr>
                 </thead>
                 <tbody>
                   {vacunos.map(vac=>{
                     return (<tr key={vac.id} >
-                    <th>{vac.id}</th>
+                    <td><img height={styles.height} width={styles.width} src={url_imagenes+vac.id+".jpg"}/></td>
                     <td>{vac.nombre}</td>
+                    <td>{vac.numero}</td>
+                    <td>{vac.fecha_colocacion}</td>
                     <td>{vac.fecha_nacimiento}</td>
                     <td>{vac.sexo}</td>
                     <td>{vac.raza}</td>
-                    <td><img height={34} src={url_imagenes+vac.id+".jpg"}/></td>
+                    
                   </tr>);} )}
                 </tbody>
               </Table>
