@@ -32,7 +32,7 @@ export const get = (url, parameters) => {
   const datas = {
     params: parameters
   };
-  return instance.get(url, datas);
+  return instance.get(url, parameters);
 };
 
 export const post = (url, parameters) => {
