@@ -48,9 +48,8 @@ Route::post('login', function (Request $request) {
     }
     else{
     	return response([
-            'status_code' => 401,
-
-        ], 200);
+            'status_code' => 401
+        ], 401);
     }
 })->middleware('cors');
 

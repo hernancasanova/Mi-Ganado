@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Card, CardBody, CardHeader, Col, Row, Button, FormFeedback, FormGroup, FormText, Input, Label, UncontrolledAlert } from 'reactstrap';
 import * as actions from '../actions/VacunoActions';
-import ganado_vacuno from '../../src/assets/img/logo/019017472.jpg';
 import { jsPDF } from "jspdf";
 import 'jspdf-autotable';
 import PageSpinner from '../components/PageSpinner';
@@ -18,9 +17,7 @@ const RegistrarVacuno = () => {
     let raza = document.getElementById("raza").value;
     let estado = document.getElementById("estado").value;
     let fecha_venta = document.getElementById("fecha_venta").value;
-    //let imagen2 = document.getElementById("imagen_vacuno").files[0];
     let imagen = document.querySelector('input[type="file"]').files[0];
-    //imagen.name="test";
     var datosVacuno = new FormData();
     datosVacuno.append("nombre",nombre);
     datosVacuno.append("fecha_nacimiento",fecha_nacimiento);
@@ -50,10 +47,25 @@ const RegistrarVacuno = () => {
             'icon': "success",
             'timer': 4000,
             'confirmButtonText': 'Aceptar'
-        });
+          });
+        }
+        else{
+          Swal.fire({
+            'icon': 'error',
+            'title': 'Oops...',
+            'text': 'Algo salió mal!',
+            'confirmButtonText': 'Intentelo nuevamente',
+            'footer': '<a href="javascript:location.reload(true)">Por favor recargue la página si el problema persiste</a>'
+          })
         }
       })
-    .catch(error=>{console.log("error en crear arete: ",error)});
+    .catch(error=>{Swal.fire({
+      'icon': 'error',
+      'title': 'Oops...',
+      'text': 'Algo salió mal!',
+      'confirmButtonText': 'Intentelo nuevamente',
+      'footer': '<a href="javascript:location.reload(true)">Por favor recargue la página si el problema persiste</a>'
+    })});
   }
   const dispatch = useDispatch();
   //useEffect(()=>{
@@ -150,6 +162,7 @@ const RegistrarVacuno = () => {
                   id="imagen_vacuno"
                   //placeholder="Ej: 2021-04-06"
                 />
+                <FormText>Tamaño máximo 2 MB</FormText>
               </FormGroup>
               <Button className="ml-10" onClick={registrar_vacuno}>Registrar vacuno</Button>
             </CardBody>
