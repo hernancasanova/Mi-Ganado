@@ -1,12 +1,14 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Spinner } from 'reactstrap';
+import { Spinner, Row } from 'reactstrap';
 
-const PageSpinner = ({ color = 'primary' }) => {
-  return (
-    <div className="cr-page-spinner">
-      <Spinner color={color} />
+const PageSpinner = ({ color = 'primary', texto }) => {
+  return ( 
+    <>
+    <div className="cr-page-spinner" >
+      <Spinner color={color} style={{marginRight: 20}}/>{texto}
     </div>
+    </>
   );
 };
 

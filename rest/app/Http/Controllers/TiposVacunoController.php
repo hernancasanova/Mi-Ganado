@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\TiposVacuno;
 use Illuminate\Http\Request;
+use DB;
 
 class TiposVacunoController extends Controller
 {
@@ -14,7 +15,11 @@ class TiposVacunoController extends Controller
      */
     public function index()
     {
-        //
+        $tiposVacunos=DB::table('tipos_vacunos')->select('tipos_vacunos.*')->get();
+        return response([
+            'tiposVacunos'=> $tiposVacunos,
+            'status_code' => 200,
+        ], 200);
     }
 
     /**
