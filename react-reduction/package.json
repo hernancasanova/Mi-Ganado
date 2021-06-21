@@ -8,7 +8,7 @@
     "axios": "^0.19.2",
     "base64-img": "^1.0.4",
     "bootstrap": "4.3.1",
-    "chart.js": "2.7.2",
+    "chart.js": "2.9.4",
     "classnames": "^2.2.6",
     "connected-react-router": "^6.9.1",
     "d3-geo": "^1.11.3",
