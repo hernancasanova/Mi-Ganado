@@ -4,9 +4,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Card, CardBody, CardHeader, Col, Row, Table, Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import * as actions from '../actions/VacunoActions';
 import { jsPDF } from "jspdf";
-import 'jspdf-autotable'
+import 'jspdf-autotable';
+import PageSpinner from '../components/PageSpinner';
+import Swal from 'sweetalert2';
 
-const Listado = () => {  
+const Listado = (props) => {  
   const styles = {
       width: 300,
       height: 300,
@@ -14,6 +16,8 @@ const Listado = () => {
       
   };
   var url_imagenes = useSelector(store=>store.vacuno.url_imagenes);
+  var loading = useSelector(store=>store.vacuno.loading);
+  var vacunosBuscados = useSelector(store=>store.vacuno.vacunosBuscados);
   const descargarPdf = () => {
     console.log("Descargando pdf");
     var pdf = new jsPDF('p', 'pt', 'letter');
@@ -38,10 +42,22 @@ const Listado = () => {
   },[]);
   var vacunos = useSelector(store=>store.vacuno.vacunos);
   var url_imagenes = useSelector(store=>store.vacuno.url_imagenes); 
-  console.log("VACUNOS DESDE EL BODY DEL COMPONENTE FUNCIONAL LISTADO: ",vacunos);
+  if(vacunosBuscados && vacunos.length===0){
+    Swal.fire({
+      'icon': 'info',
+      'title': 'No se encontraron vacunos',
+      'confirmButtonText': 'Registrar vacuno',
+      'footer': '<a href="javascript:location.reload(true)">Favor recargue la página si existe algun problema</a>',
+      'allowOutsideClick': false
+    }).then((result) => {
+      if (result.isConfirmed) {
+        props.history.push("registrar_vacuno");
+      }
+    })
+  }
   return (
     <Page
-      title="Listado de animales"
+      title="Listado de vacunos"
       breadcrumbs={[{ name: 'listado', active: true }]}
       className="TablePage"
     >
@@ -51,7 +67,7 @@ const Listado = () => {
             <CardHeader>Actualizado al 
               <Button disabled={vacunos.length===0} style={{float:'right'}} className="ml-10" onClick={descargarPdf}>Descargar pdf </Button>
             </CardHeader>
-            <CardBody>
+            <CardBody>{loading?<PageSpinner texto="cargando listado" />:
               <Table id="listVacunos">
                 <thead>
                   <tr className="align-middle">
@@ -77,13 +93,13 @@ const Listado = () => {
                     
                   </tr>);} )}
                 </tbody>
-              </Table>
+              </Table>}
             </CardBody>
           </Card>
         </Col>
       </Row>
     </Page>
-  );
+                    );
 }
 
 export default Listado;

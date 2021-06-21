@@ -29,6 +29,7 @@ const ModalPage = React.lazy(() => import('pages/ModalPage'));
 //const Bienvenida = React.lazy(() => import('pages/Bienvenida'));
 const Listado = React.lazy(() => import('pages/Listado'));
 const RegistrarVacuno = React.lazy(() => import('pages/RegistrarVacuno'));
+//const RegistrarVacuno = React.lazy(() => import('pages/ReactHookForm'));
 const RegistrarArete = React.lazy(() => import('pages/RegistrarArete'));
 const TypographyPage = React.lazy(() => import('pages/TypographyPage'));
 const WidgetPage = React.lazy(() => import('pages/WidgetPage'));//

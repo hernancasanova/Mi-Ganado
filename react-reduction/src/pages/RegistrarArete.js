@@ -1,25 +1,28 @@
 import Page from 'components/Page';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Card, CardBody, CardHeader, Col, Row, Button, FormFeedback, FormGroup, FormText, Input, Label, UncontrolledAlert } from 'reactstrap';
-import * as actions from '../actions/VacunoActions';
+import { Card, CardBody, CardHeader, Col, Row, Spinner, Button, FormFeedback, FormGroup, FormText, Input, Label, UncontrolledAlert } from 'reactstrap';
+import * as actions from '../actions/AreteActions';
+import * as vacunoActions from '../actions/VacunoActions';
 import ganado_vacuno from '../../src/assets/img/logo/019017472.jpg';
 import { jsPDF } from "jspdf";
 import 'jspdf-autotable';
+import {Link} from 'react-router-dom';
 import PageSpinner from '../components/PageSpinner';
 import Swal from 'sweetalert2';
+import { useForm } from "react-hook-form";
 
-const RegistrarArete = () => {  
-  const registrar_arete = () => {
+const RegistrarArete = (props) => {  
+  /*const registrar_arete = () => {
     let numero = document.getElementById('diio').value;
-    let vacuno_id = document.getElementById('vacuno_id').value;
+    let khbkvacuno_id = document.getElementById('jbjbvacuno_id').value;
     let fecha_colocacion = document.getElementById("fecha_colocacion").value;
     fetch("http://localhost:8000/api/aretes",{method: 'post',
     headers: {
       'Accept': 'application/json, text/plain, *',
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({numero, vacuno_id, fecha_colocacion})})
+    body: JSON.stringify({numero, ytfugyvacuno_id, fecha_colocacion})})
     .then(result => { return result.json() })
     .then(data => {
         if(data.status_code===200){
@@ -32,21 +35,81 @@ const RegistrarArete = () => {
         }
       })
     .catch(error=>{console.log("error en crear arete: ",error)});
-  }
-  const dispatch = useDispatch();
+  }*/
   //useEffect(()=>{
   //   dispatch(actions.listadoAnimales());
   //},[]);
   //const [numero, onChange] = useState(0);
-  const [arete_registrado, AreteRegistrado]= useState(false);
+  //const [arete_registrado, AreteRegistrado]= useState(false);
+  /*const handleSelectChange = (e) => {
+    console.log("ID: ",e.target.value);
+  }*/
+  /*useEffect(()=>{
+     dispatch(actions.crearVacuno(nombre, fecha_nacimiento, sexo, tipo_vacuno, raza, estado, fecha_venta));
+  },[]);*/
+  /*if(vacunos.length===0){
+    dispatch(vacunoActions.listadoAnimales());
+  }*/
+  /*useEffect(()=>{
+    if(!hayVacunos && vacunos.length===0){
+      Swal.fire({
+        'icon': 'error',
+        'title': 'No existen vacunos aún',
+        'text': 'Debe registrar un vacuno antes de un arete',
+        'confirmButtonText': 'Registrar vacuno',
+        'allowOutsideClick': false
+      }).then((result) => {
+        if (result.isConfirmed) {
+          console.log("YENDO A CREAR VACUNO");
+          props.history.push("registrar_vacuno");
+        }
+      })
+    }
+  },[loadingVacunos]);*/
+  //var numero = document.getElementById('diio').value;
+  //var ihiuhvacuno_id = document.getElementById('ytfgyuvacuno_id').value;
+  //var fecha_colocacion = document.getElementById("fecha_colocacion").value;
   const [vacuno_id, handleSelectChange] = useState("");
   var vacunos = useSelector(store=>store.vacuno.vacunos);
+  var loading = useSelector(store=>store.arete.loading);
+  var loadingVacunos = useSelector(store=>store.vacuno.loading);
   var url_imagenes = useSelector(store=>store.vacuno.url_imagenes);
-  /*const handleSelectChange = (e) => {
-    vacuno_id=e.target.value;
-  }*/
-  if(vacunos.length===0){
-    dispatch(actions.listadoAnimales());
+  var vacunosBuscados = useSelector(store=>store.vacuno.vacunosBuscados);
+  var areteCreado = useSelector(store=>store.arete.areteCreado);
+  //var vtyfguvacuno_id="";
+  const dispatch = useDispatch();
+  const { register, handleSubmit, watch, formState: { errors } } = useForm();
+  console.log("vacuno_id: ",vacuno_id);
+  useEffect(()=>{
+    console.log("buscando animales para registrar aretes");
+    dispatch(vacunoActions.listadoAnimales());
+  },[]);
+  const onsubmit = data => {
+    console.log(data);
+    dispatch(actions.crearArete(data.numero, data.vacuno, data.fecha_colocacion));
+  };
+  if(vacunosBuscados && vacunos.length===0){
+    Swal.fire({
+      'icon': 'error',
+      'title': 'No se encontraron vacunos',
+      'text': 'Debe registrar un vacuno antes de un arete',
+      'confirmButtonText': 'Registrar vacuno',
+      'footer': '<a href="javascript:location.reload(true)">Por favor recargue la página si el problema persiste</a>',
+      'allowOutsideClick': false
+    }).then((result) => {
+      if (result.isConfirmed) {
+        console.log("YENDO A CREAR VACUNO");
+        props.history.push("registrar_vacuno");
+      }
+    })
+  }
+  if(areteCreado){
+    Swal.fire({
+      'html': "Arete agregado correctamente",
+      'icon': "success",
+      'timer': 4000,
+      'confirmButtonText': 'Aceptar'
+    });
   }
   return (
     <Page
@@ -56,43 +119,58 @@ const RegistrarArete = () => {
     >
       <Row>
         <Col>
-        {vacunos.length>0?<>
+        {!loadingVacunos?<>
           <Card className="mb-3">
             <CardHeader> 
             </CardHeader>
             <CardBody>
-              <FormGroup>
-                <Label for="diio">DIIO</Label>
-                <Input
-                  type="number"
-                  name="numero"
-                  id="diio"
-                  placeholder="Ej: 019017472"
-                />
-              </FormGroup>
-              <FormGroup>
-                <Label for="fecha_colocacion">Fecha colocación</Label>
-                <Input
-                  type="date"
-                  name="fecha_colocacion"
-                  id="fecha_colocacion"
-                  placeholder="Ej: 2021-04-06"
-                />
-              </FormGroup>
-              {/*<SelectVacuno />*/}
-              <FormGroup>
-                  <Label for="vacuno_id">Seleccione vacuno a asignar el arete</Label>
-                  <Input type="select" id="vacuno_id" name="vacuno_id" onChange={(e)=>handleSelectChange(e.target.value)}>
-                      <option val="">Seleccione</option>
-                  {vacunos.map(vac=>{
-                      return (<option key={vac.id} value={vac.id}>{vac.nombre}</option>);} )}
-                  </Input>
-              </FormGroup>
-              {vacuno_id!=="" && <FormGroup>
-                  <Label for="">Vacuno seleccionado:</Label>{' '}
-                  <img height={100} width={100} src={url_imagenes+vacuno_id+".jpg"}/>
-              </FormGroup>}
-              <Button className="ml-10" onClick={registrar_arete}>Registrar arete</Button>
+              <form onSubmit={handleSubmit(onsubmit)}>
+                <FormGroup>
+                  <Label for="diio">DIIO</Label>
+                  <Input
+                    type="number"
+                    name="numero"
+                    id="diio"
+                    placeholder="Ej: 019017472"
+                    {...register("numero", { required: {value: true, message: "El campo DIIO es requerido"}, maxLength: {value: 9, message: "Máximo 9 dígitos"} })}
+                  />
+                  <span className="text-danger text-small d-block mb-2">
+                    {errors.numero &&  errors.numero.message}
+                  </span>
+                </FormGroup>
+                <FormGroup>
+                  <Label for="fecha_colocacion">Fecha colocación</Label>
+                  <Input
+                    type="date"
+                    name="fecha_colocacion"
+                    id="fecha_colocacion"
+                    placeholder="Ej: 2021-04-06"
+                    {...register("fecha_colocacion", { required: {value: true, message: "La fecha de colocación es requerida"} })}
+                  />
+                  <span className="text-danger text-small d-block mb-2">
+                    {errors.fecha_colocacion &&  errors.fecha_colocacion.message}
+                  </span>
+                </FormGroup>
+                <FormGroup>
+                    <Label for="">Seleccione vacuno a asignar el arete</Label>
+                    <Input type="select" name="vacuno_id"
+                    {...register("vacuno", { required: {value: true, message: "El vacuno es requerido"} })}
+                    onChange={(e)=>{handleSelectChange(e.target.value)}}
+                    >
+                        <option val="">Seleccione</option>
+                    {vacunos.map(vac=>{
+                        return (<option key={vac.id} value={vac.id}>{vac.nombre}</option>);} )} 
+                    </Input>
+                    <span className="text-danger text-small d-block mb-2">
+                      {errors.vacuno &&  errors.vacuno.message}
+                    </span>
+                </FormGroup>
+                {vacuno_id && <FormGroup>
+                    <Label for="">Vacuno seleccionado:</Label>{' '}
+                    <img height={100} width={100} src={url_imagenes+vacuno_id+".jpg"}/>
+                </FormGroup>}
+                <Button className="ml-10">{!loading?"Registrar arete":<>{"Registrando arete...  "}<Spinner/></>}</Button>
+              </form>
             </CardBody>
           </Card></>:<PageSpinner />}
         </Col>
