@@ -2,30 +2,19 @@
 import ganadovacunoImage from 'assets/img/logo/ganado_vacuno.png';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Button, Form, FormGroup, FormText, Input, Label } from 'reactstrap';
+import { Button, Form, FormGroup, Input, Label } from 'reactstrap';
 import {signIn, register, auth} from '../actions/AuthActions';
 import {connect} from 'react-redux';
 import {Link, Redirect, withRouter} from 'react-router-dom';
-import PageSpinner from './PageSpinner';
-import isEmail from 'validator/es/lib/isEmail';
+import Alert from 'reactstrap/lib/Alert';
 
  
 class AuthForm extends React.Component {
   constructor(props) {
     super(props);
     const { isRegistered } = props;
-    this.state = {userLogged: '',
-                  username:'', 
-                  email: '', 
-                  password: '', 
-                  confirmPassword: '',
-                  api_token: '', 
-                  isRegistered, 
-                  validUsername: false, 
-                  validEmail: false,
-                  validPassword: false};
+    this.state = {userLogged: '' , username:'', email: '', password: '', api_token: '' , isRegistered};
     this.handleChange=this.handleChange.bind(this);
-    //this.estadoBoton=this.estadoBoton.bind(this);
   }
 
   get isSignup() {//determina texto del botón de formulario de inicio de sesión/registro
@@ -33,28 +22,14 @@ class AuthForm extends React.Component {
   }
 
 
-  /*componentDidMount(){//si se accede desde la url, por ejemplo
-    console.log("desde did mount")
-    const {userLogged, history} =this.props;
-    let api_token=localStorage.getItem('api_token');//modificar ya que debe obtenerse desde el store
-    if(api_token){//Si el usuario ha iniciado sesión
-      history.push("/");
-      console.log("El usuario "+userLogged+" ha iniciado sesión desde mount");
-    }
-  }*/
-
-  /*componentDidUpdate(){//si se actualiza el store al iniciar sesión
-    console.log("Desde did update");
+  componentDidUpdate(){
     const {userLogged, api_token, history} =this.props;
-    if(userLogged){//si el usuario ha iniciado sesion
-      //localStorage.setItem('api_token', api_token);//modificar ya que debe obtenerse desde el store
-      //CUANDO SE TRABAJE CON EL STORE
-      //const {api_token} =this.props;
-      //localStorage.setItem('api_token',api_token);PUEDE SER NO NECESARIO
+    if(userLogged.length>0){
+      localStorage.setItem('api_token',api_token);
       history.push("/");
       console.log("El usuario "+userLogged+" ha iniciado sesión");
     }
-  }*/
+  }
 
   handleSubmit = event => {
     console.log("CLICKEADO HANDLESUBMIT");
@@ -69,57 +44,12 @@ class AuthForm extends React.Component {
     }
   };
 
-  estadoBoton(){
-    if(!this.isSignup){
-      return false;
-    }
-    const {validUsername, validEmail, validPassword}= this.state;
-    if(validUsername && validEmail && validPassword){
-      console.log("CAMPOS VALIDOS");
-      return false;
-    }else{
-      return true;
-    }
-  }
-
   handleChange(e){
-    const {username, email, password}=this.state;
     const value=e.target.value;
-    const input=e.target.name;
     this.setState({
       [e.target.name]:value
     });
-    if (input==="username"){
-      //if(username.length>2 && username.length<7){
-      if(username.length>0 && username.length<6){
-        this.setState({validUsername:true});
-      
-      }
-      else{
-        this.setState({validUsername:false});
-      }
-    }
-    else if (input==="email"){
-      if(isEmail(email)){
-        this.setState({validEmail:true});
-      
-      }
-      else{
-        this.setState({validEmail:false});
-      }
-    }
-    else{//si es password
-      //if(5<password.length && password.length<9 && this.isSignup){
-      if(4<password.length && password.length<8 && this.isSignup){
-        this.setState({validPassword:true});
-      
-      }
-      else{
-        this.setState({validPassword:false});
-      }
-    }
   }
-
 
   renderButtonText() {
     if (this.isSignup) {
@@ -131,7 +61,6 @@ class AuthForm extends React.Component {
   }
 
   render() {
-    console.log("RENDERIZADO!!");
     const {
       showLogo,
       usernameLabel,
@@ -144,51 +73,49 @@ class AuthForm extends React.Component {
       confirmPasswordInputProps,
       children,
       signIn,
+      isRegistered,
       api_token,
-      loading,
       history
     } = this.props;
-    const { username, email, password, confirmPassword, validEmail, validPassword, validUsername } = this.state;
-    return (<>
+    return (
       <Form onSubmit={this.handleSubmit}>
+        {isRegistered && <Redirect to="/login" />
+         }
         <div className="text-center pb-4">
           <h5>Plataforma de gestión de vacunos</h5>
         </div>
-        <div className="text-center pb-4">
-          <img
-            src={ganadovacunoImage}
-            className="rounded"
-            style={{ width: 201, height: 60}}
-            alt="logo"
-          />
-        </div>
+        {showLogo && (
+          <div className="text-center pb-4">
+            <img
+              src={ganadovacunoImage}
+              className="rounded"
+              style={{ width: 201, height: 60, cursor: 'pointer' }}
+              alt="logo"
+            />
+          </div>
+        )}
       {this.isSignup && (
-        <FormGroup>
+          <FormGroup>
           <Label for={usernameLabel}>{usernameLabel}</Label>
-          <Input {...usernameInputProps} value={username} name="username" onChange={this.handleChange} invalid={!validUsername && username.length>0}  valid={validUsername}/>
-          <FormText>Ingrese entre 2 a 6 caracteres</FormText>
+          <Input {...usernameInputProps} value={this.state.username} name="username" onChange={this.handleChange} />
         </FormGroup>
         )}
         <FormGroup>
           <Label for={emailLabel}>{emailLabel}</Label>
-          <Input {...emailInputProps} type="email" value={email} name='email' onChange={this.handleChange} valid={validEmail} invalid={!validEmail && email.length>0} />
-          <FormText>Ej: usuario@correo.com</FormText>
+          <Input {...emailInputProps} value={this.state.email} name='email' onChange={this.handleChange} />
         </FormGroup>
         <FormGroup>
           <Label for={passwordLabel}>{passwordLabel}</Label>
-          <Input {...passwordInputProps} value={password} name="password" onChange={this.handleChange} valid={validPassword} invalid={!validPassword && password.length>0} />
-          {this.isSignup && (<FormText>Ingrese entre 6 a 8 caracteres</FormText>)}
+          <Input {...passwordInputProps} value={this.state.password} name="password" onChange={this.handleChange} />
         </FormGroup>
-        {/*this.isSignup && (
+        {this.isSignup && (
           <FormGroup>
             <Label for={confirmPasswordLabel}>{confirmPasswordLabel}</Label>
-            <Input {...confirmPasswordInputProps} value={confirmPassword} onChange={this.handleChange}/>
-            <FormText>Ingrese la misma contraseña</FormText>
+            <Input {...confirmPasswordInputProps} />
           </FormGroup>
-        )*/}
+        )}
         <hr />
         <Button
-          disabled={this.estadoBoton()}
           size="lg"
           className="bg-gradient-theme-left border-0"
           block
@@ -208,8 +135,9 @@ class AuthForm extends React.Component {
             )}
           </h6>
         </div>
-        {}
-      </Form></>
+
+        {children}
+      </Form>
     );
   }
 }
@@ -259,8 +187,7 @@ AuthForm.defaultProps = {
 const mapStateToProps = state => ({
   userLogged: state.auth.userLogged,
   api_token: state.auth.api_token,
-  isRegistered: state.auth.isRegistered,
-  loading: state.auth.loading
+  isRegistered: state.auth.isRegistered
 });
 
 export default connect(

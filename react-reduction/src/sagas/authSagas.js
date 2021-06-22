@@ -19,10 +19,6 @@ function* signIn({ payload }) {
     const response = yield call(post, 'api/login', data);
     console.log("response del login: ");
     console.log(response);
-    if(response.status===200){
-      localStorage.setItem('api_token',response.data.api_token);
-    }
-    //local
     //localStorage.setItem('token', response.data.access_token);
     //localStorage.setItem('token.expiresIn', response.data.expires_in);
     yield put({ type: AUTH_SIGNIN_SUCCESS, payload: response.data });
@@ -30,7 +26,7 @@ function* signIn({ payload }) {
     //yield put(push(PATHS.HOME));
   } catch (error) {
     yield put({ type: AUTH_SIGNIN_FAILED, payload: error.data });
-    //localStorage.removeItem('token');
+    localStorage.removeItem('token');
   }
 }
 function* register({ payload }) {

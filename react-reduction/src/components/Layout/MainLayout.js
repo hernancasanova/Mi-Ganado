@@ -30,12 +30,24 @@ class MainLayout extends React.Component {
       }
 
       this.notificationSystem.addNotification({
-        //title: <MdImportantDevices />,
-        message: 'Bienvenido a la plataforma de gestión de vacunos appAn2.1',
+        title: <MdImportantDevices />,
+        message: 'Welome to Reduction Admin!',
         level: 'info',
       });
-    }, 2000);
+    }, 1500);
 
+    setTimeout(() => {
+      if (!this.notificationSystem) {
+        return;
+      }
+
+      this.notificationSystem.addNotification({
+        title: <MdLoyalty />,
+        message:
+          'Reduction is carefully designed template powered by React and Bootstrap4!',
+        level: 'info',
+      });
+    }, 2500);
   }
 
   // close sidebar when

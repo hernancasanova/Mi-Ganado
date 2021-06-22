@@ -19,17 +19,15 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::resource('users','UserController')->middleware("cors");
+Route::resource('users','UserController');
 
 //Route::resource('vacunos','VacunoController');//->middleware('auth:api');
 
-Route::apiResource('tiposvacunos','TiposVacunoController')->middleware("cors");
+Route::apiResource('vacunos','VacunoController');
 
-Route::resource('vacunos','VacunoController')->middleware("cors");
+Route::apiResource('aretes','AreteController');
 
-Route::apiResource('aretes','AreteController')->middleware("cors");
-
-Route::post('register','RegisterController@register')->middleware("cors");
+Route::post('register','RegisterController@register');
 
 Route::post('login', function (Request $request) {
     //if (auth()->attempt(['email' => $request->input('email'), 'password' => $request->input('password')])) {
@@ -48,10 +46,11 @@ Route::post('login', function (Request $request) {
     }
     else{
     	return response([
-            'status_code' => 401
-        ], 401);
+            'status_code' => 401,
+
+        ], 200);
     }
-})->middleware('cors');
+});
 
 Route::middleware('auth:api')->post('logout', function (Request $request) {
     if (auth()->user()) {
@@ -66,4 +65,4 @@ Route::middleware('auth:api')->post('logout', function (Request $request) {
                 'status_code' => 401,
             ], 200);
     }
-})->middleware("cors");
+});

@@ -13,15 +13,12 @@ import {
   
   const INITIAL_STATE = {
     userLogged: '',
-    userValid: true,
     //email: '',
     //password: '',
     api_token: '',
     errors: false,
     data: null,
     loading: false,
-    isLoginModalOpen: false,
-    isRegistered: false,
     /*user: MODO_OFFLINE
       ? {
           id: 1,
@@ -35,23 +32,20 @@ import {
           updated_at: '2019-10-15 18:30:19'
         }
       : null,*/
+    isLoginModalOpen: false,
+    isRegistered: false
   };
   
   export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
-      case AUTH_SIGNIN:
-        console.log("AUTH DESDE REDUCER AUTH_SIGNIN");
-        return { ...state, loading: true, errors: false, userValid: true }
       case AUTH_SIGNIN_FAILED:
-        console.log("ERROR DE SIGNIN: ",action.payload);
         return {
           ...state,
           loading: false,
-          errors:action.payload,
-          userValid: false
-            /*typeof action.payload !== 'undefined'
+          errors:
+            typeof action.payload !== 'undefined'
               ? action.payload
-              : { error: 'Servidor en mantención temporalmente' }*/
+              : { error: 'Servidor en mantención temporalmente' }
         };
       case AUTH_SIGNIN_SUCCESS:
         console.log("AUTH DESDE REDUCER AUTH_SIGNIN_SUCCESS");
@@ -61,11 +55,10 @@ import {
           //data: action.payload,
           //username: action.payload.user,
           userLogged: action.payload.user,
-          userValid: true,
           //email: action.payload.email,
           //password: action.payload.password,
           api_token: action.payload.api_token,
-          loading: false
+          loading: false,
           // tokenRefresh: action.payload.token.refreshToken,
           // tokenType: action.payload.token.tokenType,
           // expiresIn: action.payload.token.expiresIn,
@@ -73,7 +66,7 @@ import {
       
       case AUTH_REGISTER:
         console.log("AUTH DESDE REDUCER AUTH_REGISTER");
-        return {...state, loading: true, errors: false, userValid: true};
+        return {...state, loading: true, errors: false};
       case AUTH_REGISTER_FAILED:
         console.log("AUTH DESDE REDUCER AUTH_REGISTER_FAILED");
         return {...state, loading: false, errors: true};
@@ -84,11 +77,14 @@ import {
           errors: false,
           isRegistered: true
         };
-      /*case AUTH:
+      case AUTH:
         return {
           ...state,
           isRegistered:false
-        };*/
+        };
+      case AUTH_SIGNIN:
+        console.log("AUTH DESDE REDUCER AUTH_SIGNIN");
+        return { ...state, loading: true, errors: false };
       default:
         return state;
     }
