@@ -28,7 +28,6 @@ const InputGroupPage = React.lazy(() => import('pages/InputGroupPage'));
 const ModalPage = React.lazy(() => import('pages/ModalPage'));
 const ProgressPage = React.lazy(() => import('pages/ProgressPage'));
 const Listado = React.lazy(() => import('pages/Listado'));
-const RegistrarVacuno = React.lazy(() => import('pages/RegistrarVacuno'));
 const RegistrarArete = React.lazy(() => import('pages/RegistrarArete'));
 const TypographyPage = React.lazy(() => import('pages/TypographyPage'));
 const WidgetPage = React.lazy(() => import('pages/WidgetPage'));//
@@ -76,7 +75,6 @@ class App extends React.Component {
                 <Route exact path="/typography" component={TypographyPage} />
                 <Route exact path="/alerts" component={AlertPage} />
                 <Route exact path="/listado_vacunos" component={Listado} />
-                <Route exact path="/registrar_vacuno" component={RegistrarVacuno} />
                 <Route exact path="/registrar_arete" component={RegistrarArete} />
                 <Route exact path="/badges" component={BadgePage} />
                 <Route exact path="/button-groups" component={ButtonGroupPage} />

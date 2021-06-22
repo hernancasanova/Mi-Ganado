@@ -6,6 +6,7 @@ import * as actions from '../actions/VacunoActions';
 import ganado_vacuno from '../../src/assets/img/logo/019017472.jpg';
 import { jsPDF } from "jspdf";
 import 'jspdf-autotable';
+import SelectVacuno from '../components/SelectVacuno';
 import PageSpinner from '../components/PageSpinner';
 import Swal from 'sweetalert2';
 

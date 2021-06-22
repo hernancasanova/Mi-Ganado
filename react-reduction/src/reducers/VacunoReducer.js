@@ -1,12 +1,11 @@
 /* eslint-disable no-undef */
 import {
-    VACUNO_LIST_REQUEST, VACUNO_LIST_SUCCESS, TIPOS_VACUNOS_LIST_REQUEST, TIPOS_VACUNOS_LIST_SUCCESS
+    VACUNO_LIST_REQUEST, VACUNO_LIST_SUCCESS
   } from '../actionstypes/types';
   
   
   const INITIAL_STATE = {
     vacunos:[],
-    tipos_vacunos:[],
     url_imagenes: "http://localhost:8000/storage/imagenes/"
   };
   
@@ -18,10 +17,6 @@ import {
       case VACUNO_LIST_SUCCESS:
         return {...state, vacunos: action.payload};
         //return { ...state, vacunos: [action.payload, ...state.vacunos] };
-      case TIPOS_VACUNOS_LIST_REQUEST:
-        return {...state};
-      case TIPOS_VACUNOS_LIST_SUCCESS:
-        return {...state, tipos_vacunos: action.payload};
       default:
         return state;
     }

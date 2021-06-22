@@ -16,11 +16,6 @@ export const VACUNO_LIST_FAILED = 'vacuno_list_failed';
 export const VACUNO_LIST_SUCCESS = 'vacuno_list_success';
 
 
-export const TIPOS_VACUNOS_LIST_REQUEST = 'tipos_vacunos_list_request';
-export const TIPOS_VACUNOS_LIST_FAILED = 'tipos_vacunos_list_failed';
-export const TIPOS_VACUNOS_LIST_SUCCESS = 'tipos_vacunos_list_success';
-
-
 export const VACUNO_CREATE_REQUEST = 'vacuno_create_request';
 export const VACUNO_CREATE_FAILED = 'vacuno_create_failed';
 export const VACUNO_CREATE_SUCCESS = 'vacuno_create_success';

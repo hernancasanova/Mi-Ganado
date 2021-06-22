@@ -3,35 +3,27 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Card, CardBody, CardHeader, Col, Row, Table, Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import * as actions from '../actions/VacunoActions';
+import ganado_vacuno from '../../src/assets/img/logo/019017472.jpg';
 import { jsPDF } from "jspdf";
 import 'jspdf-autotable'
 
 const Listado = () => {  
-  const styles = {
-      width: 300,
-      height: 300,
-      resizeMode: 'cover'
-      
-  };
-  var url_imagenes = useSelector(store=>store.vacuno.url_imagenes);
   const descargarPdf = () => {
     console.log("Descargando pdf");
     var pdf = new jsPDF('p', 'pt', 'letter');
-    var id;
+    var tabla = document.getElementById("listVacunos");
     pdf.autoTable({
       html: "#listVacunos",
-      bodyStyles: {minCellHeight: 50},
+      bodyStyles: {minCellHeight: 15},
       didDrawCell: function(data) {
-        if(data.column.index===0 && data.cell.section === 'body'){
-          id=data.cell.text[0];
-        }
         if (data.column.index === 5 && data.cell.section === 'body') {
-          pdf.addImage("http://localhost:8000/api/vacunos/"+id, 'JPEG', data.cell.x + 15, data.cell.y + 2, 50, 50)
+           pdf.addImage(ganado_vacuno, 'JPEG', data.cell.x + 15, data.cell.y + 2, 30, 20)
         }
       }
     });
     pdf.save("Listado_animales.pdf");
   }
+  const [modalPdf, showPdf] = useState(false);
   const dispatch = useDispatch();
   useEffect(()=>{
     dispatch(actions.listadoAnimales());
@@ -54,27 +46,24 @@ const Listado = () => {
             <CardBody>
               <Table id="listVacunos">
                 <thead>
-                  <tr className="align-middle">
-                    <th scope="col">Imagen</th>
+                  <tr>
+                    <th scope="col">N°</th>
                     <th scope="col">Nombre</th>
-                    <th scope="col">DIIO</th>
-                    <th scope="col">Fecha colocación</th>
                     <th scope="col">Fecha nacimiento</th>
                     <th scope="col">Sexo</th>
                     <th scope="col">Raza</th>
+                    <th scope="col">Imagen</th>
                   </tr>
                 </thead>
                 <tbody>
                   {vacunos.map(vac=>{
-                    return (<tr key={vac.id} >
-                    <td><img height={styles.height} width={styles.width} src={url_imagenes+vac.id+".jpg"}/></td>
+                    return (<tr key={vac.id} className="table-info">
+                    <th>{vac.id}</th>
                     <td>{vac.nombre}</td>
-                    <td>{vac.numero}</td>
-                    <td>{vac.fecha_colocacion}</td>
                     <td>{vac.fecha_nacimiento}</td>
                     <td>{vac.sexo}</td>
                     <td>{vac.raza}</td>
-                    
+                    <td><img height={34} src={url_imagenes+vac.id+".jpg"}/></td>
                   </tr>);} )}
                 </tbody>
               </Table>
@@ -82,6 +71,29 @@ const Listado = () => {
           </Card>
         </Col>
       </Row>
+      {/*<Row>
+        <Modal
+          isOpen={modalPdf}
+          //toggle={this.toggle()}
+          //className={this.props.className}
+          size="xl"
+          >
+          <ModalHeader>Listado de animales</ModalHeader>
+          <ModalBody>
+            <PDFViewer>
+              <PdfListado />
+            </PDFViewer>
+          </ModalBody>
+          <ModalFooter>
+            <Button color="primary" onClick={descargarPdf}>
+              Descargar
+            </Button>{' '}
+            <Button color="secondary" onClick={()=>showPdf(!modalPdf)}>
+              Cancelar
+            </Button>
+          </ModalFooter>
+        </Modal>
+      </Row>*/}
     </Page>
   );
 }
