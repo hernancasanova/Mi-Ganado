@@ -30,8 +30,8 @@ class VacunoController extends Controller
                     ->leftJoin('aretes','vacunos.id','=','aretes.vacuno_id')
                     //->select('vacunos.id','vacunos.nombre','vacunos.fecha_nacimiento','vacunos.sexo','vacunos.tipos_vacunos_id','vacunos.raza','vacunos.estado','vacunos.fecha_venta','aretes.fecha_colocacion',DB::raw('SUM(aretes.numero) as DIIO'))
                     //->select('vacunos.id','vacunos.nombre','vacunos.fecha_nacimiento','vacunos.sexo','vacunos.tipos_vacunos_id','vacunos.raza','vacunos.estado','vacunos.fecha_venta',DB::raw('MAX(aretes.fecha_colocacion) as fecha_colocacion')
-                    //->select('vacunos.id','vacunos.nombre','vacunos.fecha_nacimiento','vacunos.sexo','vacunos.tipos_vacunos_id','vacunos.raza','vacunos.estado','vacunos.fecha_venta','aretes.numero','aretes.fecha_colocacion')//ESTA FUNCIONA
-                    ->select('vacunos.id','vacunos.nombre','vacunos.fecha_nacimiento','vacunos.sexo','vacunos.tipos_vacunos_id','vacunos.raza','vacunos.estado','vacunos.fecha_venta',DB::raw('select numero, fecha_colocacion from aretes where estado="activo"'))//ESTA FUNCIONA                    
+                    ->select('vacunos.id','vacunos.nombre','vacunos.fecha_nacimiento','vacunos.sexo','vacunos.tipos_vacunos_id','vacunos.raza','vacunos.estado','vacunos.fecha_venta','aretes.numero','aretes.fecha_colocacion')//ESTA FUNCIONA
+                    //->select('vacunos.id','vacunos.nombre','vacunos.fecha_nacimiento','vacunos.sexo','vacunos.tipos_vacunos_id','vacunos.raza','vacunos.estado','vacunos.fecha_venta',DB::raw('select numero, fecha_colocacion from aretes where estado="activo"'))//ESTA FUNCIONA                    
                     //->groupBy('vacunos.id','vacunos.nombre','vacunos.fecha_nacimiento','vacunos.sexo','vacunos.tipos_vacunos_id','vacunos.raza','vacunos.estado','vacunos.fecha_venta')
                     //->groupBy('vacunos.id')
                     //->where('aretes.estado','activo')
