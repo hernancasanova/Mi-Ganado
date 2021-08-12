@@ -18,35 +18,18 @@ class VacunoController extends Controller
      */
     public function index()
     {
-        //$vacunos=Vacuno::all();
-        /*$aretes=DB::table('aretes')
-                    ->select('vacuno_id',DB::raw('MAX(fecha_colocacion) as fecha_colocacion'))
-                    ->groupBy('vacuno_id')
-                    //->latest('fecha_colocacion')//solo obtiene un registro por tabla
-                    ->get();*/
-        //$aretes=$arete->addSelect('numero')->get();
         $vacunos=DB::table("vacunos")
-                    //->leftJoin('aretes','vacunos.id','=','aretes.vacuno_id')
                     ->leftJoin('aretes','vacunos.id','=','aretes.vacuno_id')
-                    //->select('vacunos.id','vacunos.nombre','vacunos.fecha_nacimiento','vacunos.sexo','vacunos.tipos_vacunos_id','vacunos.raza','vacunos.estado','vacunos.fecha_venta','aretes.fecha_colocacion',DB::raw('SUM(aretes.numero) as DIIO'))
-                    //->select('vacunos.id','vacunos.nombre','vacunos.fecha_nacimiento','vacunos.sexo','vacunos.tipos_vacunos_id','vacunos.raza','vacunos.estado','vacunos.fecha_venta',DB::raw('MAX(aretes.fecha_colocacion) as fecha_colocacion')
-                    ->select('vacunos.id','vacunos.nombre','vacunos.fecha_nacimiento','vacunos.sexo','vacunos.tipos_vacunos_id','vacunos.raza','vacunos.estado','vacunos.fecha_venta','aretes.numero','aretes.fecha_colocacion')//ESTA FUNCIONA
-                    //->select('vacunos.id','vacunos.nombre','vacunos.fecha_nacimiento','vacunos.sexo','vacunos.tipos_vacunos_id','vacunos.raza','vacunos.estado','vacunos.fecha_venta',DB::raw('select numero, fecha_colocacion from aretes where estado="activo"'))//ESTA FUNCIONA                    
-                    //->groupBy('vacunos.id','vacunos.nombre','vacunos.fecha_nacimiento','vacunos.sexo','vacunos.tipos_vacunos_id','vacunos.raza','vacunos.estado','vacunos.fecha_venta')
-                    //->groupBy('vacunos.id')
-                    //->where('aretes.estado','activo')
-                    //->where('vacunos.id','=','aretes.vacuno_id')//devuelve null
-                    //->latest('fecha_colocacion')
-                    //->join('aretes','=','aretes.','')
-                    ->get();
-        //$vacunos= $aretes->addSelect('aretes.numero')->get();
-
-        //$vacunos = Vacuno::all();
-        //$vacunos=Vacuno::find(1)->aretes()->get();
-        //$vacunos=DB::table('vacunos')->aretes()->get();
+                    ->select('vacunos.id','vacunos.nombre','vacunos.fecha_nacimiento','vacunos.sexo','vacunos.tipos_vacunos_id','vacunos.raza','vacunos.estado','vacunos.fecha_venta',DB::raw('MAX(aretes.fecha_colocacion) as fecha_colocacion'))//ESTA FUNCIONA
+                    ->groupBy('vacunos.id','vacunos.nombre','vacunos.fecha_nacimiento','vacunos.sexo','vacunos.tipos_vacunos_id','vacunos.raza','vacunos.estado','vacunos.fecha_venta');//FUNCIONA
+        $vacunos = DB::table('aretes')
+                   ->select('aretes.numero','fechaUltimosAretes.*')
+                  ->rightJoinSub($vacunos, 'fechaUltimosAretes', function ($join) {
+                      $join->on('aretes.fecha_colocacion', '=', 'fechaUltimosAretes.fecha_colocacion');
+                  })
+                  ->get();
         return response([
             'vacunos'=> $vacunos,
-            //'aretes'=> $aretes,
             'status_code' => 200,
         ], 200);
     }
