@@ -7,22 +7,27 @@ import { jsPDF } from "jspdf";
 import 'jspdf-autotable';
 import PageSpinner from '../components/PageSpinner';
 import Swal from 'sweetalert2';
+import * as moment from 'moment';
 
 const Listado = (props) => {  
   const styles = {
       width: 300,
       height: 300,
-      resizeMode: 'cover'
-      
+      resizeMode: 'cover',
+      textAlign: 'center',
+      verticalAlign: 'middle' 
   };
+  var fechaFormateada;
   var url_imagenes = useSelector(store=>store.vacuno.url_imagenes);
   var loading = useSelector(store=>store.vacuno.loading);
   var vacunosBuscados = useSelector(store=>store.vacuno.vacunosBuscados);
   const descargarPdf = () => {
     console.log("Descargando pdf");
     var pdf = new jsPDF('p', 'pt', 'letter');
-    var id;
-    var nColumna=20;
+    var nColumna=1;
+    var ids=[];
+    var i=0;
+    //var fecha;
     pdf.autoTable({
       html: "#listVacunos",
       columnStyles: {
@@ -36,17 +41,31 @@ const Listado = (props) => {
         7: {cellWidth: 'auto', minCellHeight: 80},
         // etc
       },
+      styles:{
+        valign: 'middle',
+        halign : 'center'
+      },
       //bodyStyles: {minCellHeight: 80, minCellWidth: 80},
       includeHiddenHtml: true,
-      didDrawCell: function(data) {
+      didParseCell: function(data) {
         console.log("data: ",data);
         if(data.column.index===0 && data.cell.section === 'body'){
-          //nColumna++;
-          id=data.cell.text[0];
-          //pdf.text(nColumna.toString(), data.cell.x, data.cell.y);
+          ids.push(data.cell.text[0]);
+          data.cell.text[0]=nColumna.toString();
+          nColumna++;
         }
-        else if(data.column.index === 1 && data.cell.section === 'body') {
-          pdf.addImage("http://localhost:8000/api/vacunos/"+id, 'JPEG', data.cell.x + 15, data.cell.y + 2, 80, 80)
+        /*if((data.column.index === 4 && data.cell.section === 'body')||(data.column.index === 5 && data.cell.section === 'body')){
+          //data.cell.text[0]=moment(data.cell.text[0], 'DD-MM-YYYY');
+          if(data.cell.text[0]!="Sin arete"){
+            fecha=data.cell.text[0].split('-');
+            data.cell.text[0] = [fecha[2],fecha[1],fecha[0] ].join("-");
+          }
+        }*/
+      },
+      didDrawCell: function(data) {
+        if(data.column.index === 1 && data.cell.section === 'body') {
+          pdf.addImage("http://localhost:8000/api/vacunos/"+ids[i], 'JPEG', data.cell.x + 15, data.cell.y + 2, 80, 80);
+          i++;
         }
       }
     });
@@ -71,6 +90,10 @@ const Listado = (props) => {
       }
     })
   }
+  const formatoFecha = (fecha) => {
+    fechaFormateada=fecha.split('-');
+    return [fechaFormateada[2],fechaFormateada[1],fechaFormateada[0] ].join("-");
+  }
   return (
     <Page
       title="Listado de vacunos"
@@ -80,13 +103,13 @@ const Listado = (props) => {
       <Row>
         <Col>
           <Card className="mb-3">
-            <CardHeader>Actualizado al 
+            <CardHeader>
               <Button disabled={vacunos.length===0} style={{float:'right'}} className="ml-10" onClick={descargarPdf}>Descargar pdf </Button>
             </CardHeader>
             <CardBody>{loading?<PageSpinner texto="cargando listado" />:
               <Table id="listVacunos">
                 <thead>
-                  <tr className="align-middle">
+                  <tr >
                     <th scope="col" hidden={true}>N°</th>
                     <th scope="col">Imagen</th>
                     <th scope="col">Nombre</th>
@@ -102,10 +125,10 @@ const Listado = (props) => {
                     return (<tr key={vac.id} >
                     <td hidden={true}>{vac.id}</td>
                     <td><img height={styles.height} width={styles.width} src={url_imagenes+vac.id+".jpg"}/></td>
-                    <td>{vac.nombre}</td>
+                    <td >{vac.nombre}</td>
                     <td>{vac.numero!=null?vac.numero:"Sin arete"}</td>
-                    <td>{vac.fecha_colocacion!=null?vac.fecha_colocacion: "Sin arete"}</td>
-                    <td>{vac.fecha_nacimiento}</td>
+                    <td>{vac.fecha_colocacion!=null?formatoFecha(vac.fecha_colocacion): "Sin arete"}</td>
+                    <td>{formatoFecha(vac.fecha_nacimiento)}</td>
                     <td>{vac.sexo}</td>
                     <td>{vac.raza}</td>
                   </tr>);} )}

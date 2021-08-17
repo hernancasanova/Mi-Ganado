@@ -164,14 +164,13 @@ const RegistrarVacuno = () => {
                     type="date"
                     name="fecha_nacimiento"
                     id="fecha_nacimiento"
-                    placeholder="Ej: 2021-04-06"
                   />
                   <span className="text-danger text-small d-block mb-2">
                     {errors.fecha_nacimiento &&  errors.fecha_nacimiento.message}
                   </span>
                 </FormGroup>
                 <FormGroup>
-                    <Label for="sexo">Sexo del vacuno</Label>
+                    <Label for="sexo">Sexo</Label>
                     <Input type="select" id="sexo" name="sexo" onChange={(e)=>handleSelectChange(e.target.value)} 
                     {...register("sexo", { required: {value: true, message: "El campo sexo es requerido"} })}>
                         <option val="">Seleccione</option>
@@ -183,7 +182,7 @@ const RegistrarVacuno = () => {
                     </span>
                 </FormGroup>
                 <FormGroup>
-                    <Label for="tipos_vacunos_id">Tipo del vacuno a registrar</Label>
+                    <Label for="tipos_vacunos_id">Tipo</Label>
                     <Input type="select" id="tipos_vacunos_id" name="tipos_vacunos_id" onChange={(e)=>handleSelectChange(e.target.value)}
                     {...register("tipo_vacuno", { required: {value: true, message: "El campo tipo de vacuno es requerido"} })}>
                         <option val="">Seleccione</option>
@@ -195,7 +194,7 @@ const RegistrarVacuno = () => {
                     </span>
                 </FormGroup>
                 <FormGroup>
-                    <Label for="raza">Color del vacuno</Label>
+                    <Label for="raza">Color</Label>
                     <Input type="select" id="raza" name="raza" onChange={(e)=>handleSelectChange(e.target.value)}
                     {...register("color", { required: {value: true, message: "El campo color es requerido"} })}>
                         <option val="">Seleccione</option>
@@ -210,7 +209,7 @@ const RegistrarVacuno = () => {
                     </span>
                 </FormGroup>
                 <FormGroup>
-                    <Label for="estado">Estado del vacuno</Label>
+                    <Label for="estado">Estado</Label>
                     <Input type="select" id="estado" name="estado" onChange={(e)=>handleSelectChange(e.target.value)}
                     {...register("estado", { required: {value: true, message: "El campo estado es requerido"} })}>
                         <option val="">Seleccione</option>
