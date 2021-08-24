@@ -128,11 +128,11 @@ const RegistrarArete = (props) => {
                 <FormGroup>
                   <Label for="diio">DIIO</Label>
                   <Input
-                    type="number"
+                    type="text"
                     name="numero"
                     id="diio"
                     placeholder="Ej: 019017472"
-                    {...register("numero", { required: {value: true, message: "El campo DIIO es requerido"}, maxLength: {value: 9, message: "Máximo 9 dígitos"} })}
+                    {...register("numero", { required: {value: true, message: "El campo DIIO es requerido"}, maxLength: {value: 9, message: "Máximo 9 dígitos"}, minLength: {value: 9, message: "Mínimo 9 dígitos"} })}
                   />
                   <span className="text-danger text-small d-block mb-2">
                     {errors.numero &&  errors.numero.message}

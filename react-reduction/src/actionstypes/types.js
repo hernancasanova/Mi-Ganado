@@ -29,3 +29,5 @@ export const VACUNO_CREATE_SUCCESS = 'vacuno_create_success';
 export const ARETE_CREATE_REQUEST = 'arete_create_request';
 export const ARETE_CREATE_FAILED = 'arete_create_failed';
 export const ARETE_CREATE_SUCCESS = 'arete_create_success';
+
+export const RESET = 'reset';

@@ -9,8 +9,9 @@ import rootReducer from './reducers/index'
 //import AuthReducer from './reducers/AuthReducer'
 //import VacunoReducer from './reducers/VacunoReducer'
 import { composeWithDevTools } from 'redux-devtools-extension';
-import { routerMiddleware } from 'connected-react-router'
-import { createBrowserHistory } from 'history'
+import { routerMiddleware } from 'connected-react-router';
+import './styles.css';
+import { createBrowserHistory } from 'history';
 
 
 export const history = createBrowserHistory();

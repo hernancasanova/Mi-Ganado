@@ -50,30 +50,17 @@ const RegistrarVacuno = () => {
       'footer': '<a href="javascript:location.reload(true)">Por favor recargue la página si el problema persiste</a>'
     })});
   }*/
-  /*useEffect(()=>{
-     dispatch(actions.crearVacuno(nombre, fecha_nacimiento, sexo, tipo_vacuno, raza, estado, fecha_venta));
-  },[]);*/
-  //const [numero, onChange] = useState(0);
-  const [vacuno_id, handleSelectChange] = useState("");
-  //const [nombre, handleChange] = useState("");//NO SE USARA ESTADO LOCAL
-  /*const handleSelectChange = (e) => {
-    vacuno_id=e.target.value;
-  }*/
-  /*let validNombre=(nombre)=>{
-    if(nombre.length>6 && nombre.length<15){
-      return true;
-    }else{
-      return false;
-    }
-  }*/
   var tipos_vacunos = useSelector(store=>store.vacuno.tipos_vacunos);
   var loading = useSelector(store=>store.vacuno.loading);
   var vacunoCreated = useSelector(store=>store.vacuno.vacunoCreated);
   const dispatch = useDispatch();
   const { register, handleSubmit, watch, formState: { errors } } = useForm();
-  if(tipos_vacunos.length===0){
+  /*if(tipos_vacunos.length===0){
     dispatch(actions.listadoTiposVacunos());
-  }
+  }*/
+  useEffect(()=>{
+    dispatch(actions.listadoTiposVacunos());
+  },[]);
   const onsubmit = data => {
     var nombre = document.getElementById('nombre').value;
     var fecha_nacimiento = document.getElementById('fecha_nacimiento').value;
@@ -91,9 +78,12 @@ const RegistrarVacuno = () => {
       'icon': "success",
       'timer': 4000,
       'confirmButtonText': 'Aceptar'
+    }).then((result)=>{
+      if(result.isConfirmed){
+        dispatch(actions.reset());
+      }
     });
   }
-  console.log("renderizado");
   return (
     <Page
       title="Registrar vacuno"
@@ -171,8 +161,9 @@ const RegistrarVacuno = () => {
                 </FormGroup>
                 <FormGroup>
                     <Label for="sexo">Sexo</Label>
-                    <Input type="select" id="sexo" name="sexo" onChange={(e)=>handleSelectChange(e.target.value)} 
+                    <Input type="select" id="sexo" name="sexo"  
                     {...register("sexo", { required: {value: true, message: "El campo sexo es requerido"} })}>
+                  {/*onChange={(e)=>handleSelectChange(e.target.value)}>*/}
                         <option val="">Seleccione</option>
                         <option val="1">Macho</option>
                         <option val="2">Hembra</option>
@@ -183,7 +174,7 @@ const RegistrarVacuno = () => {
                 </FormGroup>
                 <FormGroup>
                     <Label for="tipos_vacunos_id">Tipo</Label>
-                    <Input type="select" id="tipos_vacunos_id" name="tipos_vacunos_id" onChange={(e)=>handleSelectChange(e.target.value)}
+                    <Input type="select" id="tipos_vacunos_id" name="tipos_vacunos_id"
                     {...register("tipo_vacuno", { required: {value: true, message: "El campo tipo de vacuno es requerido"} })}>
                         <option val="">Seleccione</option>
                     {tipos_vacunos.map(tip_vac=>{
@@ -195,7 +186,7 @@ const RegistrarVacuno = () => {
                 </FormGroup>
                 <FormGroup>
                     <Label for="raza">Color</Label>
-                    <Input type="select" id="raza" name="raza" onChange={(e)=>handleSelectChange(e.target.value)}
+                    <Input type="select" id="raza" name="raza"
                     {...register("color", { required: {value: true, message: "El campo color es requerido"} })}>
                         <option val="">Seleccione</option>
                         <option val="1">Clavel(a)</option>
@@ -210,7 +201,7 @@ const RegistrarVacuno = () => {
                 </FormGroup>
                 <FormGroup>
                     <Label for="estado">Estado</Label>
-                    <Input type="select" id="estado" name="estado" onChange={(e)=>handleSelectChange(e.target.value)}
+                    <Input type="select" id="estado" name="estado"
                     {...register("estado", { required: {value: true, message: "El campo estado es requerido"} })}>
                         <option val="">Seleccione</option>
                         <option val="1">Vivo</option>
@@ -221,7 +212,7 @@ const RegistrarVacuno = () => {
                     </span>
                 </FormGroup>
                 <FormGroup>
-                  <Label for="fecha_venta">Fecha venta</Label>
+                  <Label for="fecha_venta">Fecha venta (opcional)</Label>
                   <Input
                     type="date"
                     name="fecha_venta"

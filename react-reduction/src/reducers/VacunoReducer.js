@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 import {
-    VACUNO_LIST_REQUEST, VACUNO_LIST_SUCCESS, VACUNO_LIST_FAILED, TIPOS_VACUNOS_LIST_REQUEST, TIPOS_VACUNOS_LIST_SUCCESS, VACUNO_CREATE_REQUEST, VACUNO_CREATE_SUCCESS, VACUNO_CREATE_FAILED
+    VACUNO_LIST_REQUEST, VACUNO_LIST_SUCCESS, VACUNO_LIST_FAILED, RESET ,TIPOS_VACUNOS_LIST_REQUEST, TIPOS_VACUNOS_LIST_SUCCESS, VACUNO_CREATE_REQUEST, VACUNO_CREATE_SUCCESS, VACUNO_CREATE_FAILED
   } from '../actionstypes/types';
   
   
@@ -21,6 +21,8 @@ import {
         return {...state, loading:false, vacunoCreated:true};
       case VACUNO_CREATE_FAILED:
         return {...state, loading:false, vacunoCreated: false};
+      case RESET:
+        return {...state, loading:false, vacunoCreated: false, vacunosBuscados: false};
       case VACUNO_LIST_REQUEST:
         console.log("buscando vacunos");
         return { ...state, loading: true, vacunosBuscados: false };
@@ -30,7 +32,7 @@ import {
         return {...state, vacunos: action.payload, loading:false, vacunosBuscados: true};
         //return { ...state, vacunos: [action.payload, ...state.vacunos] };
       case TIPOS_VACUNOS_LIST_REQUEST:
-        return {...state};
+        return {...state, vacunosBuscados:false};
       case TIPOS_VACUNOS_LIST_SUCCESS:
         return {...state, tipos_vacunos: action.payload};
       default:

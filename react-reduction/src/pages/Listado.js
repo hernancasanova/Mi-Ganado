@@ -1,7 +1,7 @@
 import Page from 'components/Page';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Card, CardBody, CardHeader, Col, Row, Table, Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { Card, CardBody, CardHeader, Col, Row, Table, Button, Modal, ModalBody, Spinner, ModalFooter, ModalHeader } from 'reactstrap';
 import * as actions from '../actions/VacunoActions';
 import { jsPDF } from "jspdf";
 import 'jspdf-autotable';
@@ -75,21 +75,24 @@ const Listado = (props) => {
   useEffect(()=>{
     dispatch(actions.listadoAnimales());
   },[]);
+  useEffect(()=>{
+    //dispatch(actions.listadoAnimales());
+    if(!loading && vacunosBuscados && vacunos.length===0){
+      Swal.fire({
+        'icon': 'info',
+        'title': 'No se encontraron vacunos',
+        'confirmButtonText': 'Registrar vacuno',
+        'footer': '<a href="javascript:location.reload(true)">Favor recargue la página si existe algun problema</a>',
+        'allowOutsideClick': false
+      }).then((result) => {
+        if (result.isConfirmed) {
+          props.history.push("registrar_vacuno");
+        }
+      })
+    }
+  },[vacunosBuscados]);
   var vacunos = useSelector(store=>store.vacuno.vacunos);
   var url_imagenes = useSelector(store=>store.vacuno.url_imagenes); 
-  if(vacunosBuscados && vacunos.length===0){
-    Swal.fire({
-      'icon': 'info',
-      'title': 'No se encontraron vacunos',
-      'confirmButtonText': 'Registrar vacuno',
-      'footer': '<a href="javascript:location.reload(true)">Favor recargue la página si existe algun problema</a>',
-      'allowOutsideClick': false
-    }).then((result) => {
-      if (result.isConfirmed) {
-        props.history.push("registrar_vacuno");
-      }
-    })
-  }
   const formatoFecha = (fecha) => {
     fechaFormateada=fecha.split('-');
     return [fechaFormateada[2],fechaFormateada[1],fechaFormateada[0] ].join("-");
@@ -105,8 +108,9 @@ const Listado = (props) => {
           <Card className="mb-3">
             <CardHeader>
               <Button disabled={vacunos.length===0} style={{float:'right'}} className="ml-10" onClick={descargarPdf}>Descargar pdf </Button>
+              {/*<Button disabled={vacunos.length===0} style={{float:'right'}} className="ml-10" onClick={descargarPdf}>{loading?"Descargar pdf":<>{"Generando pdf...  "}<Spinner/></>}</Button>*/}
             </CardHeader>
-            <CardBody>{loading?<PageSpinner texto="cargando listado" />:
+            <CardBody>{loading?<PageSpinner texto="Cargando listado" />:
               <Table id="listVacunos">
                 <thead>
                   <tr >
