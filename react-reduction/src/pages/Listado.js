@@ -77,7 +77,7 @@ const Listado = (props) => {
   },[]);
   useEffect(()=>{
     //dispatch(actions.listadoAnimales());
-    if(!loading && vacunosBuscados && vacunos.length===0){
+    if(vacunosBuscados && vacunos.length===0){
       Swal.fire({
         'icon': 'info',
         'title': 'No se encontraron vacunos',

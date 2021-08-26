@@ -70,12 +70,15 @@ class AuthForm extends React.Component {
   };
 
   estadoBoton(){
-    if(!this.isSignup){
-      return false;
-    }
     const {validUsername, validEmail, validPassword}= this.state;
-    if(validUsername && validEmail && validPassword){
-      console.log("CAMPOS VALIDOS");
+    if(!this.isSignup){
+      if(validEmail && validPassword){
+        return false;
+      }else{
+        return true;
+      }
+    }
+    else if(validUsername && validEmail && validPassword){
       return false;
     }else{
       return true;
@@ -83,15 +86,11 @@ class AuthForm extends React.Component {
   }
 
   handleChange(e){
-    const {username, email, password}=this.state;
     const value=e.target.value;
     const input=e.target.name;
-    this.setState({
-      [e.target.name]:value
-    });
     if (input==="username"){
       //if(username.length>2 && username.length<7){
-      if(username.length>0 && username.length<6){
+      if(value.length>1 && value.length<7){
         this.setState({validUsername:true});
       
       }
@@ -100,7 +99,7 @@ class AuthForm extends React.Component {
       }
     }
     else if (input==="email"){
-      if(isEmail(email)){
+      if(isEmail(value)){
         this.setState({validEmail:true});
       
       }
@@ -110,7 +109,7 @@ class AuthForm extends React.Component {
     }
     else{//si es password
       //if(5<password.length && password.length<9 && this.isSignup){
-      if(4<password.length && password.length<8 && this.isSignup){
+      if(5<value.length && value.length<9){
         this.setState({validPassword:true});
       
       }
@@ -118,6 +117,9 @@ class AuthForm extends React.Component {
         this.setState({validPassword:false});
       }
     }
+    this.setState({
+      [e.target.name]:e.target.value
+    });
   }
 
 
@@ -131,7 +133,6 @@ class AuthForm extends React.Component {
   }
 
   render() {
-    console.log("RENDERIZADO!!");
     const {
       showLogo,
       usernameLabel,

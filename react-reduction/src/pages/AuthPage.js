@@ -7,7 +7,6 @@ import Swal from 'sweetalert2';
 
 class AuthPage extends React.Component {
   componentDidMount(){//Si el usuario ya había iniciado sesión
-    console.log("componentDidMount AuthPage");
     const {history, isRegistered}= this.props;
     const api_token=localStorage.getItem('api_token');
     if(api_token){//Si el usuario ya ha iniciado sesión
