@@ -8,4 +8,7 @@ class Vacuno extends Model
 {
     //
     //protected $fillable =["nombre","fecha_nacimiento","sexo","tipos_vacunos_id","raza","estado", "fecha_venta"];
+    public function aretes(){
+        return $this->hasMany('App\Arete');
+    }
 }

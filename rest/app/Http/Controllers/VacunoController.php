@@ -18,7 +18,16 @@ class VacunoController extends Controller
      */
     public function index()
     {
-        $vacunos=Vacuno::all();
+        $vacunos=DB::table("vacunos")
+                    ->leftJoin('aretes','vacunos.id','=','aretes.vacuno_id')
+                    ->select('vacunos.id','vacunos.nombre','vacunos.fecha_nacimiento','vacunos.sexo','vacunos.tipos_vacunos_id','vacunos.raza','vacunos.estado','vacunos.fecha_venta',DB::raw('MAX(aretes.fecha_colocacion) as fecha_colocacion'))//ESTA FUNCIONA
+                    ->groupBy('vacunos.id','vacunos.nombre','vacunos.fecha_nacimiento','vacunos.sexo','vacunos.tipos_vacunos_id','vacunos.raza','vacunos.estado','vacunos.fecha_venta');//FUNCIONA
+        $vacunos = DB::table('aretes')
+                   ->select('aretes.numero','fechaUltimosAretes.*')
+                  ->rightJoinSub($vacunos, 'fechaUltimosAretes', function ($join) {
+                      $join->on('aretes.fecha_colocacion', '=', 'fechaUltimosAretes.fecha_colocacion');
+                  })
+                  ->get();
         return response([
             'vacunos'=> $vacunos,
             'status_code' => 200,
@@ -33,12 +42,12 @@ class VacunoController extends Controller
      */
     public function store(Request $request)
     {
+        $fecha_venta=request()->get('fecha_venta')===''?null:request()->get('fecha_venta');
         $insertGetId=DB::table('vacunos')->insertGetId(
-            ['nombre' => $_POST['nombre'], 'fecha_nacimiento' => $_POST['fecha_nacimiento'], 'sexo' => $_POST['sexo'], 'tipos_vacunos_id' => $_POST['tipos_vacunos_id'], 'raza' => $_POST['raza'], 'estado' => $_POST['estado'], 'fecha_venta' => $_POST['fecha_venta']]);
+            //['nombre' => $_POST['nombre'], 'fecha_nacimiento' => $_POST['fecha_nacimiento'], 'sexo' => $_POST['sexo'], 'tipos_vacunos_id' => $_POST['tipos_vacunos_id'], 'raza' => $_POST['raza'], 'estado' => $_POST['estado'], 'fecha_venta' => $fecha_venta]);
+           ['nombre' => $request->nombre, 'fecha_nacimiento' => $request->fecha_nacimiento, 'sexo' => $request->sexo, 'tipos_vacunos_id' => $request->tipo_vacuno, 'raza' => $request->raza, 'estado' => $request->estado, 'fecha_venta' => $fecha_venta]);
         $request->file('imagen_vacuno')->storeAs('public/imagenes',$insertGetId.".jpg");
         return response()->json([
-            "_FILES" => $_FILES,
-            "_POST" => $_POST,
             'status_code' => 200
         ], 200);
     }
