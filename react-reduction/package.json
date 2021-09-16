@@ -13,6 +13,7 @@
     "connected-react-router": "^6.9.1",
     "d3-geo": "^1.11.3",
     "faker": "^4.1.0",
+    "formik": "^2.2.9",
     "history": "^4.10.1",
     "jspdf": "^2.3.1",
     "jspdf-autotable": "^3.5.14",
