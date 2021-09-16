@@ -37,13 +37,14 @@ const Listado = props => {
     var ids = [];
     var i = 0;
     //var fecha;
-    let tabla = document.getElementById('listVacunos'),
-      filas = tabla.rows;
+    var tabla = document.getElementById('listVacunos');
+    var tablaCopia = tabla.cloneNode(true);
+    var filas = tablaCopia.rows;
     for (var j = 0; j < filas.length; j++) {
       filas[j].deleteCell(8);
     }
     pdf.autoTable({
-      html: tabla,
+      html: tablaCopia,
       columnStyles: {
         0: { cellWidth: 'auto', minCellHeight: 80 },
         1: { cellWidth: 120, minCellHeight: 80 },
@@ -53,7 +54,6 @@ const Listado = props => {
         5: { cellWidth: 'auto', minCellHeight: 80 },
         6: { cellWidth: 'auto', minCellHeight: 80 },
         7: { cellWidth: 'auto', minCellHeight: 80 },
-        // etc
       },
       styles: {
         valign: 'middle',
