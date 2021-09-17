@@ -20,7 +20,7 @@ class CreateVacunosTable extends Migration
             $table->string('sexo');
             $table->unsignedBigInteger('tipos_vacunos_id');
             $table->foreign('tipos_vacunos_id')->references('id')->on('tipos_vacunos')->onDelete('cascade');
-            $table->string('raza');
+            $table->string('color');
             $table->string('estado');
             $table->date('fecha_venta')->nullable();
             $table->timestamps();

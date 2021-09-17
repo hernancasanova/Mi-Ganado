@@ -12,13 +12,13 @@ class TipoVacunoSeeder extends Seeder
     public function run()
     {
         $tipoVacunos=[
-            ["nombre_tipo_vacuno"=>"ternero"],
-            ["nombre_tipo_vacuno"=>"ternera"],
-            ["nombre_tipo_vacuno"=>"toro"],
-            ["nombre_tipo_vacuno"=>"vaquilla"],
-            ["nombre_tipo_vacuno"=>"vaca"],
-            ["nombre_tipo_vacuno"=>"buey"],
-            ["nombre_tipo_vacuno"=>"novillo"]
+            ["nombre_tipo_vacuno"=>"Ternero"],
+            ["nombre_tipo_vacuno"=>"Ternera"],
+            ["nombre_tipo_vacuno"=>"Toro"],
+            ["nombre_tipo_vacuno"=>"Vaquilla"],
+            ["nombre_tipo_vacuno"=>"Vaca"],
+            ["nombre_tipo_vacuno"=>"Buey"],
+            ["nombre_tipo_vacuno"=>"Novillo"]
         ];
         DB::table("tipos_vacunos")->insert($tipoVacunos);
 

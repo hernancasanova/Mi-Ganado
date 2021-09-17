@@ -36,7 +36,7 @@ class AreteController extends Controller
      */
     public function store(Request $request)
     {
-        DB::table('aretes')->where('vacuno_id',$request->vacuno_id)->update('estado','inactivo');
+        DB::table('aretes')->where('vacuno_id',$request->vacuno_id)->update(['estado'=>'inactivo']);
         DB::table('aretes')->insert([
             ['numero' => $request->numero, 'vacuno_id' => $request->vacuno_id, 'fecha_colocacion' => $request->fecha_colocacion, 'estado'=>'activo']
         ]);
