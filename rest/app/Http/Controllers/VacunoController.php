@@ -20,8 +20,8 @@ class VacunoController extends Controller
     {
         $vacunos=DB::table("vacunos")
                     ->leftJoin('aretes','vacunos.id','=','aretes.vacuno_id')
-                    ->select('vacunos.id','vacunos.nombre','vacunos.fecha_nacimiento','vacunos.sexo','vacunos.tipos_vacunos_id','vacunos.raza','vacunos.estado','vacunos.fecha_venta',DB::raw('MAX(aretes.fecha_colocacion) as fecha_colocacion'))//ESTA FUNCIONA
-                    ->groupBy('vacunos.id','vacunos.nombre','vacunos.fecha_nacimiento','vacunos.sexo','vacunos.tipos_vacunos_id','vacunos.raza','vacunos.estado','vacunos.fecha_venta');//FUNCIONA
+                    ->select('vacunos.id','vacunos.nombre','vacunos.fecha_nacimiento','vacunos.sexo','vacunos.tipos_vacunos_id as tipo','vacunos.color','vacunos.estado','vacunos.fecha_venta',DB::raw('MAX(aretes.fecha_colocacion) as fecha_colocacion'))//ESTA FUNCIONA
+                    ->groupBy('vacunos.id','vacunos.nombre','vacunos.fecha_nacimiento','vacunos.sexo','tipo','vacunos.color','vacunos.estado','vacunos.fecha_venta');//FUNCIONA
         $vacunos = DB::table('aretes')
                    ->select('aretes.numero','fechaUltimosAretes.*')
                   ->rightJoinSub($vacunos, 'fechaUltimosAretes', function ($join) {
@@ -44,8 +44,7 @@ class VacunoController extends Controller
     {
         $fecha_venta=request()->get('fecha_venta')===''?null:request()->get('fecha_venta');
         $insertGetId=DB::table('vacunos')->insertGetId(
-            //['nombre' => $_POST['nombre'], 'fecha_nacimiento' => $_POST['fecha_nacimiento'], 'sexo' => $_POST['sexo'], 'tipos_vacunos_id' => $_POST['tipos_vacunos_id'], 'raza' => $_POST['raza'], 'estado' => $_POST['estado'], 'fecha_venta' => $fecha_venta]);
-           ['nombre' => $request->nombre, 'fecha_nacimiento' => $request->fecha_nacimiento, 'sexo' => $request->sexo, 'tipos_vacunos_id' => $request->tipo_vacuno, 'raza' => $request->raza, 'estado' => $request->estado, 'fecha_venta' => $fecha_venta]);
+           ['nombre' => $request->nombre, 'fecha_nacimiento' => $request->fecha_nacimiento, 'sexo' => $request->sexo, 'tipos_vacunos_id' => $request->tipo_vacuno, 'color' => $request->color, 'estado' => $request->estado, 'fecha_venta' => $fecha_venta]);
         $request->file('imagen_vacuno')->storeAs('public/imagenes',$insertGetId.".jpg");
         return response()->json([
             'status_code' => 200
@@ -72,10 +71,23 @@ class VacunoController extends Controller
      */
     public function update(Request $request, Vacuno $vacuno)
     {
-        //
+        $fechaVenta=$request->fechaVenta===''?null:$request->fechaVenta;
+        $vacunoActualizado=DB::table('vacunos')
+              ->where('id', $request->id)
+              ->update(['nombre' => $request->nombre,
+                        'fecha_nacimiento' => $request->fecha_nacimiento,
+                        'sexo'=>$request->sexo,
+                        'tipos_vacunos_id'=>$request->tipo,
+                        'color'=>$request->color,
+                        'estado'=>$request->estado,
+                        'fecha_venta'=>$fechaVenta,
+                        //'updated_at' =>'now()'
+                        ]);
+        if($request->file('imagen_vacuno')!=null){
+            $request->file('imagen_vacuno')->storeAs('public/imagenes',$request->id.".jpg");
+        }
         return response()->json([
-            "request" => $request,
-            'status_codeput' => 200
+            'status_code' => 200
         ], 200);
     }
 

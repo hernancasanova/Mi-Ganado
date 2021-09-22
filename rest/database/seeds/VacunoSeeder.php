@@ -12,11 +12,7 @@ class VacunoSeeder extends Seeder
     public function run()
     {
         $vacunos=[
-            ["nombre"=>"Clavela mañosa","fecha_nacimiento"=>"2017-11-15","sexo"=>"Hembra","tipos_vacunos_id"=>"5","raza"=>"clavela","estado"=>"vivo"],
-            ["nombre"=>"Muñeca","fecha_nacimiento"=>"2015-12-18","sexo"=>"Hembra","tipos_vacunos_id"=>"5","raza"=>"clavela","estado"=>"vivo"]
-            //["nombre"=>"ternero","fecha_nacimiento"=>"","sexo"=>"","tipos_vacunos_id"=>"","raza"=>"","estado"=>"","fecha_venta"=>""]
-            //["nombre"=>"ternero","fecha_nacimiento"=>"","sexo"=>"","tipos_vacunos_id"=>"","raza"=>"","estado"=>"","fecha_venta"=>""],
-            //["nombre"=>"ternero","fecha_nacimiento"=>"","sexo"=>"","tipos_vacunos_id"=>"","raza"=>"","estado"=>"","fecha_venta"=>""],
+            ["nombre"=>"Toro amarillo","fecha_nacimiento"=>"2019-03-05","sexo"=>"Macho","tipos_vacunos_id"=>"3","color"=>"Amarillo(a)","estado"=>"Vivo"],
         ];
         DB::table("vacunos")->insert($vacunos);
     }
