@@ -12,7 +12,9 @@ import {
   FormGroup,
   Input,
   Label,
+  FormText,
 } from 'reactstrap';
+import * as Yup from 'yup';
 import * as actions from '../actions/VacunoActions';
 import 'jspdf-autotable';
 import PageSpinner from '../components/PageSpinner';
@@ -22,8 +24,35 @@ import {
   VACUNO_EDIT_REQUEST,
 } from '../actionstypes/types';
 import { Formik } from 'formik';
+import { FaInfo } from 'react-icons/fa';
 const RegistrarVacuno = props => {
+  //var contenidoImagen = document.getElementById('imagen_vacuno').value;
+  // const styles = {
+  //   // exampleImageInput: {
+  //   //   cursor: 'pointer',
+  //   //   position: 'absolute',
+  //   //   top: '0',
+  //   //   bottom: '0',
+  //   //   right: '0',
+  //   //   left: '0',
+  //   //   width: '100%',
+  //   //   opacity: '0',
+  //   // },
+  //   imagen_vacuno: {
+  //     display: 'none',
+  //   },
+  //   boton_imagen_vacuno: {
+  //     border: '1px solid #ccc',
+  //     display: 'inline-block',
+  //     padding: '6px 12px',
+  //     cursor: 'pointer',
+  //     backgroundColor: '#fb2a55',
+  //     color: 'white',
+  //     borderRadius: '0.25rem',
+  //   },
+  // };
   var tipos_vacunos = useSelector(store => store.vacuno.tipos_vacunos);
+  var url_imagenes = useSelector(store => store.vacuno.url_imagenes);
   var loading = useSelector(store => store.vacuno.loading);
   var vacunoCreatedEdited = useSelector(
     store => store.vacuno.vacunoCreatedEdited,
@@ -44,6 +73,25 @@ const RegistrarVacuno = props => {
   } else {
     accion = VACUNO_CREATE_REQUEST;
   }
+  const valImagenVacuno =
+    vacunoEditado.id > 0
+      ? Yup.string().notRequired()
+      : Yup.string().required('Debe seleccionar una imagen');
+  const esquemaValidacion = Yup.object().shape({
+    imagen_vacuno: valImagenVacuno,
+    nombre: Yup.string()
+      .min(4, 'Mínimo 4 caracteres')
+      .max(16, 'Máximo 16 caracteres')
+      .required('El campo nombre es requerido'),
+    fecha_nacimiento: Yup.string().required(
+      'El campo fecha de nacimiento es requerido',
+    ),
+    sexo: Yup.string().required('El campo sexo es requerido'),
+    tipo: Yup.number().required('El campo tipo es requerido'),
+    color: Yup.string().required('El campo color es requerido'),
+    estado: Yup.string().required('El campo estado es requerido'),
+    //email: Yup.string().email('Invalid email').required('Required'),
+  });
   const dispatch = useDispatch();
   useEffect(() => {
     if (tipos_vacunos.length === 0) {
@@ -88,7 +136,9 @@ const RegistrarVacuno = props => {
                     enableReinitialize
                     validateOnBlur={false}
                     //validateOnChange={false}
+                    validationSchema={esquemaValidacion}
                     initialValues={{
+                      id: vacunoEditado.id,
                       nombre,
                       fecha_nacimiento,
                       sexo,
@@ -96,19 +146,6 @@ const RegistrarVacuno = props => {
                       color,
                       estado,
                       fechaVenta,
-                    }}
-                    validate={values => {
-                      const errors = {};
-                      if (values.nombre === '') {
-                        errors.descripcion = 'El nombre es requerido';
-                      } else if (values.fecha_nacimiento === '--') {
-                        errors.fecha_nacimiento =
-                          'La fecha de nacimiento es requerida';
-                      } else if (values.fecha_creacion === '--') {
-                        errors.fecha_creacion =
-                          'La fecha de creación es requerida';
-                      }
-                      return errors;
                     }}
                     onSubmit={values => {
                       var nombre = values.nombre;
@@ -140,13 +177,59 @@ const RegistrarVacuno = props => {
                     {props => (
                       <form onSubmit={props.handleSubmit}>
                         <FormGroup>
-                          <Label for="imagen_vacuno">Seleccione imagen</Label>
-                          <Input
-                            type="file"
-                            name="imagen_vacuno"
-                            id="imagen_vacuno"
-                          />
-                          {/*<FormText>Tamaño máximo 2 MB</FormText>*/}
+                          {vacunoEditado.id > 0 ? (
+                            <>
+                              <Label for="">Imagen actual: </Label>
+                              {'               '}
+                              <img
+                                alt={vacunoEditado.id + '.jpg'}
+                                height={100}
+                                width={100}
+                                src={url_imagenes + vacunoEditado.id + '.jpg'}
+                              />
+                              {/* <Button
+                                    style={styles.boton_imagen_vacuno}
+                                    type="button"
+                                  >
+                                    Seleccione una nueva imagen
+                                  </Button>
+                                  <Input
+                                    id="imagen_vacuno"
+                                    style={styles.imagen_vacuno}
+                                    type="file"
+                                  /> */}
+                              <br />
+                              <br />
+                              <Label for="">Seleccione una nueva imagen</Label>
+                              <Input
+                                id="imagen_vacuno"
+                                //style={styles.imagen_vacuno}
+                                type="file"
+                              />
+                              <FormText>
+                                <FaInfo />
+                                {'   '}
+                                La imagen seleccionada reemplazará la actual
+                                imagen
+                              </FormText>
+                            </>
+                          ) : (
+                            <>
+                              <Label for="imagen_vacuno">
+                                Seleccione imagen
+                              </Label>
+                              <Input
+                                type="file"
+                                name="imagen_vacuno"
+                                id="imagen_vacuno"
+                              />
+                            </>
+                          )}
+                          {props.errors.imagen_vacuno && (
+                            <span className="text-danger text-small d-block mb-2">
+                              {props.errors.imagen_vacuno}
+                            </span>
+                          )}
                         </FormGroup>
                         <FormGroup>
                           <Label for="nombre">Nombre</Label>
@@ -197,6 +280,11 @@ const RegistrarVacuno = props => {
                             <option val="1">Macho</option>
                             <option val="2">Hembra</option>
                           </Input>
+                          {props.errors.sexo && (
+                            <span className="text-danger text-small d-block mb-2">
+                              {props.errors.sexo}
+                            </span>
+                          )}
                         </FormGroup>
                         <FormGroup>
                           <Label for="tipo">Tipo</Label>
@@ -218,6 +306,11 @@ const RegistrarVacuno = props => {
                               );
                             })}
                           </Input>
+                          {props.errors.tipo && (
+                            <span className="text-danger text-small d-block mb-2">
+                              {props.errors.tipo}
+                            </span>
+                          )}
                         </FormGroup>
                         <FormGroup>
                           <Label for="color">Color</Label>
@@ -237,6 +330,11 @@ const RegistrarVacuno = props => {
                             <option val="4">Colorado(a)</option>
                             <option val="5">Amarillo(a)</option>
                           </Input>
+                          {props.errors.color && (
+                            <span className="text-danger text-small d-block mb-2">
+                              {props.errors.color}
+                            </span>
+                          )}
                         </FormGroup>
                         <FormGroup>
                           <Label for="estado">Estado</Label>
@@ -253,6 +351,11 @@ const RegistrarVacuno = props => {
                             <option val="1">Vivo</option>
                             <option val="2">Muerto</option>
                           </Input>
+                          {props.errors.estado && (
+                            <span className="text-danger text-small d-block mb-2">
+                              {props.errors.estado}
+                            </span>
+                          )}
                         </FormGroup>
                         <FormGroup>
                           <Label for="fechaVenta">Fecha venta (opcional)</Label>

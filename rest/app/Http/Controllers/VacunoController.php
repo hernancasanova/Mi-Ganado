@@ -83,6 +83,9 @@ class VacunoController extends Controller
                         'fecha_venta'=>$fechaVenta,
                         //'updated_at' =>'now()'
                         ]);
+        if($request->file('imagen_vacuno')!=null){
+            $request->file('imagen_vacuno')->storeAs('public/imagenes',$request->id.".jpg");
+        }
         return response()->json([
             'status_code' => 200
         ], 200);

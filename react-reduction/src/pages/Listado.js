@@ -1,5 +1,5 @@
 import Page from 'components/Page';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Card,
@@ -8,6 +8,7 @@ import {
   Col,
   Row,
   Table,
+  Spinner,
   Button,
 } from 'reactstrap';
 import * as actions from '../actions/VacunoActions';
@@ -25,11 +26,18 @@ const Listado = props => {
     textAlign: 'center',
     verticalAlign: 'middle',
   };
+  const [loadingDescarga, cambiaLoadingDescarga] = useState(false);
   var fechaFormateada;
   var vacunos = useSelector(store => store.vacuno.vacunos);
   var url_imagenes = useSelector(store => store.vacuno.url_imagenes);
   var loading = useSelector(store => store.vacuno.loading);
   var vacunosBuscados = useSelector(store => store.vacuno.vacunosBuscados);
+
+  useEffect(() => {
+    if (loadingDescarga) {
+      descargarPdf();
+    }
+  }, [loadingDescarga]);
   const descargarPdf = () => {
     console.log('Descargando pdf');
     var pdf = new jsPDF('p', 'pt', 'letter');
@@ -68,12 +76,12 @@ const Listado = props => {
           nColumna++;
         }
         /*if((data.column.index === 4 && data.cell.section === 'body')||(data.column.index === 5 && data.cell.section === 'body')){
-          //data.cell.text[0]=moment(data.cell.text[0], 'DD-MM-YYYY');
-          if(data.cell.text[0]!="Sin arete"){
-            fecha=data.cell.text[0].split('-');
-            data.cell.text[0] = [fecha[2],fecha[1],fecha[0] ].join("-");
-          }
-        }*/
+            //data.cell.text[0]=moment(data.cell.text[0], 'DD-MM-YYYY');
+            if(data.cell.text[0]!="Sin arete"){
+              fecha=data.cell.text[0].split('-');
+              data.cell.text[0] = [fecha[2],fecha[1],fecha[0] ].join("-");
+            }
+          }*/
       },
       didDrawCell: function (data) {
         if (data.column.index === 1 && data.cell.section === 'body') {
@@ -90,6 +98,7 @@ const Listado = props => {
       },
     });
     pdf.save('Listado_animales.pdf');
+    cambiaLoadingDescarga(false);
   };
   const dispatch = useDispatch();
   useEffect(() => {
@@ -138,9 +147,18 @@ const Listado = props => {
                 disabled={vacunos.length === 0}
                 style={{ float: 'right' }}
                 className="ml-10"
-                onClick={descargarPdf}
+                onClick={() => {
+                  cambiaLoadingDescarga(true);
+                }}
               >
-                Descargar pdf{' '}
+                {loadingDescarga ? (
+                  <>
+                    {'Generando pdf... '}
+                    <Spinner />
+                  </>
+                ) : (
+                  'Descargar pdf'
+                )}{' '}
               </Button>
               {/*<Button disabled={vacunos.length===0} style={{float:'right'}} className="ml-10" onClick={descargarPdf}>{loading?"Descargar pdf":<>{"Generando pdf...  "}<Spinner/></>}</Button>*/}
             </CardHeader>
@@ -190,8 +208,16 @@ const Listado = props => {
                           <td>{vac.sexo}</td>
                           <td>{vac.color}</td>
                           <td>
-                            <FaPencilAlt onClick={() => editarVacuno(vac)} />{' '}
-                            <FaTrash onClick={() => eliminarVacuno(vac)} />
+                            <FaPencilAlt
+                              cursor="pointer"
+                              title="Editar"
+                              onClick={() => editarVacuno(vac)}
+                            />{' '}
+                            <FaTrash
+                              cursor="pointer"
+                              title="Eliminar"
+                              onClick={() => eliminarVacuno(vac)}
+                            />
                           </td>
                         </tr>
                       );
