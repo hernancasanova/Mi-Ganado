@@ -14,6 +14,9 @@ import {
   VACUNO_EDIT_SUCCESS,
   VACUNO_EDIT_FAILED,
   VACUNO_SELECTED,
+  VACUNO_DELETE_REQUEST,
+  VACUNO_DELETE_SUCCESS,
+  VACUNO_DELETE_FAILED,
 } from '../actionstypes/types';
 import { history } from '..';
 
@@ -22,6 +25,7 @@ const INITIAL_STATE = {
   tipos_vacunos: [],
   url_imagenes: 'http://localhost:8000/storage/imagenes/',
   loading: false,
+  loadingEliminar: false,
   vacunosBuscados: false,
   vacunoCreatedEdited: false,
   vacunoEditado: {
@@ -60,6 +64,7 @@ export default (state = INITIAL_STATE, action) => {
           vacunosBuscados: false,
           vacunoCreatedEdited: false,
           loading: false,
+          loadingEliminar: url_actual !== '/listado_vacunos' ? false : true,
           vacunoEditado,
           vacunos: [],
         };
@@ -69,6 +74,7 @@ export default (state = INITIAL_STATE, action) => {
           vacunosBuscados: false,
           vacunoCreatedEdited: false,
           loading: false,
+          loadingEliminar: false,
         };
       }
     case VACUNO_SELECTED:
@@ -103,6 +109,12 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, loading: false, vacunoCreatedEdited: true };
     case VACUNO_CREATE_FAILED:
       return { ...state, loading: false, vacunoCreatedEdited: false };
+    case VACUNO_DELETE_REQUEST:
+      return { ...state, loadingEliminar: true };
+    case VACUNO_DELETE_SUCCESS:
+      return { ...state, loadingEliminar: false };
+    case VACUNO_DELETE_FAILED:
+      return { ...state, loadingEliminar: false };
     case VACUNO_EDIT_REQUEST:
       return { ...state, loading: true, vacunoCreatedEdited: false };
     case VACUNO_EDIT_SUCCESS:

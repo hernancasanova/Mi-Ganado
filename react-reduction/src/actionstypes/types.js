@@ -22,6 +22,10 @@ export const VACUNO_CREATE_REQUEST = 'vacuno_create_request';
 export const VACUNO_CREATE_FAILED = 'vacuno_create_failed';
 export const VACUNO_CREATE_SUCCESS = 'vacuno_create_success';
 
+export const VACUNO_DELETE_REQUEST = 'vacuno_delete_request';
+export const VACUNO_DELETE_FAILED = 'vacuno_delete_failed';
+export const VACUNO_DELETE_SUCCESS = 'vacuno_delete_success';
+
 export const VACUNO_EDIT_REQUEST = 'vacuno_edit_request';
 export const VACUNO_EDIT_FAILED = 'vacuno_edit_failed';
 export const VACUNO_EDIT_SUCCESS = 'vacuno_edit_success';

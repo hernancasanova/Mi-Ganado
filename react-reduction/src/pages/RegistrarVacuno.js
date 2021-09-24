@@ -73,12 +73,7 @@ const RegistrarVacuno = props => {
   } else {
     accion = VACUNO_CREATE_REQUEST;
   }
-  const valImagenVacuno =
-    vacunoEditado.id > 0
-      ? Yup.string().notRequired()
-      : Yup.string().required('Debe seleccionar una imagen');
   const esquemaValidacion = Yup.object().shape({
-    imagen_vacuno: valImagenVacuno,
     nombre: Yup.string()
       .min(4, 'Mínimo 4 caracteres')
       .max(16, 'Máximo 16 caracteres')
@@ -109,7 +104,6 @@ const RegistrarVacuno = props => {
       confirmButtonText: 'Aceptar',
     }).then(result => {
       if (result.isConfirmed) {
-        //dispatch(actions.reset());
         props.history.push('listado_vacunos');
       }
     });
@@ -119,7 +113,7 @@ const RegistrarVacuno = props => {
       title={vacunoEditado.id > 0 ? 'Editar vacuno' : 'Registrar vacuno'}
       breadcrumbs={[
         {
-          name: vacunoEditado.id > 0 ? 'editar_vacuno' : 'registrar_vacuno',
+          name: vacunoEditado.id > 0 ? 'editar' : 'registrar',
           active: true,
         },
       ]}
@@ -146,6 +140,16 @@ const RegistrarVacuno = props => {
                       color,
                       estado,
                       fechaVenta,
+                      imagen_vacuno: '',
+                    }}
+                    validate={values => {
+                      const errors = {};
+                      let imagen =
+                        document.querySelector('input[type="file"]').files[0];
+                      if (!imagen && vacunoEditado.id === 0) {
+                        errors.imagen_vacuno = 'Debe seleccionar una imagen';
+                      }
+                      return errors;
                     }}
                     onSubmit={values => {
                       var nombre = values.nombre;
@@ -156,7 +160,7 @@ const RegistrarVacuno = props => {
                       var estado = values.estado;
                       var fechaVenta =
                         document.getElementById('fechaVenta').value;
-                      var imagen =
+                      let imagen =
                         document.querySelector('input[type="file"]').files[0];
                       dispatch(
                         actions.crearEditarVacuno(
@@ -203,6 +207,7 @@ const RegistrarVacuno = props => {
                               <Label for="">Seleccione una nueva imagen</Label>
                               <Input
                                 id="imagen_vacuno"
+                                name="imagen_vacuno"
                                 //style={styles.imagen_vacuno}
                                 type="file"
                               />

@@ -94,11 +94,14 @@ class VacunoController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Vacuno  $vacuno
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Vacuno $vacuno)
+    public function destroy($id)
     {
-        //
+        DB::table('vacunos')->where('id', '=', $id)->delete();
+        return response()->json([
+            'status_code' => 200
+        ], 200);
     }
 }

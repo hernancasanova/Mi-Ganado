@@ -7,11 +7,15 @@ import {
   TIPOS_VACUNOS_LIST_SUCCESS,
   VACUNO_CREATE_REQUEST,
   VACUNO_CREATE_SUCCESS,
+  VACUNO_CREATE_FAILED,
+  VACUNO_DELETE_REQUEST,
+  VACUNO_DELETE_SUCCESS,
+  VACUNO_DELETE_FAILED,
   VACUNO_EDIT_REQUEST,
   VACUNO_EDIT_SUCCESS,
   VACUNO_EDIT_FAILED,
 } from '../actionstypes/types';
-import { post, get } from '../services/api';
+import { post, get, del } from '../services/api';
 
 function* index() {
   try {
@@ -56,7 +60,19 @@ function* crearVacuno({ payload }) {
     const data = yield call(post, url, datosVacuno);
     yield put({ type: VACUNO_CREATE_SUCCESS, payload: data });
   } catch (error) {
-    yield put({ type: VACUNO_LIST_FAILED, payload: error });
+    yield put({ type: VACUNO_CREATE_FAILED, payload: error });
+  }
+}
+
+function* eliminarVacuno({ payload }) {
+  try {
+    var datosVacuno = new FormData();
+    datosVacuno.append('id', payload);
+    const url = `api/vacunos/${payload}`;
+    const data = yield call(del, url, datosVacuno);
+    yield put({ type: VACUNO_DELETE_SUCCESS, payload: data });
+  } catch (error) {
+    yield put({ type: VACUNO_DELETE_FAILED, payload: error });
   }
 }
 
@@ -85,5 +101,6 @@ export const vacunoSagas = [
   takeLatest(VACUNO_LIST_REQUEST, index),
   takeEvery(TIPOS_VACUNOS_LIST_REQUEST, index2),
   takeEvery(VACUNO_CREATE_REQUEST, crearVacuno),
+  takeEvery(VACUNO_DELETE_REQUEST, eliminarVacuno),
   takeEvery(VACUNO_EDIT_REQUEST, editarVacuno),
 ];

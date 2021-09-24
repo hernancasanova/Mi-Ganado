@@ -27,11 +27,15 @@ const Listado = props => {
     verticalAlign: 'middle',
   };
   const [loadingDescarga, cambiaLoadingDescarga] = useState(false);
+  const [mostrarAlertEliminar, muestraAlertEliminar] = useState(false);
+  const [eliminacionConfirmada, cambiaEliminacionConfirmada] = useState(false);
   var fechaFormateada;
   var vacunos = useSelector(store => store.vacuno.vacunos);
   var url_imagenes = useSelector(store => store.vacuno.url_imagenes);
   var loading = useSelector(store => store.vacuno.loading);
+  var loadingEliminar = useSelector(store => store.vacuno.loadingEliminar);
   var vacunosBuscados = useSelector(store => store.vacuno.vacunosBuscados);
+  var vacunoSeleccionado = useSelector(store => store.vacuno.vacunoEditado);
 
   useEffect(() => {
     if (loadingDescarga) {
@@ -102,6 +106,20 @@ const Listado = props => {
   };
   const dispatch = useDispatch();
   useEffect(() => {
+    if (!loadingEliminar) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Vacuno eliminado correctamente',
+        confirmButtonText: 'Aceptar',
+        allowOutsideClick: false,
+      }).then(result => {
+        if (result.isConfirmed) {
+          dispatch(actions.listadoAnimales());
+        }
+      });
+    }
+  }, [loadingEliminar]);
+  useEffect(() => {
     dispatch(actions.listadoAnimales());
   }, []);
   useEffect(() => {
@@ -126,12 +144,32 @@ const Listado = props => {
       '-',
     );
   };
+  useEffect(() => {
+    if (mostrarAlertEliminar) {
+      Swal.fire({
+        icon: 'warning',
+        title: '¿Está seguro(a) de eliminar este vacuno?',
+        confirmButtonText: 'Eliminar',
+        showCancelButton: true,
+        cancelButtonText: 'Cancelar',
+        allowOutsideClick: false,
+      }).then(result => {
+        if (result.isConfirmed) {
+          dispatch(actions.eliminarVacuno(vacunoSeleccionado.id));
+          cambiaEliminacionConfirmada(true);
+          muestraAlertEliminar(false);
+        } else {
+          muestraAlertEliminar(false);
+        }
+      });
+    }
+  }, [mostrarAlertEliminar]);
   const editarVacuno = vac => {
     dispatch(actions.vacunoSeleccionado(vac));
     props.history.push('editar_vacuno');
   };
   const eliminarVacuno = vac => {
-    console.log('vacuno eliminado: ' + vac);
+    dispatch(actions.vacunoSeleccionado(vac));
   };
   return (
     <Page
@@ -160,11 +198,14 @@ const Listado = props => {
                   'Descargar pdf'
                 )}{' '}
               </Button>
-              {/*<Button disabled={vacunos.length===0} style={{float:'right'}} className="ml-10" onClick={descargarPdf}>{loading?"Descargar pdf":<>{"Generando pdf...  "}<Spinner/></>}</Button>*/}
             </CardHeader>
             <CardBody>
               {loading ? (
                 <PageSpinner texto="Cargando listado" />
+              ) : loadingEliminar &&
+                eliminacionConfirmada &&
+                !mostrarAlertEliminar ? (
+                <PageSpinner texto="Eliminando vacuno" />
               ) : (
                 <Table id="listVacunos">
                   <thead>
@@ -216,7 +257,10 @@ const Listado = props => {
                             <FaTrash
                               cursor="pointer"
                               title="Eliminar"
-                              onClick={() => eliminarVacuno(vac)}
+                              onClick={() => {
+                                eliminarVacuno(vac);
+                                muestraAlertEliminar(true);
+                              }}
                             />
                           </td>
                         </tr>

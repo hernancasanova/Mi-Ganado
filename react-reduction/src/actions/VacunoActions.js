@@ -5,6 +5,7 @@ import {
   RESET,
   VACUNO_CREATE_REQUEST,
   VACUNO_EDIT_REQUEST,
+  VACUNO_DELETE_REQUEST,
   //VACUNO_CREATE_REQUEST,
   //VACUNO_EDIT_REQUEST,
 } from '../actionstypes/types';
@@ -17,6 +18,11 @@ export const listadoAnimales = () => ({
 export const listadoTiposVacunos = () => ({
   type: TIPOS_VACUNOS_LIST_REQUEST,
   payload: {},
+});
+
+export const eliminarVacuno = id => ({
+  type: VACUNO_DELETE_REQUEST,
+  payload: id,
 });
 
 export const crearEditarVacuno = (

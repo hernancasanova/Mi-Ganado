@@ -69,10 +69,10 @@ class Sidebar extends React.Component {
             <SourceLink className="navbar-brand d-flex">
               <img
                 src={logoappAn}
-                width="120"
-                height="40"
-                className="pr-20"
-                alt=""
+                width="190"
+                height="64"
+                className="mt-10"
+                alt="logoAppAn"
               />
             </SourceLink>
           </Navbar>
