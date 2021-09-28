@@ -42,6 +42,11 @@ class VacunoController extends Controller
      */
     public function store(Request $request)
     {
+        $vacunos=Vacuno::all();
+        $vacuno=DB::table("vacunos")->select('vacunos.*')->where("vacunos.nombre",$request->nombre)->first();
+        if(isset($vacuno)){
+            throw new \Exception("El vacuno ya se encuentra ingresado", 1);
+        }
         $fecha_venta=request()->get('fecha_venta')===''?null:request()->get('fecha_venta');
         $insertGetId=DB::table('vacunos')->insertGetId(
            ['nombre' => $request->nombre, 'fecha_nacimiento' => $request->fecha_nacimiento, 'sexo' => $request->sexo, 'tipos_vacunos_id' => $request->tipo_vacuno, 'color' => $request->color, 'estado' => $request->estado, 'fecha_venta' => $fecha_venta]);

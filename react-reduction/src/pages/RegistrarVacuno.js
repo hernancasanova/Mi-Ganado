@@ -54,6 +54,7 @@ const RegistrarVacuno = props => {
   var tipos_vacunos = useSelector(store => store.vacuno.tipos_vacunos);
   var url_imagenes = useSelector(store => store.vacuno.url_imagenes);
   var loading = useSelector(store => store.vacuno.loading);
+  var errores = useSelector(store => store.vacuno.errores);
   var vacunoCreatedEdited = useSelector(
     store => store.vacuno.vacunoCreatedEdited,
   );
@@ -108,6 +109,15 @@ const RegistrarVacuno = props => {
       }
     });
   }
+  useEffect(() => {
+    if (!loading && errores) {
+      Swal.fire({
+        html: errores,
+        icon: 'error',
+        confirmButtonText: 'Aceptar',
+      });
+    }
+  }, [loading]);
   return (
     <Page
       title={vacunoEditado.id > 0 ? 'Editar vacuno' : 'Registrar vacuno'}

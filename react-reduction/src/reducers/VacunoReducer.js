@@ -40,6 +40,7 @@ const INITIAL_STATE = {
     created_at: '',
     updated_at: '',
   },
+  errores: '',
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -67,6 +68,7 @@ export default (state = INITIAL_STATE, action) => {
           loadingEliminar: url_actual !== '/listado_vacunos' ? false : true,
           vacunoEditado,
           vacunos: [],
+          errores: '',
         };
       } else {
         return {
@@ -75,6 +77,7 @@ export default (state = INITIAL_STATE, action) => {
           vacunoCreatedEdited: false,
           loading: false,
           loadingEliminar: false,
+          errores: '',
         };
       }
     case VACUNO_SELECTED:
@@ -108,7 +111,12 @@ export default (state = INITIAL_STATE, action) => {
     case VACUNO_CREATE_SUCCESS:
       return { ...state, loading: false, vacunoCreatedEdited: true };
     case VACUNO_CREATE_FAILED:
-      return { ...state, loading: false, vacunoCreatedEdited: false };
+      return {
+        ...state,
+        loading: false,
+        vacunoCreatedEdited: false,
+        errores: action.payload,
+      };
     case VACUNO_DELETE_REQUEST:
       return { ...state, loadingEliminar: true };
     case VACUNO_DELETE_SUCCESS:

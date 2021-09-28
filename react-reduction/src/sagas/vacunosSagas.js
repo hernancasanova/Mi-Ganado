@@ -60,7 +60,7 @@ function* crearVacuno({ payload }) {
     const data = yield call(post, url, datosVacuno);
     yield put({ type: VACUNO_CREATE_SUCCESS, payload: data });
   } catch (error) {
-    yield put({ type: VACUNO_CREATE_FAILED, payload: error });
+    yield put({ type: VACUNO_CREATE_FAILED, payload: error.data.message });
   }
 }
 
