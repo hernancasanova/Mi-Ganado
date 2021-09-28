@@ -14,8 +14,8 @@ class CreateAretesTable extends Migration
     public function up()
     {
         Schema::create('aretes', function (Blueprint $table) {
-            $table->id();
             $table->string('numero');
+            $table->primary('numero');
             $table->unsignedBigInteger('vacuno_id');
             $table->foreign('vacuno_id')->references('id')->on('vacunos')->onDelete('cascade');
             $table->date('fecha_colocacion');

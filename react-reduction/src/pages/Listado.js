@@ -7,7 +7,6 @@ import {
   CardHeader,
   Col,
   Row,
-  Table,
   Spinner,
   Button,
 } from 'reactstrap';
@@ -16,7 +15,7 @@ import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 import PageSpinner from '../components/PageSpinner';
 import Swal from 'sweetalert2';
-import { FaPencilAlt, FaTrash } from 'react-icons/fa';
+import TablaPaginador from '../components/TablaPaginador';
 
 const Listado = props => {
   const styles = {
@@ -31,7 +30,6 @@ const Listado = props => {
   const [eliminacionConfirmada, cambiaEliminacionConfirmada] = useState(false);
   var fechaFormateada;
   var vacunos = useSelector(store => store.vacuno.vacunos);
-  var url_imagenes = useSelector(store => store.vacuno.url_imagenes);
   var loading = useSelector(store => store.vacuno.loading);
   var loadingEliminar = useSelector(store => store.vacuno.loadingEliminar);
   var vacunosBuscados = useSelector(store => store.vacuno.vacunosBuscados);
@@ -55,8 +53,40 @@ const Listado = props => {
     for (var j = 0; j < filas.length; j++) {
       filas[j].deleteCell(8);
     }
+    var body = [];
+    vacunos.forEach((vac, i) => {
+      let fila = [
+        vac.id,
+        'imagen',
+        vac.nombre,
+        vac.numero ? vac.numero : 'Sin arete',
+        vac.fecha_colocacion ? formatoFecha(vac.fecha_colocacion) : 'Sin arete',
+        formatoFecha(vac.fecha_nacimiento),
+        vac.sexo,
+        vac.color,
+      ];
+      body.push(fila);
+    });
     pdf.autoTable({
-      html: tablaCopia,
+      //html: tablaCopia,
+      head: [
+        [
+          'N°',
+          'Imagen',
+          'Nombre',
+          'DIIO',
+          'Fecha colocación',
+          'Fecha nacimiento',
+          'Sexo',
+          'Color',
+        ],
+      ],
+      body,
+      /*body: [
+        ['David', 'david@example.com', 'Sweden'],
+        ['Castille', 'castille@example.com', 'Spain'],
+        // ...
+      ],*/
       columnStyles: {
         0: { cellWidth: 'auto', minCellHeight: 80 },
         1: { cellWidth: 120, minCellHeight: 80 },
@@ -207,67 +237,77 @@ const Listado = props => {
                 !mostrarAlertEliminar ? (
                 <PageSpinner texto="Eliminando vacuno" />
               ) : (
-                <Table id="listVacunos">
-                  <thead>
-                    <tr>
-                      <th scope="col" hidden={true}>
-                        N°
-                      </th>
-                      <th scope="col">Imagen</th>
-                      <th scope="col">Nombre</th>
-                      <th scope="col">DIIO</th>
-                      <th scope="col">Fecha colocación</th>
-                      <th scope="col">Fecha nacimiento</th>
-                      <th scope="col">Sexo</th>
-                      <th scope="col">Color</th>
-                      <th scope="col">Acciones</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {vacunos.map(vac => {
-                      return (
-                        <tr key={vac.id}>
-                          <td hidden={true}>{vac.id}</td>
-                          <td>
-                            <img
-                              alt={vac.name}
-                              height={styles.height}
-                              width={styles.width}
-                              src={url_imagenes + vac.id + '.jpg'}
-                            />
-                          </td>
-                          <td>{vac.nombre}</td>
-                          <td>
-                            {vac.numero != null ? vac.numero : 'Sin arete'}
-                          </td>
-                          <td>
-                            {vac.fecha_colocacion != null
-                              ? formatoFecha(vac.fecha_colocacion)
-                              : 'Sin arete'}
-                          </td>
-                          <td>{formatoFecha(vac.fecha_nacimiento)}</td>
-                          <td>{vac.sexo}</td>
-                          <td>{vac.color}</td>
-                          <td>
-                            <FaPencilAlt
-                              cursor="pointer"
-                              title="Editar"
-                              onClick={() => editarVacuno(vac)}
-                            />{' '}
-                            <FaTrash
-                              cursor="pointer"
-                              title="Eliminar"
-                              onClick={() => {
-                                eliminarVacuno(vac);
-                                muestraAlertEliminar(true);
-                              }}
-                            />
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </Table>
+                <>
+                  {/* <Table id="listVacunos">
+                    <thead>
+                      <tr>
+                        <th scope="col" hidden={true}>
+                          N°
+                        </th>
+                        <th scope="col">Imagen</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">DIIO</th>
+                        <th scope="col">Fecha colocación</th>
+                        <th scope="col">Fecha nacimiento</th>
+                        <th scope="col">Sexo</th>
+                        <th scope="col">Color</th>
+                        <th scope="col">Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {vacunos.map(vac => {
+                        return (
+                          <tr key={vac.id}>
+                            <td hidden={true}>{vac.id}</td>
+                            <td>
+                              <img
+                                alt={vac.name}
+                                height={styles.height}
+                                width={styles.width}
+                                src={url_imagenes + vac.id + '.jpg'}
+                              />
+                            </td>
+                            <td>{vac.nombre}</td>
+                            <td>
+                              {vac.numero != null ? vac.numero : 'Sin arete'}
+                            </td>
+                            <td>
+                              {vac.fecha_colocacion != null
+                                ? formatoFecha(vac.fecha_colocacion)
+                                : 'Sin arete'}
+                            </td>
+                            <td>{formatoFecha(vac.fecha_nacimiento)}</td>
+                            <td>{vac.sexo}</td>
+                            <td>{vac.color}</td>
+                            <td>
+                              <FaPencilAlt
+                                cursor="pointer"
+                                title="Editar"
+                                onClick={() => editarVacuno(vac)}
+                              />{' '}
+                              <FaTrash
+                                cursor="pointer"
+                                title="Eliminar"
+                                onClick={() => {
+                                  eliminarVacuno(vac);
+                                  muestraAlertEliminar(true);
+                                }}
+                              />
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </Table> */}
+                  <TablaPaginador
+                    vacunos={vacunos}
+                    styles={styles}
+                    editarVacuno={editarVacuno}
+                    eliminarVacuno={eliminarVacuno}
+                    formatoFecha={formatoFecha}
+                    muestraAlertEliminar={muestraAlertEliminar}
+                  />
+                </>
               )}
             </CardBody>
           </Card>

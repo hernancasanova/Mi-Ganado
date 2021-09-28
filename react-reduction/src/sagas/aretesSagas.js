@@ -16,7 +16,7 @@ function* crearArete({ payload }) {
     const data = yield call(post, url, datosArete);
     yield put({ type: ARETE_CREATE_SUCCESS, payload: data });
   } catch (error) {
-    yield put({ type: ARETE_CREATE_FAILED, payload: error });
+    yield put({ type: ARETE_CREATE_FAILED, payload: error.data.message });
   }
 }
 

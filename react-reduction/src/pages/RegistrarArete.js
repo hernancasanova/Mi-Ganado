@@ -80,6 +80,7 @@ const RegistrarArete = props => {
   const [vacuno_id, handleSelectChange] = useState('');
   var vacunos = useSelector(store => store.vacuno.vacunos);
   var loading = useSelector(store => store.arete.loading);
+  var errores = useSelector(store => store.arete.errores);
   var loadingVacunos = useSelector(store => store.vacuno.loading);
   var url_imagenes = useSelector(store => store.vacuno.url_imagenes);
   var vacunosBuscados = useSelector(store => store.vacuno.vacunosBuscados);
@@ -114,14 +115,23 @@ const RegistrarArete = props => {
       }
     });
   }
-  if (areteCreado) {
-    Swal.fire({
-      html: 'Arete agregado correctamente',
-      icon: 'success',
-      timer: 4000,
-      confirmButtonText: 'Aceptar',
-    });
-  }
+  useEffect(() => {
+    if (areteCreado) {
+      Swal.fire({
+        html: 'Arete agregado correctamente',
+        icon: 'success',
+        timer: 4000,
+        confirmButtonText: 'Aceptar',
+      });
+    } else if (!loading && errores !== '') {
+      Swal.fire({
+        html: errores,
+        icon: 'error',
+        timer: 4000,
+        confirmButtonText: 'Aceptar',
+      });
+    }
+  }, [loading]);
   return (
     <Page
       title="Registrar arete"
