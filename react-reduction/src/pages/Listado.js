@@ -9,6 +9,7 @@ import {
   Row,
   Spinner,
   Button,
+  Input,
 } from 'reactstrap';
 import * as actions from '../actions/VacunoActions';
 import { jsPDF } from 'jspdf';
@@ -16,6 +17,7 @@ import 'jspdf-autotable';
 import PageSpinner from '../components/PageSpinner';
 import Swal from 'sweetalert2';
 import TablaPaginador from '../components/TablaPaginador';
+import Label from 'reactstrap/lib/Label';
 
 const Listado = props => {
   const styles = {
@@ -68,7 +70,6 @@ const Listado = props => {
       body.push(fila);
     });
     pdf.autoTable({
-      //html: tablaCopia,
       head: [
         [
           'N°',
@@ -82,11 +83,6 @@ const Listado = props => {
         ],
       ],
       body,
-      /*body: [
-        ['David', 'david@example.com', 'Sweden'],
-        ['Castille', 'castille@example.com', 'Spain'],
-        // ...
-      ],*/
       columnStyles: {
         0: { cellWidth: 'auto', minCellHeight: 80 },
         1: { cellWidth: 120, minCellHeight: 80 },
@@ -201,20 +197,37 @@ const Listado = props => {
   const eliminarVacuno = vac => {
     dispatch(actions.vacunoSeleccionado(vac));
   };
+  const [vacunosPorPagina, cambiaVacPorPagina] = useState(2);
   return (
     <Page
       title="Listado de vacunos"
       breadcrumbs={[{ name: 'listado', active: true }]}
       className="TablePage"
     >
-      <Row>
-        <Col>
-          <Card className="mb-3">
-            <CardHeader>
+      <Card className="mb-3">
+        <CardHeader>
+          <Row>
+            <Col className="col-3">
+              <b>
+                <Label for="nPaginas">Vacunos por página</Label>
+              </b>
+              <Input
+                value={vacunosPorPagina}
+                onChange={e => {
+                  cambiaVacPorPagina(e.target.value);
+                }}
+                id="nPaginas"
+                type="select"
+              >
+                <option>2</option>
+                <option>5</option>
+                <option>10</option>
+              </Input>
+            </Col>
+            <Col className="col-9">
               <Button
                 disabled={vacunos.length === 0}
-                style={{ float: 'right' }}
-                className="ml-10"
+                style={{ float: 'right', marginTop: '20px' }}
                 onClick={() => {
                   cambiaLoadingDescarga(true);
                 }}
@@ -228,91 +241,31 @@ const Listado = props => {
                   'Descargar pdf'
                 )}{' '}
               </Button>
-            </CardHeader>
-            <CardBody>
-              {loading ? (
-                <PageSpinner texto="Cargando listado" />
-              ) : loadingEliminar &&
-                eliminacionConfirmada &&
-                !mostrarAlertEliminar ? (
-                <PageSpinner texto="Eliminando vacuno" />
-              ) : (
-                <>
-                  {/* <Table id="listVacunos">
-                    <thead>
-                      <tr>
-                        <th scope="col" hidden={true}>
-                          N°
-                        </th>
-                        <th scope="col">Imagen</th>
-                        <th scope="col">Nombre</th>
-                        <th scope="col">DIIO</th>
-                        <th scope="col">Fecha colocación</th>
-                        <th scope="col">Fecha nacimiento</th>
-                        <th scope="col">Sexo</th>
-                        <th scope="col">Color</th>
-                        <th scope="col">Acciones</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {vacunos.map(vac => {
-                        return (
-                          <tr key={vac.id}>
-                            <td hidden={true}>{vac.id}</td>
-                            <td>
-                              <img
-                                alt={vac.name}
-                                height={styles.height}
-                                width={styles.width}
-                                src={url_imagenes + vac.id + '.jpg'}
-                              />
-                            </td>
-                            <td>{vac.nombre}</td>
-                            <td>
-                              {vac.numero != null ? vac.numero : 'Sin arete'}
-                            </td>
-                            <td>
-                              {vac.fecha_colocacion != null
-                                ? formatoFecha(vac.fecha_colocacion)
-                                : 'Sin arete'}
-                            </td>
-                            <td>{formatoFecha(vac.fecha_nacimiento)}</td>
-                            <td>{vac.sexo}</td>
-                            <td>{vac.color}</td>
-                            <td>
-                              <FaPencilAlt
-                                cursor="pointer"
-                                title="Editar"
-                                onClick={() => editarVacuno(vac)}
-                              />{' '}
-                              <FaTrash
-                                cursor="pointer"
-                                title="Eliminar"
-                                onClick={() => {
-                                  eliminarVacuno(vac);
-                                  muestraAlertEliminar(true);
-                                }}
-                              />
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </Table> */}
-                  <TablaPaginador
-                    vacunos={vacunos}
-                    styles={styles}
-                    editarVacuno={editarVacuno}
-                    eliminarVacuno={eliminarVacuno}
-                    formatoFecha={formatoFecha}
-                    muestraAlertEliminar={muestraAlertEliminar}
-                  />
-                </>
-              )}
-            </CardBody>
-          </Card>
-        </Col>
-      </Row>
+            </Col>
+          </Row>
+        </CardHeader>
+        <CardBody>
+          {loading ? (
+            <PageSpinner texto="Cargando listado" />
+          ) : loadingEliminar &&
+            eliminacionConfirmada &&
+            !mostrarAlertEliminar ? (
+            <PageSpinner texto="Eliminando vacuno" />
+          ) : (
+            <>
+              <TablaPaginador
+                vacunos={vacunos}
+                styles={styles}
+                vacunosPorPagina={vacunosPorPagina}
+                editarVacuno={editarVacuno}
+                eliminarVacuno={eliminarVacuno}
+                formatoFecha={formatoFecha}
+                muestraAlertEliminar={muestraAlertEliminar}
+              />
+            </>
+          )}
+        </CardBody>
+      </Card>
     </Page>
   );
 };

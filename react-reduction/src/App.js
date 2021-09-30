@@ -2,6 +2,8 @@ import { STATE_LOGIN, STATE_SIGNUP } from 'components/AuthForm';
 import { EmptyLayout, LayoutRoute, MainLayout } from 'components/Layout';
 import PageSpinner from 'components/PageSpinner';
 import AuthPage from 'pages/AuthPage';
+//import NoEncontrado from 'pages/NoEncontrado';
+//import Bienvenida from 'pages/Bienvenida';
 import React from 'react';
 import componentQueries from 'react-component-queries';
 import { Route, Switch } from 'react-router-dom';
@@ -9,8 +11,9 @@ import './styles/reduction.scss';
 import { ConnectedRouter } from 'connected-react-router';
 import { connect } from 'react-redux';
 
-//const Bienvenida = React.lazy(() => import('pages/Bienvenida'));
+const Bienvenida = React.lazy(() => import('pages/Bienvenida'));
 const Listado = React.lazy(() => import('pages/Listado'));
+const NoEncontrado = React.lazy(() => import('pages/NoEncontrado'));
 const RegistrarVacuno = React.lazy(() => import('pages/RegistrarVacuno'));
 //const RegistrarVacuno = React.lazy(() => import('pages/ReactHookForm'));
 const RegistrarArete = React.lazy(() => import('pages/RegistrarArete'));
@@ -46,7 +49,7 @@ class App extends React.Component {
 
           <MainLayout breakpoint={this.props.breakpoint} history={history}>
             <React.Suspense fallback={<PageSpinner />}>
-              {/*<Route exact path="/" component={Bienvenida} />*/}
+              <Route exact path="/" component={Bienvenida} />
               <Route exact path="/listado_vacunos" component={Listado} />
               <Route
                 exact
@@ -61,7 +64,14 @@ class App extends React.Component {
                 />
               )}
               <Route exact path="/registrar_arete" component={RegistrarArete} />
+              <Route exact path="/404" component={NoEncontrado} />
+              {/* <Route render={() => <Redirect to="/404" />} /> */}
+              {/* <Route render={() => <NoEncontrado />} /> */}
+              {/* <Route>
+                <Redirect to="/404" />
+              </Route> */}
               {/*<Redirect </Redirect>to={} /> */}
+              {/* <Route component={NoEncontrado} /> */}
             </React.Suspense>
           </MainLayout>
         </Switch>

@@ -67,7 +67,6 @@ export default (state = INITIAL_STATE, action) => {
           loading: false,
           loadingEliminar: url_actual !== '/listado_vacunos' ? false : true,
           vacunoEditado,
-          vacunos: [],
           errores: '',
         };
       } else {

@@ -40,8 +40,8 @@ Route::post('login', function (Request $request) {
         $user->save();
     	return response([
             'api_token'=>$user->api_token,
-            'user'=>$user->email,
-            //'password'=>$user->password,
+            'user'=>$user->name,
+            'email'=>$user->email,
             'user_id'=>$user->id,
             'status_code' => 200,
         ], 200);

@@ -1,10 +1,5 @@
 import { Content, Footer, Header, Sidebar } from 'components/Layout';
 import React from 'react';
-import {
-  MdImportantDevices,
-  // MdCardGiftcard,
-  MdLoyalty,
-} from 'react-icons/md';
 import NotificationSystem from 'react-notification-system';
 import { NOTIFICATION_SYSTEM_STYLE } from 'utils/constants';
 
@@ -31,11 +26,10 @@ class MainLayout extends React.Component {
 
       this.notificationSystem.addNotification({
         //title: <MdImportantDevices />,
-        message: 'Bienvenido a la plataforma de gestión de vacunos appAn2.1',
+        message: 'Bienvenido a la plataforma de gestión de vacunos Mi ganado',
         level: 'info',
       });
     }, 2000);
-
   }
 
   // close sidebar when

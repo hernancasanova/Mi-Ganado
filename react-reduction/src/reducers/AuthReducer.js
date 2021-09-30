@@ -58,6 +58,7 @@ export default (state = INITIAL_STATE, action) => {
         //data: action.payload,
         //username: action.payload.user,
         userLogged: action.payload.user,
+        emailUser: action.payload.email,
         userValid: true,
         //email: action.payload.email,
         //password: action.payload.password,

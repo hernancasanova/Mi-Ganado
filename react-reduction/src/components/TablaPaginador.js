@@ -1,15 +1,7 @@
 import React, { useState } from 'react';
-import {
-  Pagination,
-  PaginationItem,
-  PaginationLink,
-  Table,
-  Input,
-  Col,
-} from 'reactstrap';
+import { Pagination, PaginationItem, PaginationLink, Table } from 'reactstrap';
 import { useSelector } from 'react-redux';
 import { FaPencilAlt, FaTrash } from 'react-icons/fa';
-import Label from 'reactstrap/lib/Label';
 
 const TablaPaginador = props => {
   var url_imagenes = useSelector(store => store.vacuno.url_imagenes);
@@ -22,7 +14,7 @@ const TablaPaginador = props => {
     muestraAlertEliminar,
   } = props;
   const [paginaActual, cambiaPaginaActual] = useState(0);
-  const [vacunosPorPagina, cambiaVacPorPagina] = useState(2);
+  const { vacunosPorPagina } = props;
   let cantidadPaginas = Math.ceil(vacunos.length / vacunosPorPagina);
   const vacunosListados = vacunos.slice(
     paginaActual * vacunosPorPagina,
@@ -40,23 +32,6 @@ const TablaPaginador = props => {
   }
   return (
     <>
-      <Col className="col-3">
-        <b>
-          <Label for="nPaginas">Vacunos por página</Label>
-        </b>
-        <Input
-          value={vacunosPorPagina}
-          onChange={e => {
-            cambiaVacPorPagina(e.target.value);
-          }}
-          id="nPaginas"
-          type="select"
-        >
-          <option>2</option>
-          <option>5</option>
-          <option>10</option>
-        </Input>
-      </Col>
       <Table id="listVacunos">
         <thead>
           <tr>

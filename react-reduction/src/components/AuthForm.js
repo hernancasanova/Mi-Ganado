@@ -7,6 +7,7 @@ import { signIn, register, auth } from '../actions/AuthActions';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import isEmail from 'validator/es/lib/isEmail';
+import Typography from './Typography';
 
 class AuthForm extends React.Component {
   constructor(props) {
@@ -88,7 +89,7 @@ class AuthForm extends React.Component {
     const input = e.target.name;
     if (input === 'username') {
       //if(username.length>2 && username.length<7){
-      if (value.length > 1 && value.length < 7) {
+      if (value.length > 1 && value.length < 9) {
         this.setState({ validUsername: true });
       } else {
         this.setState({ validUsername: false });
@@ -141,9 +142,10 @@ class AuthForm extends React.Component {
     return (
       <>
         <Form onSubmit={this.handleSubmit}>
-          <div className="text-center pb-4">
+          <Typography className="text-center pb-4 text-primary">
             <h5>Plataforma de gestión de vacunos</h5>
-          </div>
+            <h3 style={{ fontFamily: 'cursive' }}>Mi ganado</h3>
+          </Typography>
           <div className="text-center pb-4">
             <img
               src={ganadovacunoImage}
@@ -163,7 +165,7 @@ class AuthForm extends React.Component {
                 invalid={!validUsername && username.length > 0}
                 valid={validUsername}
               />
-              <FormText>Ingrese entre 2 a 6 caracteres</FormText>
+              <FormText>Ingrese entre 2 a 8 caracteres</FormText>
             </FormGroup>
           )}
           <FormGroup>
