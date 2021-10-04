@@ -7,6 +7,7 @@ use App\Arete;
 use DB;
 use Illuminate\Database\QueryException;
 use App\Exceptions\Handler;
+use Carbon\Carbon;
 
 class AreteController extends Controller
 {
@@ -42,7 +43,7 @@ class AreteController extends Controller
             DB::beginTransaction();
             DB::table('aretes')->where('vacuno_id',$request->vacuno_id)->update(['estado'=>'inactivo']);
             DB::table('aretes')->insert([
-                ['numero' => $request->numero, 'vacuno_id' => $request->vacuno_id, 'fecha_colocacion' => $request->fecha_colocacion, 'estado'=>'activo']
+                ['numero' => $request->numero, 'vacuno_id' => $request->vacuno_id, 'fecha_colocacion' => $request->fecha_colocacion, 'estado'=>'activo', 'created_at'=>Carbon::now()]
             ]);
             DB::commit();
             return response()->json([
@@ -53,6 +54,8 @@ class AreteController extends Controller
             DB::rollback();
             if($errorCode===1062){
                 throw new \Exception("El arete ya se encuentra asociado a un vacuno", 1);
+            }else{
+                throw $e;
             }
         } 
     }
