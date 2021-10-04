@@ -21,12 +21,12 @@ class VacunoController extends Controller
     {
         $vacunos1=DB::table("vacunos")
                     ->leftJoin('aretes','vacunos.id','=','aretes.vacuno_id')
-                    ->select('vacunos.id','vacunos.nombre','vacunos.fecha_nacimiento','vacunos.sexo','vacunos.tipos_vacunos_id as tipo','vacunos.color','vacunos.estado','vacunos.fecha_venta',DB::raw('DATE(MAX(aretes.created_at)) as fecha_colocacion'))//ESTA FUNCIONA
+                    ->select('vacunos.id','vacunos.nombre','vacunos.fecha_nacimiento','vacunos.sexo','vacunos.tipos_vacunos_id as tipo','vacunos.color','vacunos.estado','vacunos.fecha_venta',DB::raw('DATE(MAX(aretes.created_at)) as fecha_colocacion'),DB::raw('MAX(aretes.created_at) as created_at'))//ESTA FUNCIONA
                     ->groupBy('vacunos.id','vacunos.nombre','vacunos.fecha_nacimiento','vacunos.sexo','tipo','vacunos.color','vacunos.estado','vacunos.fecha_venta');//FUNCIONA
         $vacunos = DB::table('aretes')
                     ->select('aretes.numero','fechaUltimosAretes.*')
                     ->rightJoinSub($vacunos1, 'fechaUltimosAretes', function ($join) {
-                      $join->on('aretes.created_at', '=', 'fechaUltimosAretes.fecha_colocacion');
+                      $join->on('aretes.created_at', '=', 'fechaUltimosAretes.created_at');
                     })
                     ->get();
         return response([
