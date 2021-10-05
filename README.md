@@ -1,3 +1,8 @@
+# Software requerido
+
+1. Git
+2. Docker
+
 # Pasos para ejecutar la aplicación
 
 1.  Clonar repositorio `git clone https://github.com/hernancasanova/appAn2.0.git`
