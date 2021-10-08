@@ -3,32 +3,9 @@ import logoappAn from 'assets/img/logo/ganado_vacuno.png';
 import sidebarBgImage from 'assets/img/sidebar/sidebar-4.jpg';
 import SourceLink from 'components/SourceLink';
 import React from 'react';
-import { FaGithub } from 'react-icons/fa';
-import {
-  MdAccountCircle,
-  MdArrowDropDownCircle,
-  MdBorderAll,
-  MdBrush,
-  MdChromeReaderMode,
-  MdDashboard,
-  MdExtension,
-  MdGroupWork,
-  MdInsertChart,
-  MdKeyboardArrowDown,
-  MdNotificationsActive,
-  MdPages,
-  MdRadioButtonChecked,
-  MdSend,
-  MdStar,
-  MdTextFields,
-  MdViewCarousel,
-  MdViewDay,
-  MdViewList,
-  MdWeb,
-  MdWidgets,
-} from 'react-icons/md';
-import {GiCow} from 'react-icons/gi';
-import {FiList} from 'react-icons/fi';
+import { MdDashboard, MdExtension, MdKeyboardArrowDown } from 'react-icons/md';
+import { GiCow } from 'react-icons/gi';
+import { FiList } from 'react-icons/fi';
 import { NavLink } from 'react-router-dom';
 import {
   // UncontrolledTooltip,
@@ -47,25 +24,27 @@ const sidebarBackground = {
 };
 
 const navVacunos = [
-//{ to: '/listado', name: 'Listado de animales', exact: true, Icon: MdRadioButtonChecked },
+  //{ to: '/listado', name: 'Listado de animales', exact: true, Icon: MdRadioButtonChecked },
   { to: '/listado_vacunos', name: 'Listado', exact: true, Icon: FiList },
-  { to: '/registrar_vacuno', name: 'Registrar', exact: true, Icon: MdDashboard },
+  {
+    to: '/registrar_vacuno',
+    name: 'Registrar',
+    exact: true,
+    Icon: MdDashboard,
+  },
 ];
 const navAretes = [
   //{ to: '/listado', name: 'Listado de animales', exact: true, Icon: MdRadioButtonChecked },
-  
+
   { to: '/registrar_arete', name: 'Registrar', exact: true, Icon: MdDashboard },
-  ];
-const navItems = [
-  { to: '/listado', name: 'Listado de animales', exact: true, Icon: MdDashboard },
 ];
 
 const bem = bn.create('sidebar');
 
 class Sidebar extends React.Component {
   state = {
-    isOpenVacunos: true,
-    isOpenAretes: true,
+    isOpenVacunos: false,
+    isOpenAretes: false,
     isOpenComponents: true,
     isOpenContents: true,
     isOpenPages: true,
@@ -90,10 +69,10 @@ class Sidebar extends React.Component {
             <SourceLink className="navbar-brand d-flex">
               <img
                 src={logoappAn}
-                width="120"
-                height="40"
-                className="pr-20"
-                alt=""
+                width="190"
+                height="64"
+                className="mt-10"
+                alt="logoAppAn"
               />
             </SourceLink>
           </Navbar>

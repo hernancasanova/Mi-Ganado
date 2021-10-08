@@ -1,9 +1,15 @@
 import React from 'react';
+import { history } from '../index';
 
 const SourceLink = props => {
   /* eslint-disable jsx-a11y/anchor-has-content */
   return (
-    <a href={process.env.REACT_APP_SOURCE_URL} target="_blank" rel="noopener noreferrer" {...props} />
+    <a
+      onClick={() => {
+        history.push('/');
+      }}
+      {...props}
+    />
   );
 };
 

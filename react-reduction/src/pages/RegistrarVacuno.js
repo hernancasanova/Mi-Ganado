@@ -1,260 +1,422 @@
 import Page from 'components/Page';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Card, CardBody, CardHeader, Col, Row, Spinner, Button, FormFeedback, FormGroup, FormText, Input, Label, UncontrolledAlert } from 'reactstrap';
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  Col,
+  Row,
+  Spinner,
+  Button,
+  FormGroup,
+  Input,
+  Label,
+  FormText,
+} from 'reactstrap';
+import * as Yup from 'yup';
 import * as actions from '../actions/VacunoActions';
-import { jsPDF } from "jspdf";
 import 'jspdf-autotable';
 import PageSpinner from '../components/PageSpinner';
 import Swal from 'sweetalert2';
-import { useForm } from "react-hook-form";
-
-const RegistrarVacuno = () => {  
-  /*var datosVacuno = new FormData();
-  datosVacuno.append("nombre",nombre);
-  datosVacuno.append("fecha_nacimiento",fecha_nacimiento);
-  datosVacuno.append("sexo",sexo);
-  datosVacuno.append("tipos_vacunos_id",tipos_vacunos_id);
-  datosVacuno.append("raza",raza);
-  datosVacuno.append("estado",estado);
-  datosVacuno.append("fecha_venta",fecha_venta);
-  datosVacuno.append("imagen_vacuno",imagen);
-  const registrar_vacuno = () => {
-    fetch("http://localhost:8000/api/vacunos",{method: 'post',
-    body:datosVacuno})
-    .then(result => { return result.json() })
-    .then(data => {
-        if(data.status_code===200){
-          Swal.fire({
-            'html': "Vacuno agregado correctamente",
-            'icon': "success",
-            'timer': 4000,
-            'confirmButtonText': 'Aceptar'
-          });
-        }
-        else{
-          Swal.fire({
-            'icon': 'error',
-            'title': 'Ups...',
-            'text': 'Algo salió mal!',
-            'confirmButtonText': 'Intentelo nuevamente',
-            'footer': '<a href="javascript:location.reload(true)">Por favor recargue la página si el problema persiste</a>'
-          })
-        }
-      })
-    .catch(error=>{Swal.fire({
-      'icon': 'error',
-      'title': 'ups...',
-      'text': 'Algo salió mal!',
-      'confirmButtonText': 'Intentelo nuevamente',
-      'footer': '<a href="javascript:location.reload(true)">Por favor recargue la página si el problema persiste</a>'
-    })});
-  }*/
-  /*useEffect(()=>{
-     dispatch(actions.crearVacuno(nombre, fecha_nacimiento, sexo, tipo_vacuno, raza, estado, fecha_venta));
-  },[]);*/
-  //const [numero, onChange] = useState(0);
-  const [vacuno_id, handleSelectChange] = useState("");
-  //const [nombre, handleChange] = useState("");//NO SE USARA ESTADO LOCAL
-  /*const handleSelectChange = (e) => {
-    vacuno_id=e.target.value;
-  }*/
-  /*let validNombre=(nombre)=>{
-    if(nombre.length>6 && nombre.length<15){
-      return true;
-    }else{
-      return false;
-    }
-  }*/
-  var tipos_vacunos = useSelector(store=>store.vacuno.tipos_vacunos);
-  var loading = useSelector(store=>store.vacuno.loading);
-  var vacunoCreated = useSelector(store=>store.vacuno.vacunoCreated);
-  const dispatch = useDispatch();
-  const { register, handleSubmit, watch, formState: { errors } } = useForm();
-  if(tipos_vacunos.length===0){
-    dispatch(actions.listadoTiposVacunos());
+import {
+  VACUNO_CREATE_REQUEST,
+  VACUNO_EDIT_REQUEST,
+} from '../actionstypes/types';
+import { Formik } from 'formik';
+import { FaInfo } from 'react-icons/fa';
+const RegistrarVacuno = props => {
+  //var contenidoImagen = document.getElementById('imagen_vacuno').value;
+  // const styles = {
+  //   // exampleImageInput: {
+  //   //   cursor: 'pointer',
+  //   //   position: 'absolute',
+  //   //   top: '0',
+  //   //   bottom: '0',
+  //   //   right: '0',
+  //   //   left: '0',
+  //   //   width: '100%',
+  //   //   opacity: '0',
+  //   // },
+  //   imagen_vacuno: {
+  //     display: 'none',
+  //   },
+  //   boton_imagen_vacuno: {
+  //     border: '1px solid #ccc',
+  //     display: 'inline-block',
+  //     padding: '6px 12px',
+  //     cursor: 'pointer',
+  //     backgroundColor: '#fb2a55',
+  //     color: 'white',
+  //     borderRadius: '0.25rem',
+  //   },
+  // };
+  var tipos_vacunos = useSelector(store => store.vacuno.tipos_vacunos);
+  var url_imagenes = useSelector(store => store.vacuno.url_imagenes);
+  var loading = useSelector(store => store.vacuno.loading);
+  var errores = useSelector(store => store.vacuno.errores);
+  var vacunoCreatedEdited = useSelector(
+    store => store.vacuno.vacunoCreatedEdited,
+  );
+  var vacunoEditado = useSelector(store => store.vacuno.vacunoEditado);
+  const [nombre, cambiaNombre] = useState(vacunoEditado.nombre);
+  const [fecha_nacimiento, cambiaFechaNacimiento] = useState(
+    vacunoEditado.fecha_nacimiento,
+  );
+  const [sexo, cambiaSexo] = useState(vacunoEditado.sexo);
+  const [tipo, cambiaTipo] = useState(vacunoEditado.tipo);
+  const [color, cambiaColor] = useState(vacunoEditado.color);
+  const [estado, cambiaEstado] = useState(vacunoEditado.estado);
+  const [fechaVenta, cambiaFechaVenta] = useState(vacunoEditado.fechaVenta);
+  var accion;
+  if (vacunoEditado.id > 0) {
+    accion = VACUNO_EDIT_REQUEST;
+  } else {
+    accion = VACUNO_CREATE_REQUEST;
   }
-  const onsubmit = data => {
-    var nombre = document.getElementById('nombre').value;
-    var fecha_nacimiento = document.getElementById('fecha_nacimiento').value;
-    var sexo = document.getElementById("sexo").value;
-    var tipo_vacuno = document.getElementById("tipos_vacunos_id").value;//tipos_vacunos_id
-    var raza = document.getElementById("raza").value;
-    var estado = document.getElementById("estado").value;
-    var fecha_venta = document.getElementById("fecha_venta").value;
-    var imagen = document.querySelector('input[type="file"]').files[0];
-    dispatch(actions.crearVacuno(nombre, fecha_nacimiento, sexo, tipo_vacuno, raza, estado, fecha_venta, imagen));
-  };
-  if(vacunoCreated){
+  const esquemaValidacion = Yup.object().shape({
+    nombre: Yup.string()
+      .min(4, 'Mínimo 4 caracteres')
+      .max(16, 'Máximo 16 caracteres')
+      .required('El campo nombre es requerido'),
+    fecha_nacimiento: Yup.string().required(
+      'El campo fecha de nacimiento es requerido',
+    ),
+    sexo: Yup.string().required('El campo sexo es requerido'),
+    tipo: Yup.number().required('El campo tipo es requerido'),
+    color: Yup.string().required('El campo color es requerido'),
+    estado: Yup.string().required('El campo estado es requerido'),
+    //email: Yup.string().email('Invalid email').required('Required'),
+  });
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (tipos_vacunos.length === 0) {
+      dispatch(actions.listadoTiposVacunos()); //se ejecuta una sola vez porque al primer render actualiza el store y la condición nunca más se ejecuta
+    }
+  }, []);
+  if (vacunoCreatedEdited && !loading) {
     Swal.fire({
-      'html': "Vacuno agregado correctamente",
-      'icon': "success",
-      'timer': 4000,
-      'confirmButtonText': 'Aceptar'
+      html:
+        vacunoEditado.id > 0
+          ? 'Vacuno editado correctamente'
+          : 'Vacuno agregado correctamente',
+      icon: 'success',
+      timer: 4000,
+      confirmButtonText: 'Aceptar',
+    }).then(result => {
+      if (result.isConfirmed) {
+        props.history.push('listado_vacunos');
+      }
     });
   }
-  console.log("renderizado");
+  useEffect(() => {
+    if (!loading && errores) {
+      Swal.fire({
+        html: errores,
+        icon: 'error',
+        confirmButtonText: 'Aceptar',
+      });
+    }
+  }, [loading]);
   return (
     <Page
-      title="Registrar vacuno"
-      breadcrumbs={[{ name: 'registrar_vacuno', active: true }]}
+      title={vacunoEditado.id > 0 ? 'Editar vacuno' : 'Registrar vacuno'}
+      breadcrumbs={[
+        {
+          name: vacunoEditado.id > 0 ? 'editar' : 'registrar',
+          active: true,
+        },
+      ]}
       className="TablePage"
     >
       <Row>
         <Col>
-        {tipos_vacunos.length>0?<>
-          <Card className="mb-3">
-            <CardHeader> 
-            </CardHeader>
-            <CardBody>
-              <form onSubmit={handleSubmit(onsubmit)}>
-              {/*<input
-                        className="form-control my-2"
-                        name="nameshrt"
-                        {...register("name", { 
-                            required:{
-                                value: true,
-                                message: 'Title required' 
-                            }
-                        })}   
-                    />
-                    <span className="text-danger text-small d-block mb-2">
-                        {errors.name &&  errors.name.message}
-                    </span>*/}
-                <FormGroup>
-                  <Label for="imagen_vacuno">Seleccione imagen</Label>
-                  <Input
-                    //{...register("imagen", { required: {value: true, message: "Debe seleccionar una imagen"} })}
-                    type="file"
-                    name="imagen_vacuno"
-                    id="imagen_vacuno"
-                    //placeholder="Ej: 2021-04-06"
-                  />
-                  <FormText>Tamaño máximo 2 MB</FormText>
-                  <span className="text-danger text-small d-block mb-2">
-                    {errors.imagen &&  errors.imagen.message}
-                  </span>
-                </FormGroup>
-                <FormGroup>
-                  <Label for="nombre">Nombre</Label>
-                  <Input
-                    //type="text"
-                    name="nombre"
-                    id="nombre"
-                    //placeholder=""
-                    //onChange={(e)=>handleChange(e.target.value)}
-                    //value={nombre}
-                    //valid={validNombre(nombre)}
-                    //invalid={!validNombre(nombre)}
-                    //valid={e=>validNombre(e.target.value)}
-                    //valid={nombre.length>6 && nombre.length<15}
-                    //invalid={!(nombre.length>6 && nombre.length<15) && nombre.length>0}
-                    //invalid={e=>{!validNombre(e.target.value) && nombre.length>0}}
-                    {...register("name", { required: {value: true, message: "El campo nombre es requerido"}, maxLength: {value: 12, message: "Máximo de 12 caracteres"}, minLength: {value: 4, message: 'Mínimo 4 caracteres'} })}
-                  />
-                  <span className="text-danger text-small d-block mb-2">
-                    {errors.name &&  errors.name.message}
-                  </span>
-                  {/*errors.nombre && <span>This field is required</span>*/}
-                </FormGroup>
-                <FormGroup>
-                  <Label for="fecha_nacimiento">Fecha nacimiento</Label>
-                  <Input
-                    {...register("fecha_nacimiento", { required: {value: true, message: "El campo fecha de nacimiento es requerido"} })}
-                    type="date"
-                    name="fecha_nacimiento"
-                    id="fecha_nacimiento"
-                    placeholder="Ej: 2021-04-06"
-                  />
-                  <span className="text-danger text-small d-block mb-2">
-                    {errors.fecha_nacimiento &&  errors.fecha_nacimiento.message}
-                  </span>
-                </FormGroup>
-                <FormGroup>
-                    <Label for="sexo">Sexo del vacuno</Label>
-                    <Input type="select" id="sexo" name="sexo" onChange={(e)=>handleSelectChange(e.target.value)} 
-                    {...register("sexo", { required: {value: true, message: "El campo sexo es requerido"} })}>
-                        <option val="">Seleccione</option>
-                        <option val="1">Macho</option>
-                        <option val="2">Hembra</option>
-                    </Input>
-                    <span className="text-danger text-small d-block mb-2">
-                      {errors.sexo &&  errors.sexo.message}
-                    </span>
-                </FormGroup>
-                <FormGroup>
-                    <Label for="tipos_vacunos_id">Tipo del vacuno a registrar</Label>
-                    <Input type="select" id="tipos_vacunos_id" name="tipos_vacunos_id" onChange={(e)=>handleSelectChange(e.target.value)}
-                    {...register("tipo_vacuno", { required: {value: true, message: "El campo tipo de vacuno es requerido"} })}>
-                        <option val="">Seleccione</option>
-                    {tipos_vacunos.map(tip_vac=>{
-                        return (<option key={tip_vac.id} value={tip_vac.id}>{tip_vac.nombre_tipo_vacuno}</option>);} )}
-                    </Input>
-                    <span className="text-danger text-small d-block mb-2">
-                      {errors.tipo_vacuno &&  errors.tipo_vacuno.message}
-                    </span>
-                </FormGroup>
-                <FormGroup>
-                    <Label for="raza">Color del vacuno</Label>
-                    <Input type="select" id="raza" name="raza" onChange={(e)=>handleSelectChange(e.target.value)}
-                    {...register("color", { required: {value: true, message: "El campo color es requerido"} })}>
-                        <option val="">Seleccione</option>
-                        <option val="1">Clavel(a)</option>
-                        <option val="2">Overo(a)</option>
-                        <option val="3">Blanco(a)</option>
-                        <option val="4">Colorado(a)</option>
-                        <option val="5">Amarillo(a)</option>
-                    </Input>
-                    <span className="text-danger text-small d-block mb-2">
-                      {errors.color &&  errors.color.message}
-                    </span>
-                </FormGroup>
-                <FormGroup>
-                    <Label for="estado">Estado del vacuno</Label>
-                    <Input type="select" id="estado" name="estado" onChange={(e)=>handleSelectChange(e.target.value)}
-                    {...register("estado", { required: {value: true, message: "El campo estado es requerido"} })}>
-                        <option val="">Seleccione</option>
-                        <option val="1">Vivo</option>
-                        <option val="2">Muerto</option>
-                    </Input>
-                    <span className="text-danger text-small d-block mb-2">
-                      {errors.estado &&  errors.estado.message}
-                    </span>
-                </FormGroup>
-                <FormGroup>
-                  <Label for="fecha_venta">Fecha venta</Label>
-                  <Input
-                    type="date"
-                    name="fecha_venta"
-                    id="fecha_venta"
-                    placeholder="Ej: 2021-04-06"
-                  />
-                </FormGroup>
-                <Button className="ml-10">{!loading?"Registrar vacuno":<>{"Registrando vacuno...  "}<Spinner/></>}</Button>
-                </form>
-                {/*<form onSubmit={handleSubmit(onsubmit)}>
-                    <input
-                        className="form-control my-2"
-                        name="nameshrt"
-                        {...register("name", { 
-                            required:{
-                                value: true,
-                                message: 'Title required' 
-                            }
-                        })}   
-                    />
-                    <span className="text-danger text-small d-block mb-2">
-                        {errors.name &&  errors.name.message}
-                    </span>
-                    
-                    <button className="btn btn-primary" >Send</button>
-                      </form>*/}
-            </CardBody>
-          </Card></>:<PageSpinner />}
+          {tipos_vacunos.length > 0 ? (
+            <>
+              <Card className="mb-3">
+                <CardHeader></CardHeader>
+                <CardBody>
+                  <Formik
+                    enableReinitialize
+                    validateOnBlur={false}
+                    //validateOnChange={false}
+                    validationSchema={esquemaValidacion}
+                    initialValues={{
+                      id: vacunoEditado.id,
+                      nombre,
+                      fecha_nacimiento,
+                      sexo,
+                      tipo,
+                      color,
+                      estado,
+                      fechaVenta,
+                      imagen_vacuno: '',
+                    }}
+                    validate={values => {
+                      const errors = {};
+                      let imagen =
+                        document.querySelector('input[type="file"]').files[0];
+                      if (!imagen && vacunoEditado.id === 0) {
+                        errors.imagen_vacuno = 'Debe seleccionar una imagen';
+                      }
+                      return errors;
+                    }}
+                    onSubmit={values => {
+                      var nombre = values.nombre;
+                      var fecha_nacimiento = values.fecha_nacimiento;
+                      var sexo = values.sexo;
+                      var tipo = values.tipo;
+                      var color = values.color;
+                      var estado = values.estado;
+                      var fechaVenta =
+                        document.getElementById('fechaVenta').value;
+                      let imagen =
+                        document.querySelector('input[type="file"]').files[0];
+                      dispatch(
+                        actions.crearEditarVacuno(
+                          vacunoEditado.id,
+                          nombre,
+                          fecha_nacimiento,
+                          sexo,
+                          tipo,
+                          color,
+                          estado,
+                          fechaVenta,
+                          imagen,
+                          accion,
+                        ),
+                      );
+                    }}
+                  >
+                    {props => (
+                      <form onSubmit={props.handleSubmit}>
+                        <FormGroup>
+                          {vacunoEditado.id > 0 ? (
+                            <>
+                              <Label for="">Imagen actual: </Label>
+                              {'               '}
+                              <img
+                                alt={vacunoEditado.id + '.jpg'}
+                                height={100}
+                                width={100}
+                                src={url_imagenes + vacunoEditado.id + '.jpg'}
+                              />
+                              {/* <Button
+                                    style={styles.boton_imagen_vacuno}
+                                    type="button"
+                                  >
+                                    Seleccione una nueva imagen
+                                  </Button>
+                                  <Input
+                                    id="imagen_vacuno"
+                                    style={styles.imagen_vacuno}
+                                    type="file"
+                                  /> */}
+                              <br />
+                              <br />
+                              <Label for="">Seleccione una nueva imagen</Label>
+                              <Input
+                                id="imagen_vacuno"
+                                name="imagen_vacuno"
+                                //style={styles.imagen_vacuno}
+                                type="file"
+                              />
+                              <FormText>
+                                <FaInfo />
+                                {'   '}
+                                La imagen seleccionada reemplazará la actual
+                                imagen
+                              </FormText>
+                            </>
+                          ) : (
+                            <>
+                              <Label for="imagen_vacuno">
+                                Seleccione imagen
+                              </Label>
+                              <Input
+                                type="file"
+                                name="imagen_vacuno"
+                                id="imagen_vacuno"
+                              />
+                            </>
+                          )}
+                          {props.errors.imagen_vacuno && (
+                            <span className="text-danger text-small d-block mb-2">
+                              {props.errors.imagen_vacuno}
+                            </span>
+                          )}
+                        </FormGroup>
+                        <FormGroup>
+                          <Label for="nombre">Nombre</Label>
+                          <Input
+                            type="text"
+                            onChange={e => {
+                              cambiaNombre(e.target.value);
+                            }}
+                            value={props.values.nombre}
+                            name="nombre"
+                            id="nombre"
+                          />
+                          {props.errors.nombre && (
+                            <span className="text-danger text-small d-block mb-2">
+                              {props.errors.nombre}
+                            </span>
+                          )}
+                        </FormGroup>
+                        <FormGroup>
+                          <Label for="fecha_nacimiento">Fecha nacimiento</Label>
+                          <Input
+                            type="date"
+                            onChange={e => {
+                              cambiaFechaNacimiento(e.target.value);
+                            }}
+                            value={props.values.fecha_nacimiento}
+                            name="fecha_nacimiento"
+                            id="fecha_nacimiento"
+                          />
+                          {props.errors.fecha_nacimiento && (
+                            <span className="text-danger text-small d-block mb-9">
+                              {props.errors.fecha_nacimiento}
+                            </span>
+                          )}
+                        </FormGroup>
+                        <FormGroup>
+                          <Label for="sexo">Sexo</Label>
+                          <Input
+                            type="select"
+                            id="sexo"
+                            name="sexo"
+                            onChange={e => {
+                              cambiaSexo(e.target.value);
+                            }}
+                            value={props.values.sexo}
+                          >
+                            <option val="">Seleccione</option>
+                            <option val="1">Macho</option>
+                            <option val="2">Hembra</option>
+                          </Input>
+                          {props.errors.sexo && (
+                            <span className="text-danger text-small d-block mb-2">
+                              {props.errors.sexo}
+                            </span>
+                          )}
+                        </FormGroup>
+                        <FormGroup>
+                          <Label for="tipo">Tipo</Label>
+                          <Input
+                            type="select"
+                            id="tipo"
+                            name="tipo"
+                            onChange={e => {
+                              cambiaTipo(e.target.value);
+                            }}
+                            value={props.values.tipo}
+                          >
+                            <option val="">Seleccione</option>
+                            {tipos_vacunos.map(tip_vac => {
+                              return (
+                                <option key={tip_vac.id} value={tip_vac.id}>
+                                  {tip_vac.nombre_tipo_vacuno}
+                                </option>
+                              );
+                            })}
+                          </Input>
+                          {props.errors.tipo && (
+                            <span className="text-danger text-small d-block mb-2">
+                              {props.errors.tipo}
+                            </span>
+                          )}
+                        </FormGroup>
+                        <FormGroup>
+                          <Label for="color">Color</Label>
+                          <Input
+                            type="select"
+                            id="color"
+                            name="color"
+                            onChange={e => {
+                              cambiaColor(e.target.value);
+                            }}
+                            value={props.values.color}
+                          >
+                            <option val="">Seleccione</option>
+                            <option val="1">Clavel(a)</option>
+                            <option val="2">Overo(a)</option>
+                            <option val="3">Blanco(a)</option>
+                            <option val="4">Colorado(a)</option>
+                            <option val="5">Amarillo(a)</option>
+                          </Input>
+                          {props.errors.color && (
+                            <span className="text-danger text-small d-block mb-2">
+                              {props.errors.color}
+                            </span>
+                          )}
+                        </FormGroup>
+                        <FormGroup>
+                          <Label for="estado">Estado</Label>
+                          <Input
+                            type="select"
+                            id="estado"
+                            name="estado"
+                            onChange={e => {
+                              cambiaEstado(e.target.value);
+                            }}
+                            value={props.values.estado}
+                          >
+                            <option val="">Seleccione</option>
+                            <option val="1">Vivo</option>
+                            <option val="2">Muerto</option>
+                          </Input>
+                          {props.errors.estado && (
+                            <span className="text-danger text-small d-block mb-2">
+                              {props.errors.estado}
+                            </span>
+                          )}
+                        </FormGroup>
+                        <FormGroup>
+                          <Label for="fechaVenta">Fecha venta (opcional)</Label>
+                          <Input
+                            type="date"
+                            name="fechaVenta"
+                            id="fechaVenta"
+                            placeholder="Ej: 2021-04-06"
+                            onChange={e => {
+                              cambiaFechaVenta(e.target.value);
+                            }}
+                            value={props.values.fechaVenta}
+                          />
+                        </FormGroup>
+                        <Button type="submit" className="ml-10">
+                          {vacunoEditado.id > 0 ? (
+                            !loading ? (
+                              'Editar vacuno'
+                            ) : (
+                              <>
+                                {'Editando vacuno...  '}
+                                <Spinner />
+                              </>
+                            )
+                          ) : !loading ? (
+                            'Registrar vacuno'
+                          ) : (
+                            <>
+                              {'Registrando vacuno...  '}
+                              <Spinner />
+                            </>
+                          )}
+                        </Button>
+                      </form>
+                    )}
+                  </Formik>
+                </CardBody>
+              </Card>
+            </>
+          ) : (
+            <PageSpinner />
+          )}
         </Col>
       </Row>
     </Page>
   );
-}
+};
 
 export default RegistrarVacuno;
