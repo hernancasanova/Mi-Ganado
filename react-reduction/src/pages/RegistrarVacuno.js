@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   Card,
   CardBody,
-  CardHeader,
   Col,
   Row,
   Spinner,
@@ -68,6 +67,7 @@ const RegistrarVacuno = props => {
   const [color, cambiaColor] = useState(vacunoEditado.color);
   const [estado, cambiaEstado] = useState(vacunoEditado.estado);
   const [fechaVenta, cambiaFechaVenta] = useState(vacunoEditado.fechaVenta);
+  const [srcImagen, cambiaSrc] = useState('');
   var accion;
   if (vacunoEditado.id > 0) {
     accion = VACUNO_EDIT_REQUEST;
@@ -134,7 +134,6 @@ const RegistrarVacuno = props => {
           {tipos_vacunos.length > 0 ? (
             <>
               <Card className="mb-3">
-                <CardHeader></CardHeader>
                 <CardBody>
                   <Formik
                     enableReinitialize
@@ -193,47 +192,84 @@ const RegistrarVacuno = props => {
                         <FormGroup>
                           {vacunoEditado.id > 0 ? (
                             <>
-                              <Label for="">Imagen actual: </Label>
-                              {'               '}
-                              <img
-                                alt={vacunoEditado.id + '.jpg'}
-                                height={100}
-                                width={100}
-                                src={url_imagenes + vacunoEditado.id + '.jpg'}
-                              />
-                              {/* <Button
-                                    style={styles.boton_imagen_vacuno}
-                                    type="button"
-                                  >
-                                    Seleccione una nueva imagen
-                                  </Button>
-                                  <Input
-                                    id="imagen_vacuno"
-                                    style={styles.imagen_vacuno}
-                                    type="file"
-                                  /> */}
-                              <br />
-                              <br />
+                              <Row>
+                                {srcImagen && (
+                                  <Col md={3}>
+                                    <Label for="imagen_seleccionada">
+                                      Imagen seleccionada:
+                                    </Label>
+                                    {'               '}
+                                    <img
+                                      alt=""
+                                      src={srcImagen}
+                                      height={100}
+                                      width={100}
+                                      id="imagen_seleccionada"
+                                    />
+                                  </Col>
+                                )}
+                                <Col md="3">
+                                  <Label for="">Imagen actual: </Label>
+                                  {'               '}
+                                  <img
+                                    alt={vacunoEditado.id + '.jpg'}
+                                    height={100}
+                                    width={100}
+                                    src={
+                                      url_imagenes +
+                                      vacunoEditado.id +
+                                      '.jpg?dummy=' +
+                                      Math.random() * 1000
+                                    }
+                                  />
+                                </Col>
+                              </Row>
                               <Label for="">Seleccione una nueva imagen</Label>
                               <Input
                                 id="imagen_vacuno"
                                 name="imagen_vacuno"
                                 //style={styles.imagen_vacuno}
                                 type="file"
+                                onChange={e =>
+                                  cambiaSrc(
+                                    URL.createObjectURL(e.target.files[0]),
+                                  )
+                                }
                               />
                               <FormText>
                                 <FaInfo />
                                 {'   '}
-                                La imagen seleccionada reemplazará la actual
-                                imagen
+                                La imagen seleccionada reemplazará la imagen
+                                actual
                               </FormText>
                             </>
                           ) : (
                             <>
+                              {srcImagen && (
+                                <>
+                                  <Label for="imagen_seleccionada">
+                                    Imagen seleccionada:
+                                  </Label>
+                                  {'               '}
+                                  <img
+                                    alt=""
+                                    src={srcImagen}
+                                    height={100}
+                                    width={100}
+                                    id="imagen_seleccionada"
+                                  />
+                                </>
+                              )}
+                              <br />
                               <Label for="imagen_vacuno">
                                 Seleccione imagen
                               </Label>
                               <Input
+                                onChange={e =>
+                                  cambiaSrc(
+                                    URL.createObjectURL(e.target.files[0]),
+                                  )
+                                }
                                 type="file"
                                 name="imagen_vacuno"
                                 id="imagen_vacuno"

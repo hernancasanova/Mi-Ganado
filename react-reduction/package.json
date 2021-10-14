@@ -5,6 +5,8 @@
   "homepage": "https://hernancasanova.github.io/appAn2.0",
   "dependencies": {
     "@react-pdf/renderer": "^1.6.14",
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^12.1.2",
     "axios": "^0.19.2",
     "base64-img": "^1.0.4",
     "bootstrap": "4.3.1",

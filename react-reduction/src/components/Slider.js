@@ -72,7 +72,12 @@ const Slider = props => {
 
   return (
     <>
-      <Carousel activeIndex={activeIndex} next={next} previous={previous}>
+      <Carousel
+        interval={2500}
+        activeIndex={activeIndex}
+        next={next}
+        previous={previous}
+      >
         <CarouselIndicators
           items={items}
           activeIndex={activeIndex}
