@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   Card,
   CardBody,
-  CardHeader,
   Col,
   Row,
   Spinner,
@@ -134,7 +133,6 @@ const RegistrarVacuno = props => {
           {tipos_vacunos.length > 0 ? (
             <>
               <Card className="mb-3">
-                <CardHeader></CardHeader>
                 <CardBody>
                   <Formik
                     enableReinitialize

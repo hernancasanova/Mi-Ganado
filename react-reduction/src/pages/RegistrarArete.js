@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   Card,
   CardBody,
-  CardHeader,
   Col,
   Row,
   Spinner,
@@ -143,7 +142,6 @@ const RegistrarArete = props => {
           {!loadingVacunos ? (
             <>
               <Card className="mb-3">
-                <CardHeader></CardHeader>
                 <CardBody>
                   <form onSubmit={handleSubmit(onsubmit)}>
                     <FormGroup>

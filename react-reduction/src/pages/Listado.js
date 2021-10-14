@@ -18,6 +18,7 @@ import PageSpinner from '../components/PageSpinner';
 import Swal from 'sweetalert2';
 import TablaPaginador from '../components/TablaPaginador';
 import Label from 'reactstrap/lib/Label';
+import SearchInput from '../components/SearchInput';
 
 const Listado = props => {
   const styles = {
@@ -27,21 +28,37 @@ const Listado = props => {
     textAlign: 'center',
     verticalAlign: 'middle',
   };
-  const [loadingDescarga, cambiaLoadingDescarga] = useState(false);
-  const [mostrarAlertEliminar, muestraAlertEliminar] = useState(false);
-  const [eliminacionConfirmada, cambiaEliminacionConfirmada] = useState(false);
   var fechaFormateada;
-  var vacunos = useSelector(store => store.vacuno.vacunos);
+  var vacunosReducer = useSelector(store => store.vacuno.vacunos);
   var loading = useSelector(store => store.vacuno.loading);
   var loadingEliminar = useSelector(store => store.vacuno.loadingEliminar);
   var vacunosBuscados = useSelector(store => store.vacuno.vacunosBuscados);
   var vacunoSeleccionado = useSelector(store => store.vacuno.vacunoEditado);
+  const [loadingDescarga, cambiaLoadingDescarga] = useState(false);
+  const [mostrarAlertEliminar, muestraAlertEliminar] = useState(false);
+  const [eliminacionConfirmada, cambiaEliminacionConfirmada] = useState(false);
+  const [vacunos, actualizaListadoVacunos] = useState(vacunosReducer);
 
   useEffect(() => {
     if (loadingDescarga) {
       descargarPdf();
     }
   }, [loadingDescarga]);
+  const filtrarVacunos = e => {
+    var vacunosFiltrados = vacunosReducer.filter(vacuno => {
+      if (vacuno.nombre.includes(e.target.value)) {
+        return vacuno;
+      } else if (vacuno.numero !== null) {
+        if (vacuno.numero.includes(e.target.value)) {
+          return vacuno;
+        }
+        return null;
+      } else {
+        return null;
+      }
+    });
+    actualizaListadoVacunos(vacunosFiltrados);
+  };
   const descargarPdf = () => {
     console.log('Descargando pdf');
     var pdf = new jsPDF('p', 'pt', 'letter');
@@ -56,7 +73,7 @@ const Listado = props => {
       filas[j].deleteCell(8);
     }
     var body = [];
-    vacunos.forEach((vac, i) => {
+    vacunosReducer.forEach((vac, i) => {
       let fila = [
         vac.id,
         'imagen',
@@ -149,7 +166,7 @@ const Listado = props => {
     dispatch(actions.listadoAnimales());
   }, []);
   useEffect(() => {
-    if (!loading && vacunosBuscados && vacunos.length === 0) {
+    if (!loading && vacunosBuscados && vacunosReducer.length === 0) {
       Swal.fire({
         icon: 'info',
         title: 'No se encontraron vacunos',
@@ -162,6 +179,8 @@ const Listado = props => {
           props.history.push('registrar_vacuno');
         }
       });
+    } else {
+      actualizaListadoVacunos(vacunosReducer);
     }
   }, [vacunosBuscados]);
   const formatoFecha = fecha => {
@@ -224,9 +243,15 @@ const Listado = props => {
                 <option>10</option>
               </Input>
             </Col>
-            <Col className="col-9">
+            <Col xs="4" md="4">
+              <b>
+                <Label>Buscar por nombre o DIIO</Label>
+              </b>
+              <SearchInput filtrarVacunos={filtrarVacunos} />
+            </Col>
+            <Col className="col-5">
               <Button
-                disabled={vacunos.length === 0}
+                disabled={vacunosReducer.length === 0}
                 style={{ float: 'right', marginTop: '20px' }}
                 onClick={() => {
                   cambiaLoadingDescarga(true);
