@@ -218,7 +218,12 @@ const RegistrarArete = props => {
                           alt=""
                           height={100}
                           width={100}
-                          src={url_imagenes + vacuno_id + '.jpg'}
+                          src={
+                            url_imagenes +
+                            vacuno_id +
+                            '.jpg?dummy=' +
+                            Math.random() * 1000
+                          }
                         />
                       </FormGroup>
                     )}

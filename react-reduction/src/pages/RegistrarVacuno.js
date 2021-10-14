@@ -197,7 +197,12 @@ const RegistrarVacuno = props => {
                                 alt={vacunoEditado.id + '.jpg'}
                                 height={100}
                                 width={100}
-                                src={url_imagenes + vacunoEditado.id + '.jpg'}
+                                src={
+                                  url_imagenes +
+                                  vacunoEditado.id +
+                                  '.jpg?dummy=' +
+                                  Math.random() * 1000
+                                }
                               />
                               {/* <Button
                                     style={styles.boton_imagen_vacuno}
