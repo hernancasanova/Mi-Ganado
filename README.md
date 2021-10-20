@@ -5,7 +5,7 @@
 
 # Pasos para ejecutar la aplicación
 
-1.  Clonar repositorio `git clone https://github.com/hernancasanova/appAn2.0.git`
+1.  Clonar repositorio `git clone https://github.com/hernancasanova/Mi-Ganado.git`
 2.  Ingresar a la carpeta rest y ejecutar los pasos 3,4,5,6,7,8,9,10
 3.  Crear archivo '.env' renombrando el archivo '.env.example'
 4.  Construir imagen de la API: `docker-compose build app`
