@@ -114,6 +114,7 @@ const Listado = props => {
         valign: 'middle',
         halign: 'center',
       },
+      rowPageBreak: 'avoid',
       //bodyStyles: {minCellHeight: 80, minCellWidth: 80},
       includeHiddenHtml: true,
       didParseCell: function (data) {
