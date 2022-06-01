@@ -58,7 +58,12 @@ const TablaPaginador = props => {
                     alt={vac.name}
                     height={styles.height}
                     width={styles.width}
-                    src={url_imagenes + vac.id + '.jpg'}
+                    src={
+                      url_imagenes +
+                      vac.id +
+                      '.jpg?dummy=' +
+                      Math.random() * 1000
+                    }
                   />
                 </td>
                 <td>{vac.nombre}</td>

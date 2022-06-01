@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   Card,
   CardBody,
-  CardHeader,
   Col,
   Row,
   Spinner,
@@ -143,7 +142,6 @@ const RegistrarArete = props => {
           {!loadingVacunos ? (
             <>
               <Card className="mb-3">
-                <CardHeader></CardHeader>
                 <CardBody>
                   <form onSubmit={handleSubmit(onsubmit)}>
                     <FormGroup>
@@ -220,7 +218,12 @@ const RegistrarArete = props => {
                           alt=""
                           height={100}
                           width={100}
-                          src={url_imagenes + vacuno_id + '.jpg'}
+                          src={
+                            url_imagenes +
+                            vacuno_id +
+                            '.jpg?dummy=' +
+                            Math.random() * 1000
+                          }
                         />
                       </FormGroup>
                     )}
