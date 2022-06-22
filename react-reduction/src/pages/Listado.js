@@ -70,7 +70,7 @@ const Listado = props => {
     var tablaCopia = tabla.cloneNode(true);
     var filas = tablaCopia.rows;
     for (var j = 0; j < filas.length; j++) {
-      filas[j].deleteCell(8);
+      filas[j].deleteCell(7);
     }
     var body = [];
     vacunosReducer.forEach((vac, i) => {
@@ -217,7 +217,7 @@ const Listado = props => {
   const eliminarVacuno = vac => {
     dispatch(actions.vacunoSeleccionado(vac));
   };
-  const [vacunosPorPagina, cambiaVacPorPagina] = useState(2);
+  const [vacunosPorPagina, cambiaVacPorPagina] = useState(5);
   return (
     <Page
       title="Listado de vacunos"
@@ -239,18 +239,21 @@ const Listado = props => {
                 id="nPaginas"
                 type="select"
               >
-                <option>2</option>
                 <option>5</option>
                 <option>10</option>
+                <option>15</option>
               </Input>
             </Col>
-            <Col xs="4" md="4">
+            <Col xs="3" md="3">
               <b>
                 <Label>Buscar por nombre o DIIO</Label>
               </b>
               <SearchInput filtrarVacunos={filtrarVacunos} />
             </Col>
-            <Col className="col-5">
+            <Col className="col-3">
+                <b><Label style={{textAlign: 'center'}}>Total de vacunos listados:<br/>{loading?<Spinner/>:<h1>{vacunos.length}</h1>}</Label></b>
+            </Col>
+            <Col className="col-3">
               <Button
                 disabled={vacunosReducer.length === 0}
                 style={{ float: 'right', marginTop: '20px' }}

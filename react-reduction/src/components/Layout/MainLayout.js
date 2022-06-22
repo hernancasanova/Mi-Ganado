@@ -26,7 +26,7 @@ class MainLayout extends React.Component {
 
       this.notificationSystem.addNotification({
         //title: <MdImportantDevices />,
-        message: 'Bienvenido a la plataforma de gestión de vacunos Mi ganado',
+        message: 'Bienvenido a la plataforma de gestión de vacunos "Mi ganado"',
         level: 'info',
       });
     }, 2000);

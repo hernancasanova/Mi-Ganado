@@ -77,7 +77,7 @@ const RegistrarVacuno = props => {
   const esquemaValidacion = Yup.object().shape({
     nombre: Yup.string()
       .min(4, 'Mínimo 4 caracteres')
-      .max(20, 'Máximo 20 caracteres')
+      .max(30, 'Máximo 30 caracteres')
       .required('El campo nombre es requerido'),
     fecha_nacimiento: Yup.string().required(
       'El campo fecha de nacimiento es requerido',
@@ -145,7 +145,7 @@ const RegistrarVacuno = props => {
                       nombre,
                       fecha_nacimiento,
                       sexo,
-                      tipo,
+                      tipo: vacunoEditado.tipo_vacuno_id,
                       color,
                       estado,
                       fechaVenta,
