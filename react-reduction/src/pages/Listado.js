@@ -60,7 +60,6 @@ const Listado = props => {
     actualizaListadoVacunos(vacunosFiltrados);
   };
   const descargarPdf = () => {
-    console.log('Descargando pdf');
     var pdf = new jsPDF('p', 'pt', 'letter');
     var nColumna = 1;
     var ids = [];
@@ -81,8 +80,7 @@ const Listado = props => {
         vac.numero ? vac.numero : 'Sin arete',
         vac.fecha_colocacion ? formatoFecha(vac.fecha_colocacion) : 'Sin arete',
         formatoFecha(vac.fecha_nacimiento),
-        vac.sexo,
-        vac.color,
+        vac.tipo,
       ];
       body.push(fila);
     });
@@ -95,8 +93,7 @@ const Listado = props => {
           'DIIO',
           'Fecha colocación',
           'Fecha nacimiento',
-          'Sexo',
-          'Color',
+          'Tipo',
         ],
       ],
       body,
@@ -108,7 +105,6 @@ const Listado = props => {
         4: { cellWidth: 'auto', minCellHeight: 80 },
         5: { cellWidth: 'auto', minCellHeight: 80 },
         6: { cellWidth: 'auto', minCellHeight: 80 },
-        7: { cellWidth: 'auto', minCellHeight: 80 },
       },
       styles: {
         valign: 'middle',
@@ -145,7 +141,7 @@ const Listado = props => {
         }
       },
     });
-    pdf.save('Listado_animales.pdf');
+    pdf.save('Listado_vacunos.pdf');
     cambiaLoadingDescarga(false);
   };
   const dispatch = useDispatch();
