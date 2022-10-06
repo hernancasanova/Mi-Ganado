@@ -2,7 +2,7 @@
   "name": "plataforma-de-gestion-de-vacunos",
   "version": "1.1.0",
   "private": false,
-  "homepage": "https://hernancasanova.github.io/appAn2.0",
+  "homepage": "http://hernancasanova.github.io/Mi-Ganado",
   "dependencies": {
     "@react-pdf/renderer": "^1.6.14",
     "@testing-library/jest-dom": "^5.14.1",
@@ -63,6 +63,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "serve": "serve -s build",
+    "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"

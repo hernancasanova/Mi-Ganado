@@ -18,7 +18,7 @@ class AreteController extends Controller
      */
     public function index()
     {
-        //
+        $aretes=DB::table('aretes')->select('numero')->where('vacuno_id',$id)->get();
     }
 
     /**
@@ -67,7 +67,11 @@ class AreteController extends Controller
      */
     public function show($id)
     {
-        //
+        $aretes=DB::table('aretes')->select('numero')->where('vacuno_id',$id)->orderBy('','Desc')->get();
+        return response([
+            'aretes'=> $aretes,
+            'status_code' => 200,
+        ], 200);
     }
 
     /**

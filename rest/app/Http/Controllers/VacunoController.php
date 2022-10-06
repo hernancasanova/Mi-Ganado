@@ -24,6 +24,7 @@ class VacunoController extends Controller
                     ->join('tipos_vacunos as tv','vacunos.tipos_vacunos_id','=','tv.id')
                     ->select('vacunos.id','vacunos.nombre','vacunos.fecha_nacimiento','vacunos.sexo','tv.nombre_tipo_vacuno as tipo','tv.id as tipo_vacuno_id','vacunos.color','vacunos.estado','vacunos.fecha_venta',DB::raw('DATE(MAX(aretes.created_at)) as fecha_colocacion'),DB::raw('MAX(aretes.created_at) as created_at'))//ESTA FUNCIONA
                     ->whereNull('vacunos.fecha_venta')
+                    ->where('vacunos.estado','Vivo')
                     ->groupBy('vacunos.id','vacunos.nombre','vacunos.fecha_nacimiento','vacunos.sexo','tipo','vacunos.color','vacunos.estado','vacunos.fecha_venta');//FUNCIONA
         $vacunos = DB::table('aretes')
                     ->select('aretes.numero','fechaUltimosAretes.*')

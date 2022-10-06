@@ -63,7 +63,7 @@ const RegistrarVacuno = props => {
     vacunoEditado.fecha_nacimiento,
   );
   const [sexo, cambiaSexo] = useState(vacunoEditado.sexo);
-  const [tipo, cambiaTipo] = useState(vacunoEditado.tipo);
+  const [tipo, cambiaTipo] = useState(vacunoEditado.tipo_vacuno_id);
   const [color, cambiaColor] = useState(vacunoEditado.color);
   const [estado, cambiaEstado] = useState(vacunoEditado.estado);
   const [fechaVenta, cambiaFechaVenta] = useState(vacunoEditado.fechaVenta);
@@ -145,13 +145,14 @@ const RegistrarVacuno = props => {
                       nombre,
                       fecha_nacimiento,
                       sexo,
-                      tipo: vacunoEditado.tipo_vacuno_id,
+                      tipo, 
                       color,
                       estado,
                       fechaVenta,
                       imagen_vacuno: '',
                     }}
                     validate={values => {
+                      console.log("values: ",values)
                       const errors = {};
                       let imagen =
                         document.querySelector('input[type="file"]').files[0];
@@ -161,6 +162,7 @@ const RegistrarVacuno = props => {
                       return errors;
                     }}
                     onSubmit={values => {
+                      console.log("values on submit: ",values)
                       var nombre = values.nombre;
                       var fecha_nacimiento = values.fecha_nacimiento;
                       var sexo = values.sexo;
