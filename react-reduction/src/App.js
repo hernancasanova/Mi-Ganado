@@ -64,7 +64,7 @@ class App extends React.Component {
                 />
               )}
               <Route exact path="/registrar_arete" component={RegistrarArete} />
-              <Route exact path="/404" component={NoEncontrado} />
+              {/* <Route component={NoEncontrado} /> */}
               {/* <Route render={() => <Redirect to="/404" />} /> */}
               {/* <Route render={() => <NoEncontrado />} /> */}
               {/* <Route>

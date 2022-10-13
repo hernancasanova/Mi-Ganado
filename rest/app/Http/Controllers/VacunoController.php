@@ -21,7 +21,10 @@ class VacunoController extends Controller
     {
         $vacunos1=DB::table("vacunos")
                     ->leftJoin('aretes','vacunos.id','=','aretes.vacuno_id')
-                    ->select('vacunos.id','vacunos.nombre','vacunos.fecha_nacimiento','vacunos.sexo','vacunos.tipos_vacunos_id as tipo','vacunos.color','vacunos.estado','vacunos.fecha_venta',DB::raw('DATE(MAX(aretes.created_at)) as fecha_colocacion'),DB::raw('MAX(aretes.created_at) as created_at'))//ESTA FUNCIONA
+                    ->join('tipos_vacunos as tv','vacunos.tipos_vacunos_id','=','tv.id')
+                    ->select('vacunos.id','vacunos.nombre','vacunos.fecha_nacimiento','vacunos.sexo','tv.nombre_tipo_vacuno as tipo','tv.id as tipo_vacuno_id','vacunos.color','vacunos.estado','vacunos.fecha_venta',DB::raw('DATE(MAX(aretes.created_at)) as fecha_colocacion'),DB::raw('MAX(aretes.created_at) as created_at'))//ESTA FUNCIONA
+                    ->whereNull('vacunos.fecha_venta')
+                    ->where('vacunos.estado','Vivo')
                     ->groupBy('vacunos.id','vacunos.nombre','vacunos.fecha_nacimiento','vacunos.sexo','tipo','vacunos.color','vacunos.estado','vacunos.fecha_venta');//FUNCIONA
         $vacunos = DB::table('aretes')
                     ->select('aretes.numero','fechaUltimosAretes.*')
@@ -43,7 +46,6 @@ class VacunoController extends Controller
      */
     public function store(Request $request)
     {
-        $vacunos=Vacuno::all();
         $vacuno=DB::table("vacunos")->select('vacunos.*')->where("vacunos.nombre",$request->nombre)->first();
         if(isset($vacuno)){
             throw new \Exception("El vacuno ya se encuentra ingresado", 1);

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Pagination, PaginationItem, PaginationLink, Table } from 'reactstrap';
 import { useSelector } from 'react-redux';
 import { FaPencilAlt, FaTrash } from 'react-icons/fa';
+//import {IoListCircle} from 'react-icons/io5'
 
 const TablaPaginador = props => {
   var url_imagenes = useSelector(store => store.vacuno.url_imagenes);
@@ -30,73 +31,7 @@ const TablaPaginador = props => {
       </PaginationItem>,
     );
   }
-  return (
-    <>
-      <Table id="listVacunos">
-        <thead>
-          <tr>
-            <th scope="col" hidden={true}>
-              N°
-            </th>
-            <th scope="col">Imagen</th>
-            <th scope="col">Nombre</th>
-            <th scope="col">DIIO</th>
-            <th scope="col">Fecha colocación</th>
-            <th scope="col">Fecha nacimiento</th>
-            <th scope="col">Sexo</th>
-            <th scope="col">Color</th>
-            <th scope="col">Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {vacunosListados.map(vac => {
-            return (
-              <tr key={vac.id}>
-                <td hidden={true}>{vac.id}</td>
-                <td>
-                  <img
-                    alt={vac.name}
-                    height={styles.height}
-                    width={styles.width}
-                    src={
-                      url_imagenes +
-                      vac.id +
-                      '.jpg?dummy=' +
-                      Math.random() * 1000
-                    }
-                  />
-                </td>
-                <td>{vac.nombre}</td>
-                <td>{vac.numero != null ? vac.numero : 'Sin arete'}</td>
-                <td>
-                  {vac.fecha_colocacion != null
-                    ? formatoFecha(vac.fecha_colocacion)
-                    : 'Sin arete'}
-                </td>
-                <td>{formatoFecha(vac.fecha_nacimiento)}</td>
-                <td>{vac.sexo}</td>
-                <td>{vac.color}</td>
-                <td>
-                  <FaPencilAlt
-                    cursor="pointer"
-                    title="Editar"
-                    onClick={() => editarVacuno(vac)}
-                  />{' '}
-                  <FaTrash
-                    cursor="pointer"
-                    title="Eliminar"
-                    onClick={() => {
-                      eliminarVacuno(vac);
-                      muestraAlertEliminar(true);
-                    }}
-                  />
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </Table>
-      <Pagination aria-label="Page navigation example">
+  const pagination = <Pagination aria-label="Page navigation example">
         {/* <PaginationItem disabled>
         <PaginationLink first href="#" />
       </PaginationItem> */}
@@ -118,7 +53,81 @@ const TablaPaginador = props => {
         {/* <PaginationItem>
         <PaginationLink last href="#" />
       </PaginationItem> */}
-      </Pagination>
+    </Pagination>;
+  return (
+    <>
+      {pagination}
+      <Table id="listVacunos">
+        <thead>
+          <tr>
+            <th scope="col" hidden={true}>
+              N°
+            </th>
+            <th scope="col">Imagen</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">DIIO</th>
+            <th scope="col">Fecha colocación</th>
+            <th scope="col">Fecha nacimiento</th>
+            <th scope="col">Tipo</th>
+            <th scope="col">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {vacunosListados.map(vac => {
+            return (
+              <tr key={vac.id}>
+                <td hidden={true}>{vac.id}</td>
+                <td>
+                  <img
+                    className='zoom'
+                    alt={vac.name}
+                    height={styles.height}
+                    width={styles.width}
+                    src={
+                      url_imagenes +
+                      vac.id +
+                      '.jpg?dummy=' +
+                      Math.random() * 1000
+                    }
+                  />
+                </td>
+                <td>{vac.nombre}</td>
+                <td>{vac.numero != null ? vac.numero : 'Sin arete'}</td>
+                <td>
+                  {vac.fecha_colocacion != null
+                    ? formatoFecha(vac.fecha_colocacion)
+                    : 'Sin arete'}
+                </td>
+                <td>{formatoFecha(vac.fecha_nacimiento)}</td>
+                <td>{vac.tipo}</td>
+                <td>
+                  <FaPencilAlt
+                    cursor="pointer"
+                    title="Editar"
+                    onClick={() => editarVacuno(vac)}
+                  />{' '}
+                  <FaTrash
+                    cursor="pointer"
+                    title="Eliminar"
+                    onClick={() => {
+                      eliminarVacuno(vac);
+                      muestraAlertEliminar(true);
+                    }}
+                  />
+                  {/* <FaTrash
+                    cursor="pointer"
+                    title="Aretes usados"
+                    onClick={() => {
+                      mostrarAretes(vac.id);
+                    }}
+                  /> */}
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </Table>
+    {pagination}  
     </>
   );
 };

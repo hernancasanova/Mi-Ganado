@@ -60,7 +60,6 @@ const Listado = props => {
     actualizaListadoVacunos(vacunosFiltrados);
   };
   const descargarPdf = () => {
-    console.log('Descargando pdf');
     var pdf = new jsPDF('p', 'pt', 'letter');
     var nColumna = 1;
     var ids = [];
@@ -70,7 +69,7 @@ const Listado = props => {
     var tablaCopia = tabla.cloneNode(true);
     var filas = tablaCopia.rows;
     for (var j = 0; j < filas.length; j++) {
-      filas[j].deleteCell(8);
+      filas[j].deleteCell(7);
     }
     var body = [];
     vacunosReducer.forEach((vac, i) => {
@@ -81,8 +80,7 @@ const Listado = props => {
         vac.numero ? vac.numero : 'Sin arete',
         vac.fecha_colocacion ? formatoFecha(vac.fecha_colocacion) : 'Sin arete',
         formatoFecha(vac.fecha_nacimiento),
-        vac.sexo,
-        vac.color,
+        vac.tipo,
       ];
       body.push(fila);
     });
@@ -95,8 +93,7 @@ const Listado = props => {
           'DIIO',
           'Fecha colocación',
           'Fecha nacimiento',
-          'Sexo',
-          'Color',
+          'Tipo',
         ],
       ],
       body,
@@ -108,7 +105,6 @@ const Listado = props => {
         4: { cellWidth: 'auto', minCellHeight: 80 },
         5: { cellWidth: 'auto', minCellHeight: 80 },
         6: { cellWidth: 'auto', minCellHeight: 80 },
-        7: { cellWidth: 'auto', minCellHeight: 80 },
       },
       styles: {
         valign: 'middle',
@@ -145,7 +141,7 @@ const Listado = props => {
         }
       },
     });
-    pdf.save('Listado_animales.pdf');
+    pdf.save('Listado_vacunos.pdf');
     cambiaLoadingDescarga(false);
   };
   const dispatch = useDispatch();
@@ -217,7 +213,7 @@ const Listado = props => {
   const eliminarVacuno = vac => {
     dispatch(actions.vacunoSeleccionado(vac));
   };
-  const [vacunosPorPagina, cambiaVacPorPagina] = useState(2);
+  const [vacunosPorPagina, cambiaVacPorPagina] = useState(5);
   return (
     <Page
       title="Listado de vacunos"
@@ -239,18 +235,21 @@ const Listado = props => {
                 id="nPaginas"
                 type="select"
               >
-                <option>2</option>
                 <option>5</option>
                 <option>10</option>
+                <option>15</option>
               </Input>
             </Col>
-            <Col xs="4" md="4">
+            <Col xs="3" md="3">
               <b>
                 <Label>Buscar por nombre o DIIO</Label>
               </b>
               <SearchInput filtrarVacunos={filtrarVacunos} />
             </Col>
-            <Col className="col-5">
+            <Col className="col-3">
+                <b><Label style={{textAlign: 'center'}}>Total de vacunos listados:<br/>{loading?<Spinner/>:<h1>{vacunos.length}</h1>}</Label></b>
+            </Col>
+            <Col className="col-3">
               <Button
                 disabled={vacunosReducer.length === 0}
                 style={{ float: 'right', marginTop: '20px' }}
