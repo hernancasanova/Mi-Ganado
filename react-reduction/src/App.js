@@ -6,7 +6,7 @@ import AuthPage from 'pages/AuthPage';
 //import Bienvenida from 'pages/Bienvenida';
 import React from 'react';
 import componentQueries from 'react-component-queries';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, Redirect } from 'react-router-dom';
 import './styles/reduction.scss';
 import { ConnectedRouter } from 'connected-react-router';
 import { connect } from 'react-redux';
@@ -64,12 +64,12 @@ class App extends React.Component {
                 />
               )}
               <Route exact path="/registrar_arete" component={RegistrarArete} />
-              {/* <Route component={NoEncontrado} /> */}
+              <Route path="/404" component={NoEncontrado} />
               {/* <Route render={() => <Redirect to="/404" />} /> */}
               {/* <Route render={() => <NoEncontrado />} /> */}
-              {/* <Route>
+              <Route path="*">
                 <Redirect to="/404" />
-              </Route> */}
+              </Route>
               {/*<Redirect </Redirect>to={} /> */}
               {/* <Route component={NoEncontrado} /> */}
             </React.Suspense>
