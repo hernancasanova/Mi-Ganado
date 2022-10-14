@@ -4,7 +4,6 @@
 /storage/*.key
 /storage/app/public/imagenes
 /vendor
-/docker-compose/mysql
 .env
 .env.backup
 .phpunit.result.cache
