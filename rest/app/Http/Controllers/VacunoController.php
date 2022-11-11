@@ -19,18 +19,17 @@ class VacunoController extends Controller
      */
     public function index()
     {
-        $vacunos1=DB::table("vacunos")
-                    ->leftJoin('aretes','vacunos.id','=','aretes.vacuno_id')
-                    ->join('tipos_vacunos as tv','vacunos.tipos_vacunos_id','=','tv.id')
-                    ->select('vacunos.id','vacunos.nombre','vacunos.fecha_nacimiento','vacunos.sexo','tv.nombre_tipo_vacuno as tipo','tv.id as tipo_vacuno_id','vacunos.color','vacunos.estado','vacunos.fecha_venta',DB::raw('DATE(MAX(aretes.created_at)) as fecha_colocacion'),DB::raw('MAX(aretes.created_at) as created_at'))//ESTA FUNCIONA
-                    ->whereNull('vacunos.fecha_venta')
-                    ->where('vacunos.estado','Vivo')
-                    ->groupBy('vacunos.id','vacunos.nombre','vacunos.fecha_nacimiento','vacunos.sexo','tipo','vacunos.color','vacunos.estado','vacunos.fecha_venta');//FUNCIONA
-        $vacunos = DB::table('aretes')
-                    ->select('aretes.numero','fechaUltimosAretes.*')
-                    ->rightJoinSub($vacunos1, 'fechaUltimosAretes', function ($join) {
-                      $join->on('aretes.created_at', '=', 'fechaUltimosAretes.created_at');
+        $vacunos1 = DB::table("aretes as a")
+                    ->select("a.numero","a.vacuno_id as vac","a.fecha_colocacion")
+                    ->where("a.estado","activo"); 
+        $vacunos = DB::table('vacunos as v')
+                    ->join('tipos_vacunos as tv','v.tipos_vacunos_id','=','tv.id')
+                    ->select('v.id','v.nombre','v.fecha_nacimiento','v.sexo','tv.nombre_tipo_vacuno as tipo','tv.id as tipo_vacuno_id','v.color','v.estado','v.fecha_venta','fechaUltimosAretes.*')
+                    ->leftJoinSub($vacunos1, 'fechaUltimosAretes', function ($join) {
+                      $join->on('v.id', '=', 'fechaUltimosAretes.vac');
                     })
+                    ->where('v.estado','Vivo')
+                    ->whereNull('v.fecha_venta')
                     ->get();
         return response([
             'vacunos'=> $vacunos,
