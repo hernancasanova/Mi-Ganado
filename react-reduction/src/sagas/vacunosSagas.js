@@ -52,6 +52,7 @@ function* crearVacuno({ payload }) {
     datosVacuno.append('fecha_nacimiento', payload.fecha_nacimiento);
     datosVacuno.append('sexo', payload.sexo);
     datosVacuno.append('tipo_vacuno', payload.tipo);
+    datosVacuno.append('madre', payload.madre);
     datosVacuno.append('color', payload.color);
     datosVacuno.append('estado', payload.estado);
     datosVacuno.append('fecha_venta', payload.fechaVenta);
@@ -84,6 +85,7 @@ function* editarVacuno({ payload }) {
     datosVacuno.append('fecha_nacimiento', payload.fecha_nacimiento);
     datosVacuno.append('sexo', payload.sexo);
     datosVacuno.append('tipo', payload.tipo);
+    datosVacuno.append('madre', payload.madre);
     datosVacuno.append('color', payload.color);
     datosVacuno.append('estado', payload.estado);
     datosVacuno.append('fechaVenta', payload.fechaVenta);

@@ -167,6 +167,7 @@ CREATE TABLE `vacunos` (
   `fecha_nacimiento` date NOT NULL,
   `sexo` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `tipos_vacunos_id` bigint(20) unsigned NOT NULL,
+  `madre` bigint(20) unsigned DEFAULT NULL,
   `color` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `estado` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `fecha_venta` date DEFAULT NULL,
@@ -174,7 +175,9 @@ CREATE TABLE `vacunos` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `vacunos_tipos_vacunos_id_foreign` (`tipos_vacunos_id`),
-  CONSTRAINT `vacunos_tipos_vacunos_id_foreign` FOREIGN KEY (`tipos_vacunos_id`) REFERENCES `tipos_vacunos` (`id`) ON DELETE CASCADE
+  CONSTRAINT `vacunos_tipos_vacunos_id_foreign` FOREIGN KEY (`tipos_vacunos_id`) REFERENCES `tipos_vacunos` (`id`) ON DELETE CASCADE,
+  KEY `madre` (`madre`),
+  CONSTRAINT `madre` FOREIGN KEY (`madre`) REFERENCES `vacunos` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -184,7 +187,7 @@ CREATE TABLE `vacunos` (
 
 LOCK TABLES `vacunos` WRITE;
 /*!40000 ALTER TABLE `vacunos` DISABLE KEYS */;
-INSERT INTO `vacunos` VALUES (1,'Toro amarillo','2019-03-05','Macho',3,'Amarillo(a)','Vivo',NULL,NULL,NULL);
+INSERT INTO `vacunos` VALUES (1,'Toro amarillo','2019-03-05','Macho',3,NULL,'Amarillo(a)','Vivo',NULL,NULL,NULL);
 /*!40000 ALTER TABLE `vacunos` ENABLE KEYS */;
 UNLOCK TABLES;
 

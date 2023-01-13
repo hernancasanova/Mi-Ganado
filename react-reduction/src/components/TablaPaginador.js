@@ -55,21 +55,22 @@ const TablaPaginador = props => {
       </PaginationItem> */}
     </Pagination>;
   return (
-    <>
-      {pagination}
-      <Table id="listVacunos">
+    <div style={{height:"90vh",overflowY:"scroll"}}>
+      {/* {pagination} */}
+      <Table id="listVacunos" >
         <thead>
           <tr>
             <th scope="col" hidden={true}>
               N°
             </th>
-            <th scope="col">Imagen</th>
-            <th scope="col">Nombre</th>
-            <th scope="col">DIIO</th>
-            <th scope="col">Fecha colocación</th>
-            <th scope="col">Fecha nacimiento</th>
-            <th scope="col">Tipo</th>
-            <th scope="col">Acciones</th>
+            <th  scope="col">Imagen</th>
+            <th  scope="col">Nombre</th>
+            <th  scope="col">DIIO</th>
+            <th  scope="col">Fecha colocación</th>
+            <th  scope="col">Fecha nacimiento</th>
+            <th  scope="col">Madre</th>
+            <th  scope="col">Tipo</th>
+            <th  scope="col">Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -99,6 +100,9 @@ const TablaPaginador = props => {
                     : 'Sin arete'}
                 </td>
                 <td>{formatoFecha(vac.fecha_nacimiento)}</td>
+                <td>
+                  {vac.madre}
+                </td>
                 <td>{vac.tipo}</td>
                 <td>
                   <FaPencilAlt
@@ -128,7 +132,7 @@ const TablaPaginador = props => {
         </tbody>
       </Table>
     {pagination}  
-    </>
+    </div>
   );
 };
 

@@ -49,7 +49,7 @@ class App extends React.Component {
 
           <MainLayout breakpoint={this.props.breakpoint} history={history}>
             <React.Suspense fallback={<PageSpinner />}>
-              <Route exact path="/" component={Bienvenida} />
+              <Route exact path="" component={Bienvenida} />
               <Route exact path="/listado_vacunos" component={Listado} />
               <Route
                 exact
@@ -67,9 +67,9 @@ class App extends React.Component {
               <Route path="/404" component={NoEncontrado} />
               {/* <Route render={() => <Redirect to="/404" />} /> */}
               {/* <Route render={() => <NoEncontrado />} /> */}
-              <Route path="*">
+              {/* <Route path="*">
                 <Redirect to="/404" />
-              </Route>
+              </Route> */}
               {/*<Redirect </Redirect>to={} /> */}
               {/* <Route component={NoEncontrado} /> */}
             </React.Suspense>

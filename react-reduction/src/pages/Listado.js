@@ -213,14 +213,14 @@ const Listado = props => {
   const eliminarVacuno = vac => {
     dispatch(actions.vacunoSeleccionado(vac));
   };
-  const [vacunosPorPagina, cambiaVacPorPagina] = useState(5);
+  const [vacunosPorPagina, cambiaVacPorPagina] = useState(15);
   return (
     <Page
       title="Listado de vacunos"
       breadcrumbs={[{ name: 'listado', active: true }]}
       className="TablePage"
     >
-      <Card className="mb-3">
+      <Card>
         <CardHeader>
           <Row>
             <Col className="col-3">
@@ -277,7 +277,6 @@ const Listado = props => {
             !mostrarAlertEliminar ? (
             <PageSpinner texto="Eliminando vacuno" />
           ) : (
-            <>
               <TablaPaginador
                 vacunos={vacunos}
                 styles={styles}
@@ -287,7 +286,6 @@ const Listado = props => {
                 formatoFecha={formatoFecha}
                 muestraAlertEliminar={muestraAlertEliminar}
               />
-            </>
           )}
         </CardBody>
       </Card>

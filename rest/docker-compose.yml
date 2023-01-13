@@ -1,14 +1,14 @@
 version: "3.5"
 services:
-  app:
+  backend-miganado:
     build:
       args:
         user: hernan
         uid: 1000
       context: ./
       dockerfile: Dockerfile
-    image: app
-    container_name: app
+    image: backend-miganado
+    container_name: backend-miganado
     restart: unless-stopped
     working_dir: /var/www/
     volumes:

@@ -5,7 +5,7 @@ import { history } from '..';
 import PropTypes from 'prop-types';
 
 const estiloSpan = {
-  fontSize: '20px',
+  fontSize: '14px',
   color: 'black',
   fontWeight: '700',
   cursor: 'pointer',

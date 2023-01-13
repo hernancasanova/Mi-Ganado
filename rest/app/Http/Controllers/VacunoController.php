@@ -23,12 +23,14 @@ class VacunoController extends Controller
                     ->select("a.numero","a.vacuno_id as vac","a.fecha_colocacion")
                     ->where("a.estado","activo"); 
         $vacunos = DB::table('vacunos as v')
+                    ->join('vacunos as v2','v.madre','=','v2.id')
                     ->join('tipos_vacunos as tv','v.tipos_vacunos_id','=','tv.id')
-                    ->select('v.id','v.nombre','v.fecha_nacimiento','v.sexo','tv.nombre_tipo_vacuno as tipo','tv.id as tipo_vacuno_id','v.color','v.estado','v.fecha_venta','fechaUltimosAretes.*')
+                    ->select('v.id','v.nombre','v.fecha_nacimiento','v.sexo','tv.nombre_tipo_vacuno as tipo','tv.id as tipo_vacuno_id','v2.id as id_madre','v2.nombre as madre','v.color','v.estado','v.fecha_venta','fechaUltimosAretes.*')
                     ->leftJoinSub($vacunos1, 'fechaUltimosAretes', function ($join) {
                       $join->on('v.id', '=', 'fechaUltimosAretes.vac');
                     })
                     ->where('v.estado','Vivo')
+                    ->where('v.id','!=',0)
                     ->whereNull('v.fecha_venta')
                     ->get();
         return response([
@@ -49,7 +51,7 @@ class VacunoController extends Controller
         if(isset($vacuno)){
             throw new \Exception("El vacuno ya se encuentra ingresado", 1);
         }
-        $fecha_venta=request()->get('fecha_venta')===''?null:request()->get('fecha_venta');
+        $fecha_venta=request()->get('fecha_venta')===null?null:request()->get('fecha_venta');
         $insertGetId=DB::table('vacunos')->insertGetId(
            ['nombre' => $request->nombre, 'fecha_nacimiento' => $request->fecha_nacimiento, 'sexo' => $request->sexo, 'tipos_vacunos_id' => $request->tipo_vacuno, 'color' => $request->color, 'estado' => $request->estado, 'fecha_venta' => $fecha_venta]);
         $request->file('imagen_vacuno')->storeAs('public/imagenes',$insertGetId.".jpg");
@@ -78,13 +80,14 @@ class VacunoController extends Controller
      */
     public function update(Request $request, Vacuno $vacuno)
     {
-        $fechaVenta=$request->fechaVenta===''?null:$request->fechaVenta;
+        $fechaVenta=$request->fechaVenta==='null'?null:$request->fechaVenta;
         $vacunoActualizado=DB::table('vacunos')
               ->where('id', $request->id)
               ->update(['nombre' => $request->nombre,
                         'fecha_nacimiento' => $request->fecha_nacimiento,
                         'sexo'=>$request->sexo,
                         'tipos_vacunos_id'=>$request->tipo,
+                        'madre'=>$request->madre,
                         'color'=>$request->color,
                         'estado'=>$request->estado,
                         'fecha_venta'=>$fechaVenta,

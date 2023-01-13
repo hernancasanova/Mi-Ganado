@@ -1,4 +1,27 @@
-td,th{
-   text-align: center; 
+td, th{
+   text-align: center !important; 
+
 }
 .zoom:hover { transform: scale(1.8); }
+
+html,body{
+   margin-top:0;
+   padding-top:0;
+}
+#container{
+   /* height: 600px; */
+   margin:0;
+   padding:0;
+}
+
+table {
+   width: 100%;
+   border-collapse: collapse;
+ }
+
+ thead {
+   position: sticky;
+   top: -1px;
+   background-color: #fff;
+   z-index: 1;
+ }

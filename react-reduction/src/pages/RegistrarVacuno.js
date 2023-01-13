@@ -50,6 +50,7 @@ const RegistrarVacuno = props => {
   //     borderRadius: '0.25rem',
   //   },
   // };
+  var vacunos = useSelector(store => store.vacuno.vacunos);
   var tipos_vacunos = useSelector(store => store.vacuno.tipos_vacunos);
   var url_imagenes = useSelector(store => store.vacuno.url_imagenes);
   var loading = useSelector(store => store.vacuno.loading);
@@ -64,6 +65,7 @@ const RegistrarVacuno = props => {
   );
   const [sexo, cambiaSexo] = useState(vacunoEditado.sexo);
   const [tipo, cambiaTipo] = useState(vacunoEditado.tipo_vacuno_id);
+  const [madre, cambiaMadre] = useState(vacunoEditado.id_madre);
   const [color, cambiaColor] = useState(vacunoEditado.color);
   const [estado, cambiaEstado] = useState(vacunoEditado.estado);
   const [fechaVenta, cambiaFechaVenta] = useState(vacunoEditado.fechaVenta);
@@ -86,10 +88,12 @@ const RegistrarVacuno = props => {
     tipo: Yup.number().required('El campo tipo es requerido'),
     color: Yup.string().required('El campo color es requerido'),
     estado: Yup.string().required('El campo estado es requerido'),
+    madre: Yup.number(),
     //email: Yup.string().email('Invalid email').required('Required'),
   });
   const dispatch = useDispatch();
   useEffect(() => {
+    dispatch(actions.listadoAnimales());
     if (tipos_vacunos.length === 0) {
       dispatch(actions.listadoTiposVacunos()); //se ejecuta una sola vez porque al primer render actualiza el store y la condición nunca más se ejecuta
     }
@@ -145,7 +149,8 @@ const RegistrarVacuno = props => {
                       nombre,
                       fecha_nacimiento,
                       sexo,
-                      tipo, 
+                      tipo,
+                      madre, 
                       color,
                       estado,
                       fechaVenta,
@@ -169,8 +174,8 @@ const RegistrarVacuno = props => {
                       var tipo = values.tipo;
                       var color = values.color;
                       var estado = values.estado;
-                      var fechaVenta =
-                        document.getElementById('fechaVenta').value;
+                      var fechaVenta = values.fechaVenta;
+                      var madre = values.madre;
                       let imagen =
                         document.querySelector('input[type="file"]').files[0];
                       dispatch(
@@ -180,6 +185,7 @@ const RegistrarVacuno = props => {
                           fecha_nacimiento,
                           sexo,
                           tipo,
+                          madre,
                           color,
                           estado,
                           fechaVenta,
@@ -318,6 +324,37 @@ const RegistrarVacuno = props => {
                             </span>
                           )}
                         </FormGroup>
+
+                        <FormGroup>
+                          <Label for="madre">Madre (opcional)</Label>
+                          <Input
+                            type="select"
+                            id="madre"
+                            name="madre"
+                            onChange={e => {
+                              cambiaMadre(e.target.value);
+                            }}
+                            value={props.values.madre}
+                          >
+                            <option value="0">Seleccione</option>
+                            {vacunos.filter(vacuno=>{
+                              //console.log("vauno: ",vacuno)
+                              return vacuno.tipo==="Vaca"})
+                            .map(m => {
+                              return (
+                                <option key={m.id} value={m.id}>
+                                  {m.nombre}
+                                </option>
+                              );
+                            })}
+                          </Input>
+                          {props.errors.madre && (
+                            <span className="text-danger text-small d-block mb-2">
+                              {props.errors.madre}
+                            </span>
+                          )}
+                        </FormGroup>
+
                         <FormGroup>
                           <Label for="sexo">Sexo</Label>
                           <Input
@@ -389,6 +426,7 @@ const RegistrarVacuno = props => {
                             </span>
                           )}
                         </FormGroup>
+                        
                         <FormGroup>
                           <Label for="estado">Estado</Label>
                           <Input
