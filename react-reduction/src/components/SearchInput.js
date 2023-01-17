@@ -6,16 +6,18 @@ import { Form, Input } from 'reactstrap';
 const SearchInput = props => {
   const [palabraBuscada, cambiaPalabraBuscada] = useState('');
   return (
-    <Form inline className="cr-search-form" onSubmit={e => e.preventDefault()}>
+    <Form className="cr-search-form" onSubmit={e => e.preventDefault()}>
       <MdSearch
-        size="20"
+        size="30"
         className="cr-search-form__icon-search text-secondary"
+        style={{marginTop:"3%"}}
       />
       <Input
         onChange={e => {
           props.filtrarVacunos(e);
           cambiaPalabraBuscada(e.target.value);
         }}
+        id="buscadornombrediio"
         value={palabraBuscada}
         type="search"
         className="cr-search-form__input"

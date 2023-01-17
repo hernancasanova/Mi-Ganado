@@ -19,6 +19,7 @@ import Swal from 'sweetalert2';
 import TablaPaginador from '../components/TablaPaginador';
 import Label from 'reactstrap/lib/Label';
 import SearchInput from '../components/SearchInput';
+import { FaFilePdf } from 'react-icons/fa';
 
 const Listado = props => {
   const styles = {
@@ -29,6 +30,7 @@ const Listado = props => {
     verticalAlign: 'middle',
   };
   var fechaFormateada;
+  var tipos_vacunos = useSelector(store => store.vacuno.tipos_vacunos);
   var vacunosReducer = useSelector(store => store.vacuno.vacunos);
   var loading = useSelector(store => store.vacuno.loading);
   var loadingEliminar = useSelector(store => store.vacuno.loadingEliminar);
@@ -44,12 +46,14 @@ const Listado = props => {
       descargarPdf();
     }
   }, [loadingDescarga]);
-  const filtrarVacunos = e => {
+  const [tipo, setTipo] = useState(0);
+  const filtrarVacunos = () => {
+    var textoBuscado = document.getElementById("buscadornombrediio").value;
     var vacunosFiltrados = vacunosReducer.filter(vacuno => {
-      if (vacuno.nombre.includes(e.target.value)) {
+      if (vacuno.nombre.includes(textoBuscado)) {
         return vacuno;
       } else if (vacuno.numero !== null) {
-        if (vacuno.numero.includes(e.target.value)) {
+        if (vacuno.numero.includes(textoBuscado)) {
           return vacuno;
         }
         return null;
@@ -57,6 +61,13 @@ const Listado = props => {
         return null;
       }
     });
+    vacunosFiltrados=vacunosFiltrados.filter(v=>{
+        if(tipo==0){
+          return v;
+        }else if(v.tipo_vacuno_id==tipo){
+            return v;
+        }
+    })
     actualizaListadoVacunos(vacunosFiltrados);
   };
   const descargarPdf = () => {
@@ -213,6 +224,9 @@ const Listado = props => {
   const eliminarVacuno = vac => {
     dispatch(actions.vacunoSeleccionado(vac));
   };
+  useEffect(()=>{
+    filtrarVacunos()
+  },[tipo])
   const [vacunosPorPagina, cambiaVacPorPagina] = useState(15);
   return (
     <Page
@@ -222,7 +236,39 @@ const Listado = props => {
     >
       <Card>
         <CardHeader>
+          {/* <Row>Filtros:</Row> */}
           <Row>
+            <Col className="col-2">
+              <b>
+                <Label>Nombre o DIIO</Label>
+              </b>
+              <SearchInput filtrarVacunos={filtrarVacunos} />
+            </Col>
+            <Col className="col-2">
+                <b><Label for="tipo">Tipo</Label></b>
+                <Input
+                  type="select"
+                  id="tipo"
+                  // multiple
+                  name="tipo"
+                  onChange={e => {
+                    setTipo(e.target.value);
+                  }}
+                  value={tipo}
+                >
+                  <option value="0">Todos</option>
+                  {tipos_vacunos.map(tip_vac => {
+                    return (
+                      <option key={tip_vac.id} value={tip_vac.id}>
+                        {tip_vac.nombre_tipo_vacuno}
+                      </option>
+                    );
+                  })}
+                </Input>
+            </Col>
+            <Col className="col-3">
+                <b><Label style={{textAlign: 'center'}}>Total de vacunos listados:<br/>{loading?<Spinner/>:<h1>{vacunos.length}</h1>}</Label></b>
+            </Col>
             <Col className="col-3">
               <b>
                 <Label for="nPaginas">Vacunos por página</Label>
@@ -240,32 +286,24 @@ const Listado = props => {
                 <option>15</option>
               </Input>
             </Col>
-            <Col xs="3" md="3">
-              <b>
-                <Label>Buscar por nombre o DIIO</Label>
-              </b>
-              <SearchInput filtrarVacunos={filtrarVacunos} />
-            </Col>
-            <Col className="col-3">
-                <b><Label style={{textAlign: 'center'}}>Total de vacunos listados:<br/>{loading?<Spinner/>:<h1>{vacunos.length}</h1>}</Label></b>
-            </Col>
-            <Col className="col-3">
-              <Button
-                disabled={vacunosReducer.length === 0}
-                style={{ float: 'right', marginTop: '20px' }}
-                onClick={() => {
-                  cambiaLoadingDescarga(true);
-                }}
-              >
+            <Col className="col-2" >
                 {loadingDescarga ? (
                   <>
-                    {'Generando pdf... '}
+                    {'Descargando listado... '}
                     <Spinner />
                   </>
                 ) : (
-                  'Descargar pdf'
-                )}{' '}
-              </Button>
+                  <FaFilePdf
+                size={30}
+                cursor="pointer"
+                title="Descargar listado"
+                disabled={vacunosReducer.length === 0}
+                style={{marginTop:"35px" }}
+                onClick={() => {
+                  cambiaLoadingDescarga(true);
+                }}
+              />
+                )}
             </Col>
           </Row>
         </CardHeader>

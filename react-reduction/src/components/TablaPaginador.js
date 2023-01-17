@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
-import { Pagination, PaginationItem, PaginationLink, Table } from 'reactstrap';
-import { useSelector } from 'react-redux';
-import { FaPencilAlt, FaTrash } from 'react-icons/fa';
+import React, { useState, useEffect } from 'react';
+import { Pagination, PaginationItem, PaginationLink, Table, Modal, ModalBody, ModalHeader, ModalFooter, FormGroup, Label, Input, Button } from 'reactstrap';
+import { useDispatch, useSelector } from 'react-redux';
+import { FaFilter, FaPencilAlt, FaTrash } from 'react-icons/fa';
+import ModalFilter from './ModalFilter';
+import * as actions from '../actions/VacunoActions';
+
 //import {IoListCircle} from 'react-icons/io5'
 
 const TablaPaginador = props => {
@@ -13,8 +16,17 @@ const TablaPaginador = props => {
     editarVacuno,
     eliminarVacuno,
     muestraAlertEliminar,
+    actualizaListadoVacunos,
+    filtrarVacunos
   } = props;
   const [paginaActual, cambiaPaginaActual] = useState(0);
+  var tipos_vacunos = useSelector(store => store.vacuno.tipos_vacunos);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (tipos_vacunos.length === 0) {
+      dispatch(actions.listadoTiposVacunos()); //se ejecuta una sola vez porque al primer render actualiza el store y la condición nunca más se ejecuta
+    }
+  }, []);
   const { vacunosPorPagina } = props;
   let cantidadPaginas = Math.ceil(vacunos.length / vacunosPorPagina);
   const vacunosListados = vacunos.slice(
@@ -31,6 +43,8 @@ const TablaPaginador = props => {
       </PaginationItem>,
     );
   }
+  var tipos_vacunos = useSelector(store => store.vacuno.tipos_vacunos);
+  
   const pagination = <Pagination aria-label="Page navigation example">
         {/* <PaginationItem disabled>
         <PaginationLink first href="#" />
@@ -63,14 +77,14 @@ const TablaPaginador = props => {
             <th scope="col" hidden={true}>
               N°
             </th>
-            <th  scope="col">Imagen</th>
-            <th  scope="col">Nombre</th>
-            <th  scope="col">DIIO</th>
-            <th  scope="col">Fecha colocación</th>
-            <th  scope="col">Fecha nacimiento</th>
-            <th  scope="col">Madre</th>
-            <th  scope="col">Tipo</th>
-            <th  scope="col">Acciones</th>
+            <th scope="col">Imagen</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">DIIO</th>
+            <th scope="col">Fecha colocación</th>
+            <th scope="col">Fecha nacimiento</th>
+            <th scope="col">Madre</th>
+            <th scope="col">Tipo </th>
+            <th scope="col">Acciones</th>
           </tr>
         </thead>
         <tbody>
