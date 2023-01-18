@@ -53,7 +53,7 @@ class VacunoController extends Controller
         }
         $fecha_venta=request()->get('fecha_venta')===null?null:request()->get('fecha_venta');
         $insertGetId=DB::table('vacunos')->insertGetId(
-           ['nombre' => $request->nombre, 'fecha_nacimiento' => $request->fecha_nacimiento, 'sexo' => $request->sexo, 'tipos_vacunos_id' => $request->tipo_vacuno, 'color' => $request->color, 'estado' => $request->estado, 'fecha_venta' => $fecha_venta]);
+           ['nombre' => $request->nombre, 'fecha_nacimiento' => $request->fecha_nacimiento, 'sexo' => $request->sexo, 'tipos_vacunos_id' => $request->tipo_vacuno, 'madre' => $request->madre , 'color' => $request->color, 'estado' => $request->estado, 'fecha_venta' => $fecha_venta]);
         $request->file('imagen_vacuno')->storeAs('public/imagenes',$insertGetId.".jpg");
         return response()->json([
             'status_code' => 200
