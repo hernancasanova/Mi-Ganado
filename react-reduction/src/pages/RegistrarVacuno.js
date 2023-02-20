@@ -53,7 +53,7 @@ const RegistrarVacuno = props => {
   var vacunos = useSelector(store => store.vacuno.vacunos);
   var tipos_vacunos = useSelector(store => store.vacuno.tipos_vacunos);
   var url_imagenes = useSelector(store => store.vacuno.url_imagenes);
-  var loading = useSelector(store => store.vacuno.loading);
+  var loadingCrearEditar = useSelector(store => store.vacuno.loadingCrearEditar);
   var errores = useSelector(store => store.vacuno.errores);
   var vacunoCreatedEdited = useSelector(
     store => store.vacuno.vacunoCreatedEdited,
@@ -88,7 +88,7 @@ const RegistrarVacuno = props => {
     tipo: Yup.number().required('El campo tipo es requerido'),
     color: Yup.string().required('El campo color es requerido'),
     estado: Yup.string().required('El campo estado es requerido'),
-    madre: Yup.number(),
+    madre: Yup.string().nullable(),
     //email: Yup.string().email('Invalid email').required('Required'),
   });
   const dispatch = useDispatch();
@@ -98,7 +98,7 @@ const RegistrarVacuno = props => {
       dispatch(actions.listadoTiposVacunos()); //se ejecuta una sola vez porque al primer render actualiza el store y la condición nunca más se ejecuta
     }
   }, []);
-  if (vacunoCreatedEdited && !loading) {
+  if (vacunoCreatedEdited && !loadingCrearEditar) {
     Swal.fire({
       html:
         vacunoEditado.id > 0
@@ -114,20 +114,20 @@ const RegistrarVacuno = props => {
     });
   }
   useEffect(() => {
-    if (!loading && errores) {
+    if (!loadingCrearEditar && errores) {
       Swal.fire({
         html: errores,
         icon: 'error',
         confirmButtonText: 'Aceptar',
       });
     }
-  }, [loading]);
+  }, [loadingCrearEditar]);
   return (
     <Page
       title={vacunoEditado.id > 0 ? 'Editar vacuno' : 'Registrar vacuno'}
       breadcrumbs={[
         {
-          name: vacunoEditado.id > 0 ? 'editar' : 'registrar',
+          name: vacunoEditado.id > 0 ? 'editar vacuno' : 'registrar vacuno',
           active: true,
         },
       ]}
@@ -387,7 +387,7 @@ const RegistrarVacuno = props => {
                             }}
                             value={props.values.tipo}
                           >
-                            <option val="">Seleccione</option>
+                            <option value="">Seleccione</option>
                             {tipos_vacunos.map(tip_vac => {
                               return (
                                 <option key={tip_vac.id} value={tip_vac.id}>
@@ -463,7 +463,7 @@ const RegistrarVacuno = props => {
                         </FormGroup>
                         <Button type="submit" className="ml-10">
                           {vacunoEditado.id > 0 ? (
-                            !loading ? (
+                            !loadingCrearEditar ? (
                               'Editar vacuno'
                             ) : (
                               <>
@@ -471,7 +471,7 @@ const RegistrarVacuno = props => {
                                 <Spinner />
                               </>
                             )
-                          ) : !loading ? (
+                          ) : !loadingCrearEditar ? (
                             'Registrar vacuno'
                           ) : (
                             <>

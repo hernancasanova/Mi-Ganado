@@ -26,6 +26,7 @@ const INITIAL_STATE = {
   url_imagenes: 'http://localhost:8000/storage/imagenes/',
   loading: false,
   loadingEliminar: false,
+  loadingCrearEditar: false,
   vacunosBuscados: false,
   vacunoCreatedEdited: false,
   vacunoEditado: {
@@ -34,9 +35,9 @@ const INITIAL_STATE = {
     fecha_nacimiento: '',
     sexo: '',
     tipo: '',
-    tipo_vacuno_id: null,
+    tipo_vacuno_id: '',
     madre: '',
-    id_madre: null,
+    id_madre: '',
     color: '',
     estado: '',
     fechaVenta: '',
@@ -57,9 +58,9 @@ export default (state = INITIAL_STATE, action) => {
           fecha_nacimiento: '',
           sexo: '',
           tipo: '',
-          tipo_vacuno_id: null,
+          tipo_vacuno_id: '',
           madre: '',
-          id_madre: null,
+          id_madre: '',
           color: '',
           estado: '',
           fechaVenta: '',
@@ -118,13 +119,13 @@ export default (state = INITIAL_STATE, action) => {
         },
       };
     case VACUNO_CREATE_REQUEST:
-      return { ...state, loading: true, vacunoCreatedEdited: false };
+      return { ...state, loadingCrearEditar: true, vacunoCreatedEdited: false };
     case VACUNO_CREATE_SUCCESS:
-      return { ...state, loading: false, vacunoCreatedEdited: true };
+      return { ...state, loadingCrearEditar: false, vacunoCreatedEdited: true };
     case VACUNO_CREATE_FAILED:
       return {
         ...state,
-        loading: false,
+        loadingCrearEditar: false,
         vacunoCreatedEdited: false,
         errores: action.payload,
       };
@@ -135,11 +136,11 @@ export default (state = INITIAL_STATE, action) => {
     case VACUNO_DELETE_FAILED:
       return { ...state, loadingEliminar: false };
     case VACUNO_EDIT_REQUEST:
-      return { ...state, loading: true, vacunoCreatedEdited: false };
+      return { ...state, loadingCrearEditar: true, vacunoCreatedEdited: false };
     case VACUNO_EDIT_SUCCESS:
-      return { ...state, loading: false, vacunoCreatedEdited: true };
+      return { ...state, loadingCrearEditar: false, vacunoCreatedEdited: true };
     case VACUNO_EDIT_FAILED:
-      return { ...state, loading: false, vacunoCreatedEdited: false };
+      return { ...state, loadingCrearEditar: false, vacunoCreatedEdited: false };
     case RESET:
       return {
         ...state,

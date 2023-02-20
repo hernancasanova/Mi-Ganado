@@ -22,6 +22,7 @@ table {
  thead {
    position: sticky;
    top: -1px;
-   background-color: #fff;
+   background-color: rgb(149, 144, 144);
    z-index: 1;
+   color:white
  }

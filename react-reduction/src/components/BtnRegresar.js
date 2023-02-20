@@ -28,8 +28,8 @@ const validateHistory = PropTypes.shape({
     pathname: PropTypes.string,
   }).isRequired,
 });
-BtnRegresar.propTypes = {
-  history: validateHistory.isRequired,
-};
+// BtnRegresar.propTypes = {
+//   history: validateHistory.isRequired,
+// };
 
 export default BtnRegresar;

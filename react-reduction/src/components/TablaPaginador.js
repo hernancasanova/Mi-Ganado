@@ -126,7 +126,7 @@ const TablaPaginador = props => {
                   />{' '}
                   <FaTrash
                     cursor="pointer"
-                    title="Eliminar"
+                    title="Dar de baja"
                     onClick={() => {
                       eliminarVacuno(vac);
                       muestraAlertEliminar(true);

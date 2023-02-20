@@ -109,7 +109,7 @@ class VacunoController extends Controller
      */
     public function destroy($id)
     {
-        DB::table('vacunos')->where('id', '=', $id)->delete();
+        DB::table('vacunos')->where('id', '=', $id)->update(['estado'=>'Muerto']);
         return response()->json([
             'status_code' => 200
         ], 200);
