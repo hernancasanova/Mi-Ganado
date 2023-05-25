@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Pagination, PaginationItem, PaginationLink, Table, Modal, ModalBody, ModalHeader, ModalFooter, FormGroup, Label, Input, Button } from 'reactstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { FaFilter, FaPencilAlt, FaTrash } from 'react-icons/fa';
+import { GiDeathSkull } from 'react-icons/gi';
 import ModalFilter from './ModalFilter';
 import * as actions from '../actions/VacunoActions';
 
@@ -124,9 +125,9 @@ const TablaPaginador = props => {
                     title="Editar"
                     onClick={() => editarVacuno(vac)}
                   />{' '}
-                  <FaTrash
+                  <GiDeathSkull
                     cursor="pointer"
-                    title="Dar de baja"
+                    title="Dar de baja (solo es caso de muerte)"
                     onClick={() => {
                       eliminarVacuno(vac);
                       muestraAlertEliminar(true);
