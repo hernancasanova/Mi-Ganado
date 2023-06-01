@@ -3,7 +3,7 @@ import { Pagination, PaginationItem, PaginationLink, Table, Modal, ModalBody, Mo
 import { useDispatch, useSelector } from 'react-redux';
 import { FaFilter, FaPencilAlt, FaTrash } from 'react-icons/fa';
 import { GiDeathSkull } from 'react-icons/gi';
-import ModalFilter from './ModalFilter';
+// import ModalFilter from './ModalFilter';
 import * as actions from '../actions/VacunoActions';
 
 //import {IoListCircle} from 'react-icons/io5'
