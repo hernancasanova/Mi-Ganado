@@ -179,8 +179,6 @@ const Listado = props => {
         icon: 'info',
         title: 'No se encontraron vacunos',
         confirmButtonText: 'Registrar vacuno',
-        footer:
-          '<a href="javascript:location.reload(true)">Favor recargue la página si existe algun problema</a>',
         allowOutsideClick: false,
       }).then(result => {
         if (result.isConfirmed) {

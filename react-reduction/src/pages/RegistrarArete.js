@@ -105,8 +105,6 @@ const RegistrarArete = props => {
       title: 'No se encontraron vacunos',
       text: 'Debe registrar un vacuno antes de un arete',
       confirmButtonText: 'Registrar vacuno',
-      footer:
-        '<a href="javascript:location.reload(true)">Por favor recargue la página si el problema persiste</a>',
       allowOutsideClick: false,
     }).then(result => {
       if (result.isConfirmed) {
@@ -134,7 +132,7 @@ const RegistrarArete = props => {
   return (
     <Page
       title="Registrar arete"
-      breadcrumbs={[{ name: 'registrar_arete', active: true }]}
+      breadcrumbs={[{ name: 'registrar arete', active: true }]}
       className="TablePage"
     >
       <Row>

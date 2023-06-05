@@ -336,7 +336,7 @@ const RegistrarVacuno = props => {
                             }}
                             value={props.values.madre}
                           >
-                            <option value="0">Seleccione</option>
+                            <option value="">Seleccione</option>
                             {vacunos.filter(vacuno=>{
                               //console.log("vauno: ",vacuno)
                               return vacuno.tipo==="Vaca"})

@@ -97,6 +97,8 @@ const TablaPaginador = props => {
                   <img
                     className='zoom'
                     alt={vac.name}
+                    style={{cursor:"pointer"}}
+                    onClick={() => editarVacuno(vac)}
                     height={styles.height}
                     width={styles.width}
                     src={
@@ -116,7 +118,7 @@ const TablaPaginador = props => {
                 </td>
                 <td>{formatoFecha(vac.fecha_nacimiento)}</td>
                 <td>
-                  {vac.madre}
+                  {vac.madre != null ? vac.madre : 'Sin identificar'}
                 </td>
                 <td>{vac.tipo}</td>
                 <td>

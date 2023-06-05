@@ -23,7 +23,7 @@ class VacunoController extends Controller
                     ->select("a.numero","a.vacuno_id as vac","a.fecha_colocacion")
                     ->where("a.estado","activo"); 
         $vacunos = DB::table('vacunos as v')
-                    ->join('vacunos as v2','v.madre','=','v2.id')
+                    ->leftjoin('vacunos as v2','v.madre','=','v2.id')
                     ->join('tipos_vacunos as tv','v.tipos_vacunos_id','=','tv.id')
                     ->select('v.id','v.nombre','v.fecha_nacimiento','v.sexo','tv.nombre_tipo_vacuno as tipo','tv.id as tipo_vacuno_id','v2.id as id_madre','v2.nombre as madre','v.color','v.estado','v.fecha_venta','fechaUltimosAretes.*')
                     ->leftJoinSub($vacunos1, 'fechaUltimosAretes', function ($join) {

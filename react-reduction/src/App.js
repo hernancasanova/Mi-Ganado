@@ -67,9 +67,9 @@ class App extends React.Component {
               <Route path="/404" component={NoEncontrado} />
               {/* <Route render={() => <Redirect to="/404" />} /> */}
               {/* <Route render={() => <NoEncontrado />} /> */}
-              <Route path="*">
+              {/* <Route path="*">
                 <Redirect to="/404" />
-              </Route>
+              </Route> */}
               {/*<Redirect </Redirect>to={} /> */}
               {/* <Route component={NoEncontrado} /> */}
             </React.Suspense>
